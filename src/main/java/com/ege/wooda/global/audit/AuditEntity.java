@@ -8,15 +8,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
-/**
- * @author          locmment
- * @record          BaseTime
- * @description     JPA Auditing 기능 관련 클래스
- */
-
 @Getter
 @Embeddable
-public class BaseTime {
+public class AuditEntity {
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
