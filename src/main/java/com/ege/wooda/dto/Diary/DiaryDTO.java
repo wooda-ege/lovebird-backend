@@ -1,4 +1,4 @@
-package com.ege.wooda.dto;
+package com.ege.wooda.dto.Diary;
 
 import com.ege.wooda.domain.diary.Diary;
 import lombok.Builder;

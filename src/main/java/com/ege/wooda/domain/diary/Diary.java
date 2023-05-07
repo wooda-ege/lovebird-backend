@@ -45,4 +45,13 @@ public class Diary {
         this.createDate = createDate;
         this.updateDate = updateDate;
     }
+
+    public void update(String title, String subTitle, Date memoryDate, String place, String contents, Date updateDate){
+        this.title=title;
+        this.subTitle=subTitle;
+        this.memoryDate=memoryDate;
+        this.place=place;
+        this.contents=contents;
+        this.updateDate=updateDate;
+    }
 }
