@@ -1,0 +1,29 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+    import:
+      classpath:/application-aws.yml
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/wooda
+    username: user
+    password: password
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+cloud:
+  aws:
+    region:
+      static:
+        ap-northeast-2
+    stack:
+      auto:
+        false
