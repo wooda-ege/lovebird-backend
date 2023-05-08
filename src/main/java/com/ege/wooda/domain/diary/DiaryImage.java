@@ -14,7 +14,6 @@ public class DiaryImage {
 
     @Column(name="image_url")
     private String url;
-
     // 논리적 외래키
     @Column(name="diary_id")
     private Long DiaryId;

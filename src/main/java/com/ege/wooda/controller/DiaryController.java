@@ -6,7 +6,6 @@ import com.ege.wooda.dto.response.DefaultResponse;
 import com.ege.wooda.dto.response.ResponseMessage;
 import com.ege.wooda.dto.response.StatusCode;
 import com.ege.wooda.service.DiaryService;
-import jakarta.servlet.annotation.MultipartConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -1,6 +1,5 @@
 package com.ege.wooda.service;
 
-import com.amazonaws.services.s3.AmazonS3;
 import com.ege.wooda.domain.diary.DiaryRepository;
 import com.ege.wooda.domain.diary.Diary;
 import com.ege.wooda.dto.Diary.DiaryDTO;
@@ -49,7 +48,6 @@ public class DiaryService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id = " + diaryId)));
         return diary;
     }
-
     @Transactional
     public List<String> saveImage(List<MultipartFile> img) throws IOException {
         List<String> url = new ArrayList<String>();
