@@ -6,11 +6,14 @@ import com.ege.wooda.dto.response.DefaultResponse;
 import com.ege.wooda.dto.response.ResponseMessage;
 import com.ege.wooda.dto.response.StatusCode;
 import com.ege.wooda.service.DiaryService;
+import jakarta.servlet.annotation.MultipartConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.List;
@@ -59,6 +62,24 @@ public class DiaryController {
             result.put("data", diary);
         }catch (Exception e){
             return new ResponseEntity(DefaultResponse.response(StatusCode.BAD_REQUEST, ResponseMessage.DIARY_NOT_FOUND),HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<Map<String,Object>>(result,HttpStatus.OK);
+    }
+
+    @PostMapping("/image")
+    public ResponseEntity<Map<String,Object>> postDiaryImage(@RequestParam("img") List<MultipartFile> img) throws IOException {
+        Map<String, Object> result=new HashMap<>();
+        for(MultipartFile i : img){
+            System.out.println(i);
+        }
+        try{
+            List<String> urlList=diaryService.saveImage(img);
+            result.put("statusCode", StatusCode.OK);
+            result.put("responseMessage", ResponseMessage.CREATED_DIARY);
+            result.put("data", urlList);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity(DefaultResponse.response(StatusCode.BAD_REQUEST,ResponseMessage.FAILED_CREATE_DIARY),HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<Map<String,Object>>(result,HttpStatus.OK);
     }
