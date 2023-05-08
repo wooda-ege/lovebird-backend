@@ -6,10 +6,9 @@ spring:
       classpath:/application-aws.yml
 
   datasource:
-    url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: jdbc:postgresql://localhost:5432/wooda
+    username: user
+    password: password
 
   h2:
     console:

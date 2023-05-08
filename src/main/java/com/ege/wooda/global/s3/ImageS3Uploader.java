@@ -12,12 +12,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author          locmment
- * @class           ImageS3Uploader
- * @description     aws S3 버킷에 접근해 이미지를 업로드하거나 삭제할 수 있다.
- */
-
 @RequiredArgsConstructor
 @Component
 public class ImageS3Uploader  {
