@@ -1,7 +1,7 @@
 package com.ege.wooda.controller;
 
-import com.ege.wooda.domain.diary.DiaryRepository;
-import com.ege.wooda.dto.Diary.DiaryDTO;
+import com.ege.wooda.domain.diary.repository.DiaryRepository;
+import com.ege.wooda.domain.diary.dto.DiaryItem;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +37,7 @@ public class DiaryControllerTest {
         String contents="sample contents";
         Date create_date=date;
 
-        DiaryDTO diaryDTO=DiaryDTO.builder()
+        DiaryItem diaryItem = DiaryItem.builder()
                 .title(title)
                 .subTitle(subTitle)
                 .memoryDate(memory_date)

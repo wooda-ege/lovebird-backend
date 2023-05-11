@@ -1,4 +1,4 @@
-package com.ege.wooda.dto.response;
+package com.ege.wooda.global.common.response;
 
 public class ResponseMessage {
     public static final String READ_DIARY="게시물 조회 성공";

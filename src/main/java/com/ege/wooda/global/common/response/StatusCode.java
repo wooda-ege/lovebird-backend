@@ -1,4 +1,4 @@
-package com.ege.wooda.dto.response;
+package com.ege.wooda.global.common.response;
 
 public class StatusCode {
     public static final int OK=200;

@@ -1,11 +1,11 @@
-package com.ege.wooda.controller;
+package com.ege.wooda.domain.diary.controller;
 
-import com.ege.wooda.domain.diary.Diary;
-import com.ege.wooda.dto.Diary.DiaryDTO;
-import com.ege.wooda.dto.response.DefaultResponse;
-import com.ege.wooda.dto.response.ResponseMessage;
-import com.ege.wooda.dto.response.StatusCode;
-import com.ege.wooda.service.DiaryService;
+import com.ege.wooda.domain.diary.dao.Diary;
+import com.ege.wooda.domain.diary.dto.DiaryItem;
+import com.ege.wooda.global.common.response.DefaultResponse;
+import com.ege.wooda.global.common.response.ResponseMessage;
+import com.ege.wooda.global.common.response.StatusCode;
+import com.ege.wooda.domain.diary.service.DiaryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +25,9 @@ public class DiaryController {
     private final DiaryService diaryService;
 
     @PostMapping("/diaries")
-    public ResponseEntity saveDiary(@RequestBody DiaryDTO diaryDTO){
+    public ResponseEntity saveDiary(@RequestBody DiaryItem diaryItem){
         try{
-            Long id = diaryService.saveDiary(diaryDTO);
+            Long id = diaryService.saveDiary(diaryItem);
         }catch (Exception e){
             return new ResponseEntity(DefaultResponse.response(StatusCode.BAD_REQUEST, ResponseMessage.FAILED_CREATE_DIARY), HttpStatus.BAD_REQUEST);
         }

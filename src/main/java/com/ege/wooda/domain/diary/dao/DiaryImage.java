@@ -1,4 +1,4 @@
-package com.ege.wooda.domain.diary;
+package com.ege.wooda.domain.diary.dao;
 
 import jakarta.persistence.*;
 import lombok.Data;

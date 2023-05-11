@@ -1,4 +1,4 @@
-package com.ege.wooda.dto.response;
+package com.ege.wooda.global.common.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

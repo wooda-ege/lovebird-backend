@@ -1,6 +1,6 @@
-package com.ege.wooda.dto.Diary;
+package com.ege.wooda.domain.diary.dto;
 
-import com.ege.wooda.domain.diary.Diary;
+import com.ege.wooda.domain.diary.dao.Diary;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Getter
 @NoArgsConstructor
-public class DiaryDTO {
+public class DiaryItem {
     private String title;
     private String subTitle;
     private Date memory_date;
@@ -19,7 +19,7 @@ public class DiaryDTO {
     private Date update_date;
 
     @Builder
-    public DiaryDTO(String title, String subTitle, Date memoryDate, String place, String contents, Date createDate, Date updateDate) {
+    public DiaryItem(String title, String subTitle, Date memoryDate, String place, String contents, Date createDate, Date updateDate) {
         this.title = title;
         this.subTitle = subTitle;
         this.memory_date = memoryDate;

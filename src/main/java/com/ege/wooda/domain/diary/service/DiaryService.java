@@ -1,9 +1,9 @@
-package com.ege.wooda.service;
+package com.ege.wooda.domain.diary.service;
 
-import com.ege.wooda.domain.diary.DiaryRepository;
-import com.ege.wooda.domain.diary.Diary;
-import com.ege.wooda.dto.Diary.DiaryDTO;
-import com.ege.wooda.dto.Diary.DiaryUpdateDTO;
+import com.ege.wooda.domain.diary.repository.DiaryRepository;
+import com.ege.wooda.domain.diary.dao.Diary;
+import com.ege.wooda.domain.diary.dto.DiaryItem;
+import com.ege.wooda.domain.diary.dto.DiaryUpdateItem;
 import com.ege.wooda.global.s3.ImageS3Uploader;
 import com.ege.wooda.global.s3.S3File;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +24,12 @@ public class DiaryService {
     private final ImageS3Uploader imageS3Uploader;
 
     @Transactional
-    public Long saveDiary(DiaryDTO diaryDTO){
-        return diaryRepository.save(diaryDTO.toEntity()).getId();
+    public Long saveDiary(DiaryItem diaryItem){
+        return diaryRepository.save(diaryItem.toEntity()).getId();
     }
 
     @Transactional
-    public Long updateDiary(Long id, DiaryUpdateDTO updateDTO){
+    public Long updateDiary(Long id, DiaryUpdateItem updateDTO){
         Optional<Diary> diary = Optional.ofNullable(diaryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id = " + id)));
         diary.get().update(updateDTO.getTitle(), updateDTO.getSubTitle(), updateDTO.getMemory_date(), updateDTO.getPlace(), updateDTO.getContents(), updateDTO.getUpdate_date());
