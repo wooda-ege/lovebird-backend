@@ -8,12 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * @author          locmment
- * @class           S3Config
- * @description     aws S3 연동 설정 클래스
- */
-
 @Configuration
 public class S3Config {
 

@@ -16,13 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
-
-/**
- * @author          locmment
- * @class           ImageS3UploaderTest
- * @description     ImageS3Uploader 클래스 관련 테스트 작성
- */
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.junit.Assert.assertEquals;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -49,7 +44,7 @@ public class ImageS3UploaderTest {
         List<S3File> savedFiles = imageS3Uploader.upload(mockMultipartFiles);
 
         // then
-        assertThat(savedFiles.size()).isEqualTo(mockMultipartFiles.size());
+        assertEquals(mockMultipartFiles.size(), savedFiles.size());
     }
 
     @Test
