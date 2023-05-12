@@ -1,7 +1,7 @@
 package com.ege.wooda.domain.diary.repository;
 
-import com.ege.wooda.domain.diary.dao.Diary;
-import org.springframework.data.repository.CrudRepository;
+import com.ege.wooda.domain.diary.Diary;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface DiaryRepository extends CrudRepository<Diary, Long> {
+public interface DiaryRepository extends JpaRepository<Diary, Long> {
 }

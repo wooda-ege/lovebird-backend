@@ -6,9 +6,10 @@ spring:
       classpath:/application-aws.yml
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/wooda
+    url: jdbc:h2:mem:wooda
     username: user
     password: password
+    driver-class-name: org.h2.Driver
 
   h2:
     console:
@@ -18,6 +19,20 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 1MB
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+  logging.level:
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace
 
 cloud:
   aws:

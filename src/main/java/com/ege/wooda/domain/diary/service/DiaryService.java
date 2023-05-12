@@ -1,11 +1,12 @@
 package com.ege.wooda.domain.diary.service;
 
+import com.ege.wooda.domain.diary.dto.DiaryCreateRequest;
 import com.ege.wooda.domain.diary.repository.DiaryRepository;
-import com.ege.wooda.domain.diary.dao.Diary;
-import com.ege.wooda.domain.diary.dto.DiaryItem;
-import com.ege.wooda.domain.diary.dto.DiaryUpdateItem;
+import com.ege.wooda.domain.diary.Diary;
+import com.ege.wooda.domain.diary.dto.DiaryUpdateRequest;
 import com.ege.wooda.global.s3.ImageS3Uploader;
 import com.ege.wooda.global.s3.S3File;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,24 +25,29 @@ public class DiaryService {
     private final ImageS3Uploader imageS3Uploader;
 
     @Transactional
-    public Long saveDiary(DiaryItem diaryItem){
-        return diaryRepository.save(diaryItem.toEntity()).getId();
+    public Long save(DiaryCreateRequest diary){
+        return diaryRepository.save(diary.toEntity()).getId();
     }
 
     @Transactional
-    public Long updateDiary(Long id, DiaryUpdateItem updateDTO){
-        Optional<Diary> diary = Optional.ofNullable(diaryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id = " + id)));
-        diary.get().update(updateDTO.getTitle(), updateDTO.getSubTitle(), updateDTO.getMemory_date(), updateDTO.getPlace(), updateDTO.getContents(), updateDTO.getUpdate_date());
+    public Long update(Long id, DiaryUpdateRequest updateDTO){
+        Diary diary = diaryRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("해당 게시글이 존재하지 않습니다. id = " + id));
+        diary.updateDiary(updateDTO.toEntity());
         return id;
     }
 
     @Transactional
-    public List<Diary> findDiaries(){
-        return (List<Diary>) diaryRepository.findAll();
+    public void delete(Long id){
+        diaryRepository.deleteById(id);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
+    public List<Diary> findDiaries(){
+        return diaryRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
     public Optional<Diary> findOne(Long diaryId){
 
         Optional<Diary> diary= Optional.ofNullable(diaryRepository.findById(diaryId)
