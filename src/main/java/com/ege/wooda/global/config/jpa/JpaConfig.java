@@ -1,4 +1,4 @@
-package com.ege.wooda.config.jpa;
+package com.ege.wooda.global.config.jpa;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
