@@ -1,4 +1,4 @@
-package com.ege.wooda.config.s3;
+package com.ege.wooda.global.config.s3;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
