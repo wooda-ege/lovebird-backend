@@ -1,5 +1,6 @@
-package com.ege.wooda.domain.member;
+package com.ege.wooda.domain.member.domain;
 
+import com.ege.wooda.domain.member.dto.response.MemberDetailResponse;
 import com.ege.wooda.global.audit.AuditEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -20,13 +21,13 @@ public class Member {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "nickname", unique = true, nullable = false)
     private String nickname;
 
     @Column(name = "first_date", nullable = false)
         private LocalDate firstDate;
 
-    @Column(nullable = false)
+    @Column(name = "gender", nullable = false)
     @Enumerated(value = EnumType.STRING)
     private Gender gender;
 
@@ -46,17 +47,26 @@ public class Member {
         this.gender = gender;
         this.pictureM = pictureM;
         this.pictureW = pictureW;
-        auditEntity = new AuditEntity();
+        this.auditEntity = new AuditEntity();
     }
 
-    public void updateNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public void updateProfile(Member user) {
+    public void update(Member user) {
+        nickname = user.getNickname();
         firstDate = user.getFirstDate();
         pictureM = user.getPictureM();
         pictureW = user.getPictureW();
         gender = user.getGender();
     }
+
+    public MemberDetailResponse toMemberDetailResponse() {
+        return MemberDetailResponse.builder()
+                .nickname(nickname)
+                .firstDate(firstDate)
+                .gender(gender.toString())
+                .pictureM(pictureM)
+                .pictureW(pictureW)
+                .build();
+    }
+
+
 }

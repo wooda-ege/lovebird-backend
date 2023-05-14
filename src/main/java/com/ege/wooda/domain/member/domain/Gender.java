@@ -1,4 +1,4 @@
-package com.ege.wooda.domain.member;
+package com.ege.wooda.domain.member.domain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -6,8 +6,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Gender {
-    MALE("남성"),
-    FEMALE("여성");
-
-    private final String description;
+    MALE,
+    FEMALE;
 }

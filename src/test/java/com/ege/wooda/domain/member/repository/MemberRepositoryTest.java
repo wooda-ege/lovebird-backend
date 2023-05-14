@@ -1,6 +1,8 @@
-package com.ege.wooda.domain.member;
+package com.ege.wooda.domain.member.repository;
 
-import com.ege.wooda.config.jpa.JpaConfig;
+import com.ege.wooda.domain.member.domain.Gender;
+import com.ege.wooda.domain.member.domain.Member;
+import com.ege.wooda.global.config.jpa.JpaConfig;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -48,7 +50,7 @@ public class MemberRepositoryTest {
     }
 
     @Test
-    @DisplayName("Nickname을 통해 Member를 찾는 데 성공한ㄷ.")
+    @DisplayName("Nickname을 통해 Member를 찾는 데 성공한다.")
     public void findMemberByNicknameSuccess() {
         // given
         List<Member> memberList = getMemberList();

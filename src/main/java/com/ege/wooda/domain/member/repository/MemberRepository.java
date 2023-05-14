@@ -1,5 +1,6 @@
-package com.ege.wooda.domain.member;
+package com.ege.wooda.domain.member.repository;
 
+import com.ege.wooda.domain.member.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
