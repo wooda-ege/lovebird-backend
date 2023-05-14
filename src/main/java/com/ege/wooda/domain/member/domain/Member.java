@@ -11,6 +11,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 
+import static java.time.temporal.ChronoUnit.DAYS;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -25,7 +27,7 @@ public class Member {
     private String nickname;
 
     @Column(name = "first_date", nullable = false)
-        private LocalDate firstDate;
+    private LocalDate firstDate;
 
     @Column(name = "gender", nullable = false)
     @Enumerated(value = EnumType.STRING)
@@ -61,12 +63,10 @@ public class Member {
     public MemberDetailResponse toMemberDetailResponse() {
         return MemberDetailResponse.builder()
                 .nickname(nickname)
-                .firstDate(firstDate)
+                .dDay(DAYS.between(LocalDate.now(), firstDate))
                 .gender(gender.toString())
                 .pictureM(pictureM)
                 .pictureW(pictureW)
                 .build();
     }
-
-
 }

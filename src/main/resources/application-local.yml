@@ -7,8 +7,8 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5432/wooda
-    username: wooda
-    password: dnekvmfhwprxm!
+    username: user
+    password: password
 
   h2:
     console:
