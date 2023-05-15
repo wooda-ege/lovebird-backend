@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class MemberController {
-    private MemberService memberService;
+    private final MemberService memberService;
 
     @PostMapping("")
     public DefaultResponse<Object> add(@RequestPart(value = "images") List<MultipartFile> images,

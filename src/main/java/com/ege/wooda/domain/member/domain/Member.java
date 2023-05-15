@@ -63,7 +63,7 @@ public class Member {
     public MemberDetailResponse toMemberDetailResponse() {
         return MemberDetailResponse.builder()
                 .nickname(nickname)
-                .dDay(DAYS.between(LocalDate.now(), firstDate))
+                .dDay(DAYS.between(firstDate, LocalDate.now()) + 1)
                 .gender(gender.toString())
                 .pictureM(pictureM)
                 .pictureW(pictureW)

@@ -8,6 +8,7 @@ import com.ege.wooda.global.s3.ImageS3Uploader;
 import com.ege.wooda.global.s3.S3File;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,6 +48,7 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "MEMBER_PROFILE")
     public Member findMemberByNickname(String nickname) {
         return memberRepository.findMemberByNickname(nickname).orElseThrow(EntityNotFoundException::new);
     }
