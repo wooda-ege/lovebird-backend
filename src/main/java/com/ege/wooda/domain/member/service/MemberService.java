@@ -8,6 +8,7 @@ import com.ege.wooda.global.s3.ImageS3Uploader;
 import com.ege.wooda.global.s3.S3File;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +42,8 @@ public class MemberService {
         return member.getId();
     }
 
+    @Transactional
+    @CacheEvict(cacheNames = "member")
     public void delete(String nickname) {
         // 이미지 디렉토리 구조에 대해 논의 필요
         s3Uploader.deleteFiles(List.of(nickname + "/male.png", nickname + "female.png"));
@@ -48,7 +51,7 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = "MEMBER_PROFILE")
+    @Cacheable(cacheNames = "member")
     public Member findMemberByNickname(String nickname) {
         return memberRepository.findMemberByNickname(nickname).orElseThrow(EntityNotFoundException::new);
     }
