@@ -4,7 +4,8 @@ import lombok.Builder;
 
 import java.time.LocalDate;
 
-public record MemberDetailResponse(String nickname,
+public record MemberDetailResponse(String uuid,
+                                   String nickname,
                                    long dDay,
                                    String gender,
                                    String pictureM,

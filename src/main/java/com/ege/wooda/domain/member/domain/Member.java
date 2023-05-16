@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -22,6 +23,9 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
+
+    @Column(name = "uuid", unique = true, nullable = false)
+    private String uuid;
 
     @Column(name = "nickname", unique = true, nullable = false)
     private String nickname;
@@ -44,6 +48,7 @@ public class Member {
 
     @Builder
     public Member(String nickname, LocalDate firstDate, Gender gender, String pictureM, String pictureW) {
+        this.uuid = UUID.randomUUID().toString();
         this.nickname = nickname;
         this.firstDate = firstDate;
         this.gender = gender;
@@ -62,6 +67,7 @@ public class Member {
 
     public MemberDetailResponse toMemberDetailResponse() {
         return MemberDetailResponse.builder()
+                .uuid(uuid)
                 .nickname(nickname)
                 .dDay(DAYS.between(firstDate, LocalDate.now()) + 1)
                 .gender(gender.toString())
