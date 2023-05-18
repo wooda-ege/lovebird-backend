@@ -6,7 +6,6 @@ import lombok.Builder;
 import org.apache.commons.codec.binary.StringUtils;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public record MemberUpdateRequest(String nickname,
                                   String firstDate,

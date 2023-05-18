@@ -2,7 +2,6 @@ package com.ege.wooda.domain.member.dto.response;
 
 import lombok.Builder;
 
-import java.time.LocalDate;
 
 public record MemberDetailResponse(String uuid,
                                    String nickname,
