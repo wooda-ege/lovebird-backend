@@ -1,0 +1,96 @@
+= Lovebird API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels:2
+:sectlinks:
+
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
+== Member 등록
+
+=== Request
+
+include::{snippets}/member-add/httpie-request.adoc[]
+
+==== i) images
+|===
+|Path|Type|Description
+
+|`+[].images+`
+|`+image/png+`
+|프로필 사진 (남, 여)
+
+|===
+
+==== ii) memberCreateRequest
+include::{snippets}/member-add/request-part-memberCreateRequest-fields.adoc[]
+
+=== Response
+
+include::{snippets}/member-add/http-response.adoc[]
+
+include::{snippets}/member-add/response-fields.adoc[]
+
+== Member 조회
+
+=== Request
+
+include::{snippets}/member-details/httpie-request.adoc[]
+
+include::{snippets}/member-details/path-parameters.adoc[]
+
+=== Response
+
+include::{snippets}/member-details/http-response.adoc[]
+
+include::{snippets}/member-details/response-fields.adoc[]
+
+== Member 수정
+
+=== Request
+
+include::{snippets}/member-modify/httpie-request.adoc[]
+
+==== i) path
+
+include::{snippets}/member-modify/path-parameters.adoc[]
+
+==== ii) images
+
+|===
+|Path|Type|Description
+
+|`+[].images+`
+|`+image/png+`
+|프로필 사진 (남, 여)
+
+|===
+
+==== iii) memberUpdateRequest
+
+include::{snippets}/member-modify/request-part-memberUpdateRequest-fields.adoc[]
+
+=== Response
+
+include::{snippets}/member-modify/http-response.adoc[]
+
+include::{snippets}/member-modify/response-fields.adoc[]
+
+== Member 삭제
+
+=== Request
+
+include::{snippets}/member-remove/httpie-request.adoc[]
+
+include::{snippets}/member-remove/path-parameters.adoc[]
+
+=== Response
+
+include::{snippets}/member-remove/http-response.adoc[]
+
+include::{snippets}/member-remove/response-fields.adoc[]
+
