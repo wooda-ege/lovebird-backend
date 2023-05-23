@@ -25,9 +25,11 @@ public class MemberService {
 
     @Transactional
     public Long save(List<MultipartFile> images, MemberCreateRequest memberCreateRequest) throws IOException {
-        return memberRepository.save(memberCreateRequest.toEntity(s3Uploader.upload(images).stream()
+        Member member = memberCreateRequest.toEntity(s3Uploader.upload(images).stream()
                 .map(S3File::fileUrl)
-                .toList())).getId();
+                .toList());
+
+        return memberRepository.save(member).getId();
     }
 
     @Transactional
