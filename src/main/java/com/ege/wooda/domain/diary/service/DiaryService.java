@@ -1,44 +1,68 @@
 package com.ege.wooda.domain.diary.service;
 
-import com.ege.wooda.domain.diary.dto.DiaryCreateRequest;
+import com.ege.wooda.domain.diary.dto.request.DiaryCreateRequest;
 import com.ege.wooda.domain.diary.repository.DiaryRepository;
 import com.ege.wooda.domain.diary.Diary;
-import com.ege.wooda.domain.diary.dto.DiaryUpdateRequest;
+import com.ege.wooda.domain.diary.dto.request.DiaryUpdateRequest;
+import com.ege.wooda.domain.member.domain.Member;
+import com.ege.wooda.domain.member.repository.MemberRepository;
 import com.ege.wooda.global.s3.ImageS3Uploader;
 import com.ege.wooda.global.s3.S3File;
+import com.ege.wooda.global.s3.dto.ImageDeleteRequest;
+import com.ege.wooda.global.s3.dto.ImageUploadRequest;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class DiaryService {
     private final DiaryRepository diaryRepository;
+    private final MemberRepository memberRepository;
     private final ImageS3Uploader imageS3Uploader;
 
     @Transactional
-    public Long save(DiaryCreateRequest diary){
-        return diaryRepository.save(diary.toEntity()).getId();
+    public Long save(List<MultipartFile> imgs, DiaryCreateRequest diaryCreateRequest) throws IOException {
+        Member member=findTargetMember(diaryCreateRequest.memberId());
+        List<String> imgUrls=imageS3Uploader.upload(new ImageUploadRequest(imgs, "diary", member.getNickname())).stream()
+                .map(S3File::fileUrl)
+                .toList();
+
+        Diary diary=diaryCreateRequest.toEntity(imgUrls);
+        return diaryRepository.save(diary).getId();
     }
 
     @Transactional
-    public Long update(Long id, DiaryUpdateRequest updateDTO){
-        Diary diary = diaryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("해당 게시글이 존재하지 않습니다. id = " + id));
+    public Long update(Long id, List<MultipartFile> imgs, DiaryUpdateRequest updateDTO) throws IOException {
+        Member member=findTargetMember(updateDTO.member_id());
+        if(!imgs.isEmpty()){
+            ImageDeleteRequest imgDeleteRequest=new ImageDeleteRequest(
+                    imgs.stream().map(MultipartFile::getOriginalFilename).toList(),
+                    "diary",
+                    member.getNickname());
+            imageS3Uploader.deleteFiles(imgDeleteRequest);
+            imageS3Uploader.upload(new ImageUploadRequest(imgs,"diary",member.getNickname()));
+        }
+        Diary diary = diaryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         diary.updateDiary(updateDTO.toEntity());
         return id;
     }
 
     @Transactional
     public void delete(Long id){
+        Diary diary=diaryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        Member member=findTargetMember(diary.getMemberId());
+        ImageDeleteRequest imgDeleteRequest=new ImageDeleteRequest(
+                diary.getImgUrls(),
+                "diary",
+                member.getNickname());
+
+        imageS3Uploader.deleteFiles(imgDeleteRequest);
         diaryRepository.deleteById(id);
     }
 
@@ -48,24 +72,12 @@ public class DiaryService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<Diary> findOne(Long diaryId){
-
-        Optional<Diary> diary= Optional.ofNullable(diaryRepository.findById(diaryId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id = " + diaryId)));
-        return diary;
+    public Member findTargetMember(Long id){
+        return memberRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
-    @Transactional
-    public List<String> saveImage(List<MultipartFile> img) throws IOException {
-        List<String> url = new ArrayList<String>();
-        try{
-            List<S3File> s3Files = imageS3Uploader.upload(img);
-            for(S3File s3File : s3Files){
-                url.add(s3File.fileUrl());
-            }
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-            throw new FileNotFoundException("이미지 저장 실패");
-        }
-        return url;
+
+    @Transactional(readOnly = true)
+    public Diary findOne(Long diaryId){
+        return diaryRepository.findById(diaryId).orElseThrow(EntityNotFoundException::new);
     }
 }

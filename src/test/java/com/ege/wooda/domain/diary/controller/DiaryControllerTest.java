@@ -1,7 +1,7 @@
 //package com.ege.wooda.controller;
 //
 //import com.ege.wooda.domain.diary.repository.DiaryRepository;
-//import com.ege.wooda.domain.diary.dto.DiaryCreateRequest;
+//import com.ege.wooda.domain.diary.dto.request.DiaryCreateRequest;
 //import org.junit.After;
 //import org.junit.Test;
 //import org.junit.runner.RunWith;
