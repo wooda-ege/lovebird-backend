@@ -72,7 +72,7 @@ class MemberControllerTest {
 
         // when
         ResultActions result = this.mockMvc.perform(
-                multipart("/members")
+                multipart("/api/v0/members")
                         .file(mockImages.get(0))
                         .file(mockImages.get(1))
                         .file(new MockMultipartFile("memberCreateRequest", "", "application/json", contents.getBytes(StandardCharsets.UTF_8)))
@@ -93,8 +93,8 @@ class MemberControllerTest {
                                 fieldWithPath("gender").type(JsonFieldType.STRING).description("수정할 성별")
                         ),
                         responseFields(
-                                fieldWithPath("statusCode").type(JsonFieldType.NUMBER).description("상태 코드"),
-                                fieldWithPath("responseMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
                                 fieldWithPath("data").type(JsonFieldType.NUMBER).description("Member ID")
                         )));
     }
@@ -111,7 +111,7 @@ class MemberControllerTest {
 
         // when
         ResultActions result = this.mockMvc.perform(
-                get("/members/{nickname}", mockNickname)
+                get("/api/v0/members/{nickname}", mockNickname)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON));
 
@@ -123,8 +123,8 @@ class MemberControllerTest {
                         getDocumentResponse(),
                         pathParameters(parameterWithName("nickname").description("닉네임")),
                         responseFields(
-                                fieldWithPath("statusCode").type(JsonFieldType.NUMBER).description("상태 코드"),
-                                fieldWithPath("responseMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("status").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
 
                                 fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
                                 fieldWithPath("data.uuid").type(JsonFieldType.STRING).description("UUID"),
@@ -154,7 +154,7 @@ class MemberControllerTest {
 
         // when
         ResultActions result = this.mockMvc.perform(
-                multipart("/members/{nickname}", mockNickname)
+                multipart("/api/v0/members/{nickname}", mockNickname)
                         .file(mockImages.get(0))
                         .file(mockImages.get(1))
                         .file(new MockMultipartFile("memberUpdateRequest", "", "application/json", contents.getBytes(StandardCharsets.UTF_8)))
@@ -179,8 +179,8 @@ class MemberControllerTest {
                                 fieldWithPath("gender").type(JsonFieldType.STRING).description("수정할 성별")
                         ),
                         responseFields(
-                                fieldWithPath("statusCode").type(JsonFieldType.NUMBER).description("상태 코드"),
-                                fieldWithPath("responseMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("status").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
                                 fieldWithPath("data").type(JsonFieldType.NUMBER).description("Member ID")
                         )));
     }
@@ -193,7 +193,7 @@ class MemberControllerTest {
 
         // when
         ResultActions result = this.mockMvc.perform(
-                delete("/members/{nickname}", mockNickname)
+                delete("/api/v0/members/{nickname}", mockNickname)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON));
 
@@ -207,8 +207,8 @@ class MemberControllerTest {
                                 parameterWithName("nickname").description("닉네임")
                         ),
                         responseFields(
-                                fieldWithPath("statusCode").type(JsonFieldType.NUMBER).description("상태 코드"),
-                                fieldWithPath("responseMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("status").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
                                 fieldWithPath("data").description("NULL")
                         )));
     }

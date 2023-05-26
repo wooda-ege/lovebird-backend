@@ -2,6 +2,8 @@ package com.ege.wooda.global.s3;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
+import com.ege.wooda.global.s3.dto.ImageDeleteRequest;
+import com.ege.wooda.global.s3.dto.ImageUploadRequest;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,18 +23,22 @@ public class ImageS3Uploader  {
 
     private final AmazonS3 amazonS3Client;
 
-    public List<S3File> upload(List<MultipartFile> images) throws IOException {
+    public List<S3File> upload(ImageUploadRequest imageUploadRequest) throws IOException {
         List<S3File> s3Files = new ArrayList<>();
 
-        for (MultipartFile image : images) {
-            String fileName = createFileName(image.getOriginalFilename());
+        for (MultipartFile image : imageUploadRequest.images()) {
+            String fileName = createFileName(
+                    imageUploadRequest.domain(),
+                    imageUploadRequest.username(),
+                    image.getOriginalFilename());
             s3Files.add(new S3File(fileName, putS3(image, fileName, getObjectMetadata(image))));
         }
 
         return s3Files;
     }
 
-    public void deleteFiles(List<String> fileNames) {
+    public void deleteFiles(ImageDeleteRequest imageDeleteRequest) {
+        List<String> fileNames = imageDeleteRequest.getFileNamesWithPath();
         fileNames.forEach(this::deleteFromS3);
     }
 
@@ -58,8 +64,8 @@ public class ImageS3Uploader  {
         return amazonS3Client.getUrl(s3Bucket, fileName).toString();
     }
 
-    private String createFileName(String originalName) {
-        return "diary/" + originalName;
+    private String createFileName(String domain, String username, String originalName) {
+        return "users/" + username + "/" + domain + "/" + originalName;
     }
 
     private ObjectMetadata getObjectMetadata(MultipartFile multipartFile) {

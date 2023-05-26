@@ -483,7 +483,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_request"><a class="link" href="#_request">Request</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ http --multipart POST 'https://www.lovebird-wooda.com/members' \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ http --multipart POST 'https://www.lovebird-wooda.com/api/v0/members' \
     'Accept:application/json' \
     'images'@'male.png' \
     'images'@'female.png' \
@@ -553,13 +553,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_response"><a class="link" href="#_response">Response</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
 Content-Type: application/json
-Content-Length: 71
+Content-Length: 90
 
 {
-  "statusCode" : 201,
-  "responseMessage" : "SUCCESS",
+  "status" : "SUCCESS",
+  "message" : "유저가 등록되었습니다.",
   "data" : 1
 }</code></pre>
 </div>
@@ -579,12 +579,12 @@ Content-Length: 71
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>statusCode</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">상태 코드</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">응답 상태</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>responseMessage</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>message</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">응답 메시지</p></td>
 </tr>
@@ -605,13 +605,13 @@ Content-Length: 71
 <h3 id="_request_2"><a class="link" href="#_request_2">Request</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ http GET 'https://www.lovebird-wooda.com/members/%ED%99%8D%EA%B8%B8%EB%8F%99' \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ http GET 'https://www.lovebird-wooda.com/api/v0/members/%ED%99%8D%EA%B8%B8%EB%8F%99' \
     'Content-Type:application/json' \
     'Accept:application/json'</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. /members/{nickname}</caption>
+<caption class="title">Table 1. /api/v0/members/{nickname}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -636,15 +636,15 @@ Content-Length: 71
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 446
+Content-Length: 473
 
 {
-  "statusCode" : 200,
-  "responseMessage" : "SUCCESS",
+  "status" : "SUCCESS",
+  "message" : "유저 조회에 성공하셨습니다.",
   "data" : {
-    "uuid" : "10d3f9bb-89cd-4dd5-832e-29ffda6e6f71",
+    "uuid" : "9c7f15e5-f71c-4091-a6e1-087aed6e47f7",
     "nickname" : "홍길동",
-    "dDay" : 4,
+    "dDay" : 11,
     "gender" : "MALE",
     "pictureM" : "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/male.png",
     "pictureW" : "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/female.png"
@@ -667,19 +667,19 @@ Content-Length: 446
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>statusCode</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">상태 코드</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">응답 코드</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>responseMessage</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>message</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">응답 메시지</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">응답 메시지</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">응답 데이터</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.uuid</code></p></td>
@@ -723,7 +723,7 @@ Content-Length: 446
 <h3 id="_request_3"><a class="link" href="#_request_3">Request</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ http --multipart PUT 'https://www.lovebird-wooda.com/members/%ED%99%8D%EA%B8%B8%EB%8F%99' \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ http --multipart PUT 'https://www.lovebird-wooda.com/api/v0/members/%ED%99%8D%EA%B8%B8%EB%8F%99' \
     'images'@'male.png' \
     'images'@'female.png' \
     'memberUpdateRequest'='{"nickname":"홍길동","firstDate":"2023-05-15","gender":"MALE"}'</code></pre>
@@ -732,7 +732,7 @@ Content-Length: 446
 <div class="sect3">
 <h4 id="_i_path"><a class="link" href="#_i_path">i) path</a></h4>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. /members/{nickname}</caption>
+<caption class="title">Table 2. /api/v0/members/{nickname}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -816,11 +816,11 @@ Content-Length: 446
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 71
+Content-Length: 97
 
 {
-  "statusCode" : 200,
-  "responseMessage" : "SUCCESS",
+  "status" : "SUCCESS",
+  "message" : "유저 정보가 수정되었습니다.",
   "data" : 1
 }</code></pre>
 </div>
@@ -840,12 +840,12 @@ Content-Length: 71
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>statusCode</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">상태 코드</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">응답 코드</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>responseMessage</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>message</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">응답 메시지</p></td>
 </tr>
@@ -866,13 +866,13 @@ Content-Length: 71
 <h3 id="_request_4"><a class="link" href="#_request_4">Request</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ http DELETE 'https://www.lovebird-wooda.com/members/%ED%99%8D%EA%B8%B8%EB%8F%99' \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ http DELETE 'https://www.lovebird-wooda.com/api/v0/members/%ED%99%8D%EA%B8%B8%EB%8F%99' \
     'Content-Type:application/json' \
     'Accept:application/json'</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. /members/{nickname}</caption>
+<caption class="title">Table 3. /api/v0/members/{nickname}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -897,11 +897,11 @@ Content-Length: 71
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 74
+Content-Length: 100
 
 {
-  "statusCode" : 200,
-  "responseMessage" : "SUCCESS",
+  "status" : "SUCCESS",
+  "message" : "유저 정보가 삭제되었습니다.",
   "data" : null
 }</code></pre>
 </div>
@@ -921,12 +921,12 @@ Content-Length: 74
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>statusCode</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">상태 코드</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">응답 코드</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>responseMessage</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>message</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">응답 메시지</p></td>
 </tr>

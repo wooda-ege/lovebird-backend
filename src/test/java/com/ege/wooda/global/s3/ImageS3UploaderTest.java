@@ -2,6 +2,8 @@ package com.ege.wooda.global.s3;
 
 import com.ege.wooda.global.s3.config.S3MockConfig;
 
+import com.ege.wooda.global.s3.dto.ImageDeleteRequest;
+import com.ege.wooda.global.s3.dto.ImageUploadRequest;
 import io.findify.s3mock.S3Mock;
 import org.junit.After;
 import org.junit.jupiter.api.DisplayName;
@@ -38,29 +40,35 @@ public class ImageS3UploaderTest {
     @DisplayName("S3 이미지 업로드 테스트")
     public void uploadTest() throws IOException {
         // given
-        List<MultipartFile> mockMultipartFiles = getMultipartFiles();
+        ImageUploadRequest imageUploadRequest = new ImageUploadRequest(getMultipartFiles(), "test", "test");
 
         // when
-        List<S3File> savedFiles = imageS3Uploader.upload(mockMultipartFiles);
+        List<S3File> savedFiles = imageS3Uploader.upload(imageUploadRequest);
 
         // then
-        assertEquals(mockMultipartFiles.size(), savedFiles.size());
+        assertEquals(imageUploadRequest.images().size(), savedFiles.size());
     }
 
     @Test
     @DisplayName("S3 이미지 삭제 테스트")
     public void deleteTest() throws IOException {
         // given
-        List<MultipartFile> mockMultipartFiles = getMultipartFiles();
+        ImageUploadRequest imageUploadRequest = new ImageUploadRequest(getMultipartFiles(), "test", "test");
+        ImageDeleteRequest imageDeleteRequest = new ImageDeleteRequest(
+                getMultipartFiles().stream()
+                        .map(MultipartFile::getOriginalFilename)
+                        .toList(),
+                "test",
+                "test");
 
         // when
-        List<String> fileNames = imageS3Uploader.upload(mockMultipartFiles).stream()
+        List<String> fileNames = imageS3Uploader.upload(imageUploadRequest).stream()
                 .map(S3File::fileName)
                 .toList();
 
         // then
         assertThatNoException()
-                .isThrownBy(() -> imageS3Uploader.deleteFiles(fileNames));
+                .isThrownBy(() -> imageS3Uploader.deleteFiles(imageDeleteRequest));
     }
 
     private List<MultipartFile> getMultipartFiles() {
