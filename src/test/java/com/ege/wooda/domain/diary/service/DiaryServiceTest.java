@@ -29,15 +29,14 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 
 @Import(JpaConfig.class)
-@ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
-@DataJpaTest
 public class DiaryServiceTest {
 
     @InjectMocks
@@ -73,7 +72,7 @@ public class DiaryServiceTest {
         List<MultipartFile> mockImgs=getMultipartFiles();
         List<S3File> mockS3File=getS3Files();
 
-        memberRepository.save(mockMember);
+//        memberRepository.save(mockMember);
 
         Diary mockDiary=getDiary(1L, "Test Diary1", "Test diary subtitle1", getLocalDate("2023-05-28"), "place1", "contents1", urls1);
         Long mockId=1L;
@@ -88,16 +87,16 @@ public class DiaryServiceTest {
                 .imgUrls(urls1)
                 .build();
 
-        ReflectionTestUtils.setField(mockDiary,"memberId",mockId);
+        ReflectionTestUtils.setField(mockDiary,"id",mockId);
         given(imageS3Uploader.upload(any()))
                 .willReturn(mockS3File);
         given(diaryRepository.save(any()))
                 .willReturn(mockDiary);
+        given(memberRepository.findById(anyLong()))
+                .willReturn(Optional.of(mockMember));
 
-        System.out.println(memberRepository.findById(mockMember.getId()));
-
-        Long saveDiaryId=diaryService.save(mockImgs, diaryCreateRequest);
-
+        Long saveDiaryId = diaryService.save(mockImgs, diaryCreateRequest);
+        
         assertEquals(saveDiaryId, mockId);
     }
 
