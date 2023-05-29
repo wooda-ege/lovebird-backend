@@ -6,7 +6,7 @@ import lombok.Builder;
 import java.time.LocalDate;
 import java.util.List;
 
-public record DiaryCreateRequest(Long memberId,String title, String sub_title, LocalDate memory_date, String place, String contents){
+public record DiaryCreateRequest(Long memberId,String title, String sub_title, LocalDate memory_date, String place, String contents, List<String> imgUrls){
 
     @Builder
     public DiaryCreateRequest {}

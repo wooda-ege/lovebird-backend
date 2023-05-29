@@ -22,8 +22,7 @@ public class Diary {
     @Column(name="diary_id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name="user_id")
+    @Column(name="user_id")
     private Long memberId;
 
     @Column(name = "title", nullable = false)

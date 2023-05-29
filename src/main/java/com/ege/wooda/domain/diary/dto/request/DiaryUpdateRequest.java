@@ -7,18 +7,18 @@ import lombok.Builder;
 import java.time.LocalDate;
 import java.util.List;
 
-public record DiaryUpdateRequest(@NotBlank Long member_id,
+public record DiaryUpdateRequest(Long member_id,
                                  @NotBlank String title,
                                  @NotBlank String sub_title,
-                                 @NotBlank LocalDate memory_date,
+                                 LocalDate memory_date,
                                  @NotBlank String place,
                                  @NotBlank String contents,
-                                 @NotBlank List imgUrls) {
+                                 List imgUrls) {
 
     @Builder
     public DiaryUpdateRequest {}
 
-    public Diary toEntity(){
+    public Diary toEntity(List<String> imgUrls){
         return Diary.builder()
                 .memberId(member_id)
                 .title(title)
