@@ -2,7 +2,7 @@ package com.ege.wooda.domain.diary.service;
 
 import com.ege.wooda.domain.diary.dto.request.DiaryCreateRequest;
 import com.ege.wooda.domain.diary.repository.DiaryRepository;
-import com.ege.wooda.domain.diary.Diary;
+import com.ege.wooda.domain.diary.domain.Diary;
 import com.ege.wooda.domain.diary.dto.request.DiaryUpdateRequest;
 import com.ege.wooda.domain.member.domain.Member;
 import com.ege.wooda.domain.member.repository.MemberRepository;
@@ -17,10 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,13 +39,15 @@ public class DiaryService {
                     .toList();
         }
         Diary diary=diaryCreateRequest.toEntity(imgUrls);
-        return diaryRepository.save(diary).getId();
+        Diary saveDiary=diaryRepository.save(diary);
+        Long diaryId=saveDiary.getId();
+        return diaryId;
     }
 
     @Transactional
     public Long update(Long id, List<MultipartFile> imgs, DiaryUpdateRequest updateDTO) throws IOException {
         Diary diary = diaryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        Member member=findTargetMember(updateDTO.member_id());
+        Member member=findTargetMember(updateDTO.memberId());
         List<String> imgUrls=new ArrayList<>();
 
         if(!imgs.isEmpty()){
@@ -79,7 +81,8 @@ public class DiaryService {
 
     @Transactional(readOnly = true)
     public List<Diary> findDiaries(){
-        return diaryRepository.findAll();
+        List<Diary> diaryList=diaryRepository.findAll();
+        return diaryList;
     }
 
     @Transactional(readOnly = true)
@@ -89,6 +92,7 @@ public class DiaryService {
 
     @Transactional(readOnly = true)
     public Diary findOne(Long diaryId){
-        return diaryRepository.findById(diaryId).orElseThrow(EntityNotFoundException::new);
+        Diary findDiary=diaryRepository.findById(diaryId).orElseThrow(EntityNotFoundException::new);
+        return findDiary;
     }
 }

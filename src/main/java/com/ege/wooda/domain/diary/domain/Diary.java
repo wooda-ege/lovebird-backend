@@ -1,13 +1,15 @@
-package com.ege.wooda.domain.diary;
+package com.ege.wooda.domain.diary.domain;
 
 import com.ege.wooda.domain.diary.dto.response.DiaryDetailResponse;
 import com.ege.wooda.global.audit.AuditEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -17,7 +19,7 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Diary {
+public class Diary{
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="diary_id")
     private Long id;
@@ -31,6 +33,8 @@ public class Diary {
     @Column(name="sub_title")
     private String subTitle;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name="memory_date", nullable = false)
     private LocalDate memoryDate;
     private String place;

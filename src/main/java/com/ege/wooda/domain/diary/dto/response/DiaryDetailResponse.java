@@ -5,8 +5,7 @@ import lombok.Builder;
 import java.time.LocalDate;
 import java.util.List;
 
-public record DiaryDetailResponse(Long id,
-                                  Long memberId,
+public record DiaryDetailResponse(Long memberId,
                                   String title,
                                   String subTitle,
                                   LocalDate memoryDate,

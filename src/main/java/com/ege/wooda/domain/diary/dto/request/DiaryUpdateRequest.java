@@ -1,16 +1,16 @@
 package com.ege.wooda.domain.diary.dto.request;
 
-import com.ege.wooda.domain.diary.Diary;
+import com.ege.wooda.domain.diary.domain.Diary;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public record DiaryUpdateRequest(Long member_id,
+public record DiaryUpdateRequest(Long memberId,
                                  @NotBlank String title,
-                                 @NotBlank String sub_title,
-                                 LocalDate memory_date,
+                                 @NotBlank String subTitle,
+                                 @NotBlank String memoryDate,
                                  @NotBlank String place,
                                  @NotBlank String contents,
                                  List imgUrls) {
@@ -20,10 +20,10 @@ public record DiaryUpdateRequest(Long member_id,
 
     public Diary toEntity(List<String> imgUrls){
         return Diary.builder()
-                .memberId(member_id)
+                .memberId(memberId)
                 .title(title)
-                .subTitle(sub_title)
-                .memoryDate(memory_date)
+                .subTitle(subTitle)
+                .memoryDate(LocalDate.parse(memoryDate))
                 .place(place)
                 .contents(contents)
                 .imgUrls(imgUrls)

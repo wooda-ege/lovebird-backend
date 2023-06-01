@@ -1,12 +1,14 @@
 package com.ege.wooda.domain.diary.dto.request;
 
-import com.ege.wooda.domain.diary.Diary;
+import com.ege.wooda.domain.diary.domain.Diary;
 import lombok.Builder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public record DiaryCreateRequest(Long memberId,String title, String sub_title, LocalDate memory_date, String place, String contents, List<String> imgUrls){
+public record DiaryCreateRequest(Long memberId,String title, String subTitle, String memoryDate, String place, String contents, List<String> imgUrls){
 
     @Builder
     public DiaryCreateRequest {}
@@ -15,11 +17,18 @@ public record DiaryCreateRequest(Long memberId,String title, String sub_title, L
         return Diary.builder()
                 .memberId(memberId)
                 .title(title)
-                .subTitle(sub_title)
-                .memoryDate(memory_date)
+                .subTitle(subTitle)
+                .memoryDate(getLocalDate(memoryDate))
                 .place(place)
                 .contents(contents)
                 .imgUrls(imgUrls)
                 .build();
+    }
+
+    private LocalDate getLocalDate(String memoryDate) {
+        return LocalDate.parse(memoryDate, DateTimeFormatter.ISO_DATE);
+    }
+    private LocalDateTime getLocalDateTime(String date) {
+        return LocalDateTime.parse(date, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
     }
 }

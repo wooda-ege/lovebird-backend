@@ -1,8 +1,7 @@
 package com.ege.wooda.service;
 
 import com.ege.wooda.domain.diary.repository.DiaryRepository;
-import com.ege.wooda.domain.diary.Diary;
-import com.ege.wooda.domain.diary.service.DiaryService;
+import com.ege.wooda.domain.diary.domain.Diary;
 import com.ege.wooda.global.config.jpa.JpaConfig;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.After;

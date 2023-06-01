@@ -1,6 +1,6 @@
 package com.ege.wooda.domain.diary.repository;
 
-import com.ege.wooda.domain.diary.Diary;
+import com.ege.wooda.domain.diary.domain.Diary;
 import com.ege.wooda.global.config.jpa.JpaConfig;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,6 @@
 package com.ege.wooda.domain.diary.controller;
 
-import com.ege.wooda.domain.diary.Diary;
+import com.ege.wooda.domain.diary.domain.Diary;
 import com.ege.wooda.domain.diary.dto.request.DiaryCreateRequest;
 import com.ege.wooda.domain.diary.dto.response.DiaryDetailResponse;
 import com.ege.wooda.domain.diary.dto.response.DiaryResponseMessage;
@@ -26,9 +26,9 @@ public class DiaryController {
 
     @PostMapping("")
     public ResponseEntity<ApiResponse<Long>> save(
-            @RequestPart(value = "images") List<MultipartFile> imgs,
+            @RequestPart(value = "images", required = false) List<MultipartFile> images,
             @Validated @RequestPart(value = "diaryCreateRequest") DiaryCreateRequest diary) throws IOException {
-        Long id = diaryService.save(imgs, diary);
+        Long id = diaryService.save(images, diary);
         return new ResponseEntity<>(
                 ApiResponse.createSuccessWithData(DiaryResponseMessage.CREATE_DIARY.getMessage(), id),
                 HttpStatus.CREATED);
@@ -44,19 +44,19 @@ public class DiaryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<DiaryDetailResponse>> getOne(@PathVariable Long id) {
-        DiaryDetailResponse diaryDetailResponse = diaryService.findOne(id).toDiaryDetailResponse();
+    public ResponseEntity<ApiResponse<Diary>> getOne(@PathVariable Long id) {
+        Diary diary = diaryService.findOne(id);
 
-        return ResponseEntity.ok(ApiResponse.createSuccessWithData(DiaryResponseMessage.READ_DIARY.getMessage(), diaryDetailResponse));
+        return ResponseEntity.ok(ApiResponse.createSuccessWithData(DiaryResponseMessage.READ_DIARY.getMessage(), diary));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Long>> update(@PathVariable Long id,
-                                                    @RequestPart(value = "imgs") List<MultipartFile> imgs,
+                                                    @RequestPart(value = "images", required = false) List<MultipartFile> images,
                                                     @Validated @RequestPart(value = "diaryUpdateRequest") DiaryUpdateRequest diaryUpdateRequest) throws IOException {
 
-        Long updatedId = diaryService.update(id, imgs, diaryUpdateRequest);
-        return ResponseEntity.ok(ApiResponse.createSuccessWithData(DiaryResponseMessage.UPDATE_DIARY.getMessage(), id));
+        Long updatedId = diaryService.update(id, images, diaryUpdateRequest);
+        return ResponseEntity.ok(ApiResponse.createSuccessWithData(DiaryResponseMessage.UPDATE_DIARY.getMessage(), updatedId));
     }
 
     @DeleteMapping("/{id}")
