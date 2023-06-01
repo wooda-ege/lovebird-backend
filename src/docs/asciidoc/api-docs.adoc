@@ -173,7 +173,7 @@ include::{snippets}/diary-update/path-parameters.adoc[]
 
 ===== iii) diaryUpdateRequest
 
-include::{snippets}/diary-update/request-part-memberUpdateRequest-fields.adoc[]
+include::{snippets}/diary-update/request-part-diaryUpdateRequest-fields.adoc[]
 
 ==== Response
 
