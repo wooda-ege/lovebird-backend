@@ -21,7 +21,6 @@ public class DiaryControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<?>> badRequestExHandler(BindingResult bindingResult){
-        System.out.println(bindingResult.getFieldErrors());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponse.createFailWithData(
