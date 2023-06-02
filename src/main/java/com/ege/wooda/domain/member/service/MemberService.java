@@ -6,8 +6,11 @@ import com.ege.wooda.domain.member.dto.request.MemberUpdateRequest;
 import com.ege.wooda.domain.member.repository.MemberRepository;
 import com.ege.wooda.global.s3.ImageS3Uploader;
 import com.ege.wooda.global.s3.S3File;
+import com.ege.wooda.global.s3.dto.DomainName;
 import com.ege.wooda.global.s3.dto.ImageDeleteRequest;
 import com.ege.wooda.global.s3.dto.ImageUploadRequest;
+import com.ege.wooda.global.s3.fomatter.FileNameFormatter;
+
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -18,54 +21,61 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
     private final ImageS3Uploader s3Uploader;
+    private final FileNameFormatter fileNameFormatter;
 
     @Transactional
     public Long save(List<MultipartFile> images, MemberCreateRequest memberCreateRequest) throws IOException {
-        List<String> imageUrls = s3Uploader.upload(new ImageUploadRequest(images, "profile", memberCreateRequest.nickname())).stream()
-                .map(S3File::fileUrl)
-                .toList();
-        Member member = memberCreateRequest.toEntity(imageUrls);
+        String uuid = getUUID();
+
+        ImageUploadRequest imageUploadRequest = getImageUploadRequest(images, uuid);
+
+        List<String> imageUrls = s3Uploader.upload(imageUploadRequest).stream()
+                                           .map(S3File::fileUrl)
+                                           .toList();
+        Member member = memberCreateRequest.toEntity(imageUrls, getUUID());
 
         return memberRepository.save(member).getId();
     }
 
     @Transactional
+    @CacheEvict(cacheNames = "member", key = "#nickname")
     public Long update(String nickname, List<MultipartFile> images, MemberUpdateRequest memberUpdateRequest) throws IOException {
+        Member member = findMemberByNickname(nickname);
         if(!images.isEmpty()) {
-            ImageDeleteRequest imageDeleteRequest = new ImageDeleteRequest(
-                    images.stream().map(MultipartFile::getOriginalFilename).toList(),
-                    "profile",
-                    memberUpdateRequest.nickname());
+            ImageDeleteRequest imageDeleteRequest = getImageDeleteRequest(member.getUuid());
 
             s3Uploader.deleteFiles(imageDeleteRequest);
-            s3Uploader.upload(new ImageUploadRequest(images, "profile", memberUpdateRequest.nickname()));
+
+            ImageUploadRequest imageUploadRequest = getImageUploadRequest(images, member.getUuid());
+            s3Uploader.upload(imageUploadRequest);
         }
-        Member member = findMemberByNickname(nickname);
+
         member.update(memberUpdateRequest.toEntity());
 
         return member.getId();
     }
 
     @Transactional
-    @CacheEvict(cacheNames = "member")
+    @CacheEvict(cacheNames = "member", key = "#nickname")
     public void delete(String nickname) {
-        ImageDeleteRequest imageDeleteRequest = new ImageDeleteRequest(
-                List.of("male.png", "female.png"),
-                "profile",
-                nickname);
+        Member member = findMemberByNickname(nickname);
+        String uuid = member.getUuid();
+
+        ImageDeleteRequest imageDeleteRequest = getImageDeleteRequest(uuid);
 
         s3Uploader.deleteFiles(imageDeleteRequest);
         memberRepository.delete(findMemberByNickname(nickname));
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = "member")
+    @Cacheable(cacheNames = "member", key = "#nickname", value = "member")
     public Member findMemberByNickname(String nickname) {
         return memberRepository.findMemberByNickname(nickname).orElseThrow(EntityNotFoundException::new);
     }
@@ -73,5 +83,25 @@ public class MemberService {
     @Transactional(readOnly = true)
     public Member findById(Long id) {
         return memberRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    }
+
+    private String getUUID() {
+        return UUID.randomUUID().toString();
+    }
+
+    private ImageUploadRequest getImageUploadRequest(List<MultipartFile> images, String uuid) {
+        return ImageUploadRequest.builder()
+                                 .images(images)
+                                 .imageNames(fileNameFormatter.generateImageNames(images, uuid))
+                                 .domain(DomainName.MEMBER.getDomain())
+                                 .uuid(uuid)
+                                 .build();
+    }
+
+    private ImageDeleteRequest getImageDeleteRequest(String uuid) {
+        return new ImageDeleteRequest(
+                List.of(uuid + "-male.png", uuid + "-female.png"),
+                DomainName.MEMBER.getDomain(),
+                uuid);
     }
 }
