@@ -16,6 +16,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -84,6 +85,7 @@ public class MemberRepositoryTest {
 
     private Member getMember(String nickname, Gender gender, LocalDate firstDate) {
         return Member.builder()
+                .uuid(UUID.randomUUID().toString())
                 .nickname(nickname)
                 .firstDate(firstDate)
                 .gender(gender)

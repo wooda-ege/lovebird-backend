@@ -20,14 +20,13 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 
 import static com.ege.wooda.global.util.ApiDocumentUtils.getDocumentRequest;
 import static com.ege.wooda.global.util.ApiDocumentUtils.getDocumentResponse;
@@ -113,7 +112,8 @@ class MemberControllerTest {
         ResultActions result = this.mockMvc.perform(
                 get("/api/v0/members/{nickname}", mockNickname)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON));
+                        .accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8"));
 
         // then
         result.andExpect(status().is2xxSuccessful())
@@ -215,6 +215,7 @@ class MemberControllerTest {
 
     private Member getMember(String nickname, Gender gender, LocalDate firstDate) {
         return Member.builder()
+                .uuid(UUID.randomUUID().toString())
                 .nickname(nickname)
                 .firstDate(firstDate)
                 .gender(gender)
@@ -237,15 +238,10 @@ class MemberControllerTest {
                 , new MockMultipartFile("images", path2, contentType2, "female".getBytes()));
     }
 
-    public static byte[] convert(List<MultipartFile> files) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        for (MultipartFile file : files) {
-            baos.write(file.getBytes());
-        }
-        return baos.toByteArray();
-    }
-
     private LocalDate getLocalDate(String firstDate) {
         return LocalDate.parse(firstDate, DateTimeFormatter.ISO_DATE);
+    }
+    private LocalDateTime getLocalDateTime(String date) {
+        return LocalDateTime.parse(date, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
     }
 }

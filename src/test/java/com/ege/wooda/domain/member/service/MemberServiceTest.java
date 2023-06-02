@@ -7,6 +7,8 @@ import com.ege.wooda.domain.member.dto.request.MemberUpdateRequest;
 import com.ege.wooda.domain.member.repository.MemberRepository;
 import com.ege.wooda.global.s3.ImageS3Uploader;
 import com.ege.wooda.global.s3.S3File;
+import com.ege.wooda.global.s3.fomatter.FileNameFormatter;
+
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,6 +31,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
@@ -41,6 +44,9 @@ class MemberServiceTest {
 
     @Mock
     private ImageS3Uploader imageS3Uploader;
+
+    @Mock
+    private FileNameFormatter fileNameFormatter;
 
     @AfterEach
     public void cleanup(){
@@ -114,6 +120,7 @@ class MemberServiceTest {
 
         ReflectionTestUtils.setField(mockMember, "nickname", mockNickname);
         given(memberRepository.findMemberByNickname(anyString()))
+                .willReturn(Optional.empty())
                 .willReturn(Optional.of(mockMember));
 
         // when

@@ -40,7 +40,8 @@ public class ImageS3UploaderTest {
     @DisplayName("S3 이미지 업로드 테스트")
     public void uploadTest() throws IOException {
         // given
-        ImageUploadRequest imageUploadRequest = new ImageUploadRequest(getMultipartFiles(), "test", "test");
+        List<MultipartFile> mockFiles = getMultipartFiles();
+        ImageUploadRequest imageUploadRequest = new ImageUploadRequest(mockFiles, getImageNames(mockFiles), "test", "test");
 
         // when
         List<S3File> savedFiles = imageS3Uploader.upload(imageUploadRequest);
@@ -53,7 +54,8 @@ public class ImageS3UploaderTest {
     @DisplayName("S3 이미지 삭제 테스트")
     public void deleteTest() throws IOException {
         // given
-        ImageUploadRequest imageUploadRequest = new ImageUploadRequest(getMultipartFiles(), "test", "test");
+        List<MultipartFile> mockFiles = getMultipartFiles();
+        ImageUploadRequest imageUploadRequest = new ImageUploadRequest(mockFiles, getImageNames(mockFiles), "test", "test");
         ImageDeleteRequest imageDeleteRequest = new ImageDeleteRequest(
                 getMultipartFiles().stream()
                         .map(MultipartFile::getOriginalFilename)
@@ -69,6 +71,12 @@ public class ImageS3UploaderTest {
         // then
         assertThatNoException()
                 .isThrownBy(() -> imageS3Uploader.deleteFiles(imageDeleteRequest));
+    }
+
+    private List<String> getImageNames(List<MultipartFile> files) {
+        return files.stream()
+                    .map(MultipartFile::getOriginalFilename)
+                    .toList();
     }
 
     private List<MultipartFile> getMultipartFiles() {

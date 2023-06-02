@@ -4,6 +4,9 @@ import com.ege.wooda.domain.diary.domain.Diary;
 import com.ege.wooda.domain.diary.dto.request.DiaryCreateRequest;
 import com.ege.wooda.domain.diary.dto.request.DiaryUpdateRequest;
 import com.ege.wooda.domain.diary.service.DiaryService;
+import com.ege.wooda.domain.member.domain.Gender;
+import com.ege.wooda.domain.member.domain.Member;
+import com.ege.wooda.domain.member.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -20,10 +23,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -31,6 +31,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static com.ege.wooda.global.util.ApiDocumentUtils.getDocumentRequest;
 import static com.ege.wooda.global.util.ApiDocumentUtils.getDocumentResponse;
@@ -59,10 +60,16 @@ public class DiaryControllerTest {
     @MockBean
     private DiaryService diaryService;
 
+    @MockBean
+    private MemberService memberService;
+
     @Test
     @DisplayName("Diary를 생성한다.")
     public void add() throws Exception {
-        List<String> urls = getImageUrls("홍길동");
+        // given
+        String mockNickname = "홍길동";
+        Member mockMember = getMember(mockNickname, Gender.MALE, getLocalDate("2023-05-15"));
+        List<String> urls = getImageUrls(mockNickname);
         List<MockMultipartFile> mockImgs = getMultipartFiles();
 
         DiaryCreateRequest diaryCreateRequest = DiaryCreateRequest.builder()
@@ -76,8 +83,10 @@ public class DiaryControllerTest {
                 .build();
         String request = objectMapper.writeValueAsString(diaryCreateRequest);
 
-        given(diaryService.save(anyList(), any()))
+        given(diaryService.save(anyList(), any(), anyString()))
                 .willReturn(1L);
+        given(memberService.findById(anyLong()))
+                .willReturn(mockMember);
 
         ResultActions result = this.mockMvc.perform(
                 multipart("/api/v0/diaries")
@@ -94,7 +103,6 @@ public class DiaryControllerTest {
                 .andDo(document("diary-add",
                         getDocumentRequest(),
                         getDocumentResponse(),
-                        //requestPartBody("images"),
                         requestPartFields("diaryCreateRequest",
                                 fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("Member Id"),
                                 fieldWithPath("title").type(JsonFieldType.STRING).description("title"),
@@ -171,7 +179,7 @@ public class DiaryControllerTest {
         ReflectionTestUtils.setField(mockDiary.getAuditEntity(),"createdAt",getLocalDateTime("2023-06-01T19:02:14"));
         ReflectionTestUtils.setField(mockDiary.getAuditEntity(),"updatedAt",getLocalDateTime("2023-06-01T19:02:14"));
 
-        given(diaryService.findOne(anyLong()))
+        given(diaryService.findById(anyLong()))
                 .willReturn(mockDiary);
 
         ResultActions result = this.mockMvc.perform(
@@ -206,7 +214,10 @@ public class DiaryControllerTest {
     @Test
     @DisplayName("해당 id의 Diary 정보를 수정한다.")
     public void modify() throws Exception {
-        List<String> urls = getImageUrls("홍길동");
+        // given
+        String mockNickname = "홍길동";
+        Member mockMember = getMember(mockNickname, Gender.MALE, getLocalDate("2023-05-15"));
+        List<String> urls = getImageUrls(mockNickname);
         List<MockMultipartFile> mockImgs = getMultipartFiles();
 
         DiaryUpdateRequest diaryUpdateRequest = DiaryUpdateRequest.builder()
@@ -225,9 +236,11 @@ public class DiaryControllerTest {
 
         ReflectionTestUtils.setField(mockDiary,"id",mockId);
 
-        given(diaryService.findOne(2L))
+        given(memberService.findById(anyLong()))
+                .willReturn(mockMember);
+        given(diaryService.findById(2L))
                 .willReturn(mockDiary);
-        given(diaryService.update(anyLong(), anyList(), any()))
+        given(diaryService.update(anyLong(), anyList(), any(), anyString()))
                 .willReturn(2L);
 
         ResultActions result = this.mockMvc.perform(
@@ -269,11 +282,16 @@ public class DiaryControllerTest {
     @Test
     @DisplayName("특정 다이어리를 삭제한다.")
     public void remove() throws Exception{
+        // given
+        String mockNickname = "홍길동";
+        Member mockMember = getMember(mockNickname, Gender.MALE, getLocalDate("2023-05-15"));
         List<String> urls = getImageUrls("홍길동");
         Diary mockDiary = getDiary(2L, "Test Diary2", "Test diary subtitle2", getLocalDate("2023-05-30"), "place2", "contents2", urls);
         Long mockId = 2L;
 
-        given(diaryService.findOne(anyLong()))
+        given(memberService.findById(anyLong()))
+                .willReturn(mockMember);
+        given(diaryService.findById(anyLong()))
                 .willReturn(mockDiary);
 
         ResultActions result = this.mockMvc.perform(
@@ -330,12 +348,19 @@ public class DiaryControllerTest {
         return List.of(url1,url2);
     }
 
-    public static byte[] convert(List<MultipartFile> files) throws IOException {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        for (MultipartFile f : files) {
-            bos.write(f.getBytes());
-        }
-        return bos.toByteArray();
+    private Member getMember(String nickname, Gender gender, LocalDate firstDate) {
+        return Member.builder()
+                     .uuid(UUID.randomUUID().toString())
+                     .nickname(nickname)
+                     .firstDate(firstDate)
+                     .gender(gender)
+                     .pictureM("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&prefix=member/"
+                               + nickname
+                               + "/male.png")
+                     .pictureW("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&prefix=member/"
+                               + nickname
+                               + "/female.png")
+                     .build();
     }
 
     private LocalDate getLocalDate(String memoryDate) {

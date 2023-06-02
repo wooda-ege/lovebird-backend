@@ -11,6 +11,8 @@ import com.ege.wooda.domain.member.service.MemberService;
 import com.ege.wooda.global.config.jpa.JpaConfig;
 import com.ege.wooda.global.s3.ImageS3Uploader;
 import com.ege.wooda.global.s3.S3File;
+import com.ege.wooda.global.s3.fomatter.FileNameFormatter;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,11 +32,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
 
 @Import(JpaConfig.class)
 @ExtendWith(MockitoExtension.class)
@@ -47,17 +49,13 @@ public class DiaryServiceTest {
     private DiaryRepository diaryRepository;
 
     @Mock
-    private MemberService memberService;
-
-    @Mock
-    private MemberRepository memberRepository;
-
-    @Mock
     private ImageS3Uploader imageS3Uploader;
+
+    @Mock
+    private FileNameFormatter fileNameFormatter;
 
     @AfterEach
     public void cleanup() {
-        memberRepository.deleteAll();
         diaryRepository.deleteAll();
     }
 
@@ -89,11 +87,9 @@ public class DiaryServiceTest {
                 .willReturn(mockS3File);
         given(diaryRepository.save(any()))
                 .willReturn(mockDiary);
-        when(memberService.findById(1L))
-                .thenReturn(mockMember);
 
-        Long saveDiaryId = diaryService.save(mockImgs, diaryCreateRequest);
-        
+        Long saveDiaryId = diaryService.save(mockImgs, diaryCreateRequest, getUUID());
+
         assertEquals(saveDiaryId, mockId);
     }
 
@@ -127,7 +123,7 @@ public class DiaryServiceTest {
         given(diaryRepository.findById(anyLong()))
                 .willReturn(Optional.of(mockDiary));
 
-        Diary findDiary=diaryService.findOne(mockId);
+        Diary findDiary=diaryService.findById(mockId);
 
         assertEquals(findDiary,mockDiary);
 
@@ -136,13 +132,10 @@ public class DiaryServiceTest {
     @Test
     @DisplayName("Diary 정보를 수정하면 해당 Diary의 ID가 반환된다.")
     public void update() throws IOException{
+        // given
         List<String> urls2 = getImageUrls("홍길동");
-
         Diary mockDiary=getDiary(2L, "Test Diary2", "Test diary subtitle2", getLocalDate("2023-05-30"), "place2", "contents2",urls2);
         Long mockId=3L;
-
-        Member mockMember = getMember("홍길동", Gender.MALE, getLocalDate("2023-05-09"));
-
         String updateTitle="Test Diary3";
 
         List<MultipartFile> mockImgs=getMultipartFiles();
@@ -155,34 +148,30 @@ public class DiaryServiceTest {
 
         ReflectionTestUtils.setField(mockDiary,"id",mockId);
 
-        when(memberService.findById(2L))
-                .thenReturn(mockMember);
-        given(diaryRepository.findById(any()))
+        given(diaryRepository.findById(anyLong()))
                 .willReturn(Optional.of(mockDiary));
 
-        Long updateId=diaryService.update(mockId, mockImgs, diaryUpdateRequest);
-        Long updatedMemberId=diaryService.findOne(mockId).getMemberId();
+        // when
+        Long updateId = diaryService.update(mockId, mockImgs, diaryUpdateRequest, getUUID());
 
-        assertEquals(updatedMemberId,mockMember.getId());
-
+        // then
+        Long findId = diaryService.findById(mockId).getId();
+        assertEquals(updateId, findId);
     }
 
     @Test
     @DisplayName("Diary를 삭제하면 해당 ID가 반환된다.")
     public void delete(){
+        // given
         List<String> urls2 = getImageUrls("홍길동");
-
         Diary mockDiary=getDiary(2L, "Test Diary2", "Test diary subtitle2", getLocalDate("2023-05-30"), "place2", "contents2",urls2);
         Long mockId=2L;
 
-        Member mockMember = getMember("홍길동", Gender.MALE, getLocalDate("2023-05-09"));
-
-        when(memberService.findById(2L))
-                .thenReturn(mockMember);
         given(diaryRepository.findById(anyLong()))
                 .willReturn(Optional.of(mockDiary));
 
-        assertDoesNotThrow(()->diaryService.delete(mockId));
+        // then
+        assertDoesNotThrow(()->diaryService.delete(mockId, getUUID()));
     }
 
     private Member getMember(String nickname, Gender gender, LocalDate firstDate) {
@@ -248,5 +237,9 @@ public class DiaryServiceTest {
 
     private LocalDate getLocalDate(String date) {
         return LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
+    }
+
+    private String getUUID() {
+        return UUID.randomUUID().toString();
     }
 }
