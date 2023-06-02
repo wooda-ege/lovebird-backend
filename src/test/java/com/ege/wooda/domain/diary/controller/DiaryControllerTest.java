@@ -62,10 +62,7 @@ public class DiaryControllerTest {
     @Test
     @DisplayName("Diary를 생성한다.")
     public void add() throws Exception {
-        List<String> urls = new ArrayList<String>();
-        urls.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/1-1.png");
-        urls.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/1-2.png");
-
+        List<String> urls = getImageUrls("홍길동");
         List<MockMultipartFile> mockImgs = getMultipartFiles();
 
         DiaryCreateRequest diaryCreateRequest = DiaryCreateRequest.builder()
@@ -166,10 +163,7 @@ public class DiaryControllerTest {
     @Test
     @DisplayName("해당 diary Id에 해당하는 Diary를 조회한다.")
     public void findById() throws Exception {
-        List<String> urls = new ArrayList<String>();
-        urls.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/1-1.png");
-        urls.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/1-2.png");
-
+        List<String> urls = getImageUrls("홍길동");
         Diary mockDiary = getDiary(2L, "Test Diary2", "Test diary subtitle2", getLocalDate("2023-05-30"), "place2", "contents2", urls);
         Long mockId = 2L;
 
@@ -212,10 +206,7 @@ public class DiaryControllerTest {
     @Test
     @DisplayName("해당 id의 Diary 정보를 수정한다.")
     public void modify() throws Exception {
-        List<String> urls = new ArrayList<String>();
-        urls.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/1-1.png");
-        urls.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/1-2.png");
-
+        List<String> urls = getImageUrls("홍길동");
         List<MockMultipartFile> mockImgs = getMultipartFiles();
 
         DiaryUpdateRequest diaryUpdateRequest = DiaryUpdateRequest.builder()
@@ -278,10 +269,7 @@ public class DiaryControllerTest {
     @Test
     @DisplayName("특정 다이어리를 삭제한다.")
     public void remove() throws Exception{
-        List<String> urls = new ArrayList<String>();
-        urls.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/1-1.png");
-        urls.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/1-2.png");
-
+        List<String> urls = getImageUrls("홍길동");
         Diary mockDiary = getDiary(2L, "Test Diary2", "Test diary subtitle2", getLocalDate("2023-05-30"), "place2", "contents2", urls);
         Long mockId = 2L;
 
@@ -320,17 +308,9 @@ public class DiaryControllerTest {
                 .build();
     }
 
-
     private List<Diary> getDiaryList(){
-        List<String> urls1 = new ArrayList<String>();
-        urls1.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/1-1.png");
-        urls1.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/1-2.png");
-
-        List<String> urls2 = new ArrayList<String>();
-        urls2.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/여혜민/2-1.png");
-        urls2.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/여혜민/2-2.png");
-        urls2.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/여혜민/2-3.png");
-
+        List<String> urls1 = getImageUrls("홍길동");
+        List<String> urls2 = getImageUrls("여혜민");
         return List.of(getDiary(1L, "Test Diary1", "Test diary subtitle1", getLocalDate("2023-06-01"), "place1", "contents1", urls1)
                 ,getDiary(2L, "Test Diary2", "Test diary subtitle2", getLocalDate("2023-06-01"), "place2", "contents2", urls2)
                 ,getDiary(3L, "Test Diary3", "Test diary subtitle3", getLocalDate("2023-06-01"), "place3", "contents3", urls2));
@@ -341,6 +321,13 @@ public class DiaryControllerTest {
         String path2 = "1-2.png";
 
         return List.of(new MockMultipartFile("1-1", path1, "image/png", "1-1".getBytes()), new MockMultipartFile("1-2", path2, "image/png", "1-2".getBytes()));
+    }
+
+    private List<String> getImageUrls(String name){
+        String url1="https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/"+name+"/1-1.png";
+        String url2="https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/"+name+"/1-2.png";
+
+        return List.of(url1,url2);
     }
 
     public static byte[] convert(List<MultipartFile> files) throws IOException {

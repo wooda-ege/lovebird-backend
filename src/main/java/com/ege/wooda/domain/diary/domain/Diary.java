@@ -37,6 +37,8 @@ public class Diary{
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name="memory_date", nullable = false)
     private LocalDate memoryDate;
+
+    @Column(name = "place")
     private String place;
 
     @Column(name = "contents")

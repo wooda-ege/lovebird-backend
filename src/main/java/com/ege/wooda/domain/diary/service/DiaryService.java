@@ -6,6 +6,7 @@ import com.ege.wooda.domain.diary.domain.Diary;
 import com.ege.wooda.domain.diary.dto.request.DiaryUpdateRequest;
 import com.ege.wooda.domain.member.domain.Member;
 import com.ege.wooda.domain.member.repository.MemberRepository;
+import com.ege.wooda.domain.member.service.MemberService;
 import com.ege.wooda.global.s3.ImageS3Uploader;
 import com.ege.wooda.global.s3.S3File;
 import com.ege.wooda.global.s3.dto.ImageDeleteRequest;
@@ -17,8 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,12 +25,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DiaryService {
     private final DiaryRepository diaryRepository;
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
     private final ImageS3Uploader imageS3Uploader;
 
     @Transactional
     public Long save(List<MultipartFile> imgs, DiaryCreateRequest diaryCreateRequest) throws IOException {
-        Member member=findTargetMember(diaryCreateRequest.memberId());
+        Member member=memberService.findById(diaryCreateRequest.memberId());
         List<String> imgUrls=new ArrayList<>();
         if(!imgs.isEmpty()){
             imgUrls=imageS3Uploader.upload(new ImageUploadRequest(imgs, "diary", member.getNickname())).stream()
@@ -47,7 +46,7 @@ public class DiaryService {
     @Transactional
     public Long update(Long id, List<MultipartFile> imgs, DiaryUpdateRequest updateDTO) throws IOException {
         Diary diary = diaryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        Member member=findTargetMember(updateDTO.memberId());
+        Member member=memberService.findById(diary.getMemberId());
         List<String> imgUrls=new ArrayList<>();
 
         if(!imgs.isEmpty()){
@@ -68,7 +67,7 @@ public class DiaryService {
     @Transactional
     public void delete(Long id){
         Diary diary=diaryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        Member member=findTargetMember(diary.getMemberId());
+        Member member=memberService.findById(diary.getMemberId());
 
         ImageDeleteRequest imgDeleteRequest=new ImageDeleteRequest(
                 diary.getImgUrls().stream().map(s-> s.substring(s.lastIndexOf("/")+1)).toList(),
@@ -83,11 +82,6 @@ public class DiaryService {
     public List<Diary> findDiaries(){
         List<Diary> diaryList=diaryRepository.findAll();
         return diaryList;
-    }
-
-    @Transactional(readOnly = true)
-    public Member findTargetMember(Long id){
-        return memberRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     @Transactional(readOnly = true)

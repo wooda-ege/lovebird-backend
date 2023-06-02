@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,11 +33,7 @@ public class DiaryRepositoryTest {
     @DisplayName("새 다이어리 글을 생성한다")
     public void save(){
         //Diary diary
-        List<String> urls2 = new ArrayList<>();
-        urls2.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/여혜민/1-1.png");
-        urls2.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/여혜민/1-2.png");
-        urls2.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/여혜민/1-3.png");
-
+        List<String> urls2 = getImageUrls("여혜민");
         Diary diary=getDiary(2L, "Test Diary2", "Test diary subtitle2", LocalDate.now(), "place2", "contents2", urls2);
         diaryRepository.save(diary);
 
@@ -93,17 +88,17 @@ public class DiaryRepositoryTest {
     }
 
     private List<Diary> getDiaryList(){
-        List<String> urls1 = new ArrayList<String>();
-        urls1.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/1-1.png");
-        urls1.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/1-2.png");
-
-        List<String> urls2 = new ArrayList<String>();
-        urls2.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/여혜민/1-1.png");
-        urls2.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/여혜민/1-2.png");
-        urls2.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/여혜민/1-3.png");
-
+        List<String> urls1 = getImageUrls("홍길동");
+        List<String> urls2 = getImageUrls("여혜민");
         return List.of(getDiary(1L, "Test Diary1", "Test diary subtitle1", LocalDate.now(), "place1", "contents1", urls1)
         ,getDiary(2L, "Test Diary2", "Test diary subtitle2", LocalDate.now(), "place2", "contents2", urls2)
         ,getDiary(2L, "Test Diary3", "Test diary subtitle3", LocalDate.now(), "place3", "contents3", urls2));
+    }
+
+    private List<String> getImageUrls(String name){
+        String url1="https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/"+name+"/1-1.png";
+        String url2="https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/"+name+"/1-2.png";
+
+        return List.of(url1,url2);
     }
 }

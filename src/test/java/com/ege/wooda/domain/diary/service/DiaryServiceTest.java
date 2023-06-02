@@ -34,6 +34,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 
 @Import(JpaConfig.class)
 @ExtendWith(MockitoExtension.class)
@@ -45,7 +46,7 @@ public class DiaryServiceTest {
     @Mock
     private DiaryRepository diaryRepository;
 
-    @InjectMocks
+    @Mock
     private MemberService memberService;
 
     @Mock
@@ -62,10 +63,8 @@ public class DiaryServiceTest {
 
     @Test
     @DisplayName("Diary를 생성하면 해당 Diary의 ID를 반환한다.")
-    public void save() throws IOException{
-        List<String> urls1 = new ArrayList<>();
-        urls1.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/1-1.png");
-        urls1.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/1-2.png");
+    public void save() throws Exception{
+        List<String> urls1 = getImageUrls("홍길동");
 
         Member mockMember = getMember("홍길동", Gender.MALE, getLocalDate("2023-05-09"));
 
@@ -90,8 +89,8 @@ public class DiaryServiceTest {
                 .willReturn(mockS3File);
         given(diaryRepository.save(any()))
                 .willReturn(mockDiary);
-        given(memberRepository.findById(anyLong()))
-                .willReturn(Optional.of(mockMember));
+        when(memberService.findById(1L))
+                .thenReturn(mockMember);
 
         Long saveDiaryId = diaryService.save(mockImgs, diaryCreateRequest);
         
@@ -119,9 +118,7 @@ public class DiaryServiceTest {
     @Test
     @DisplayName("Diary의 ID를 통해 Diary를 반환한다.")
     public void findById(){
-        List<String> urls2 = new ArrayList<>();
-        urls2.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/2-1.png");
-        urls2.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/2-2.png");
+        List<String> urls2 = getImageUrls("홍길동");
 
         Diary mockDiary=getDiary(2L, "Test Diary2", "Test diary subtitle2", getLocalDate("2023-05-30"), "place2", "contents2",urls2);
         Long mockId=2L;
@@ -139,56 +136,49 @@ public class DiaryServiceTest {
     @Test
     @DisplayName("Diary 정보를 수정하면 해당 Diary의 ID가 반환된다.")
     public void update() throws IOException{
-        List<String> urls2 = new ArrayList<>();
-        urls2.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/2-1.png");
-        urls2.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/2-2.png");
+        List<String> urls2 = getImageUrls("홍길동");
 
         Diary mockDiary=getDiary(2L, "Test Diary2", "Test diary subtitle2", getLocalDate("2023-05-30"), "place2", "contents2",urls2);
-        Long mockId=2L;
+        Long mockId=3L;
 
         Member mockMember = getMember("홍길동", Gender.MALE, getLocalDate("2023-05-09"));
 
-        Long updateMemberId=3L;
         String updateTitle="Test Diary3";
 
         List<MultipartFile> mockImgs=getMultipartFiles();
         List<S3File> mockS3File=getS3Files();
 
         DiaryUpdateRequest diaryUpdateRequest=DiaryUpdateRequest.builder()
-                .memberId(updateMemberId)
                 .title(updateTitle)
                 .memoryDate("2023-06-01")
                 .build();
 
         ReflectionTestUtils.setField(mockDiary,"id",mockId);
 
-        given(memberRepository.findById(anyLong()))
-                .willReturn(Optional.of(mockMember));
+        when(memberService.findById(2L))
+                .thenReturn(mockMember);
         given(diaryRepository.findById(any()))
                 .willReturn(Optional.of(mockDiary));
 
         Long updateId=diaryService.update(mockId, mockImgs, diaryUpdateRequest);
         Long updatedMemberId=diaryService.findOne(mockId).getMemberId();
-        Long findId=diaryService.findOne(mockId).getMemberId();
 
-        assertEquals(updatedMemberId,findId);
+        assertEquals(updatedMemberId,mockMember.getId());
 
     }
 
     @Test
     @DisplayName("Diary를 삭제하면 해당 ID가 반환된다.")
     public void delete(){
-        List<String> urls2 = new ArrayList<>();
-        urls2.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/2-1.png");
-        urls2.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/2-2.png");
+        List<String> urls2 = getImageUrls("홍길동");
 
         Diary mockDiary=getDiary(2L, "Test Diary2", "Test diary subtitle2", getLocalDate("2023-05-30"), "place2", "contents2",urls2);
         Long mockId=2L;
 
         Member mockMember = getMember("홍길동", Gender.MALE, getLocalDate("2023-05-09"));
 
-        given(memberRepository.findById(anyLong()))
-                .willReturn(Optional.of(mockMember));
+        when(memberService.findById(2L))
+                .thenReturn(mockMember);
         given(diaryRepository.findById(anyLong()))
                 .willReturn(Optional.of(mockDiary));
 
@@ -218,18 +208,20 @@ public class DiaryServiceTest {
     }
 
     private List<Diary> getDiaryList(){
-        List<String> urls1 = new ArrayList<String>();
-        urls1.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/1-1.png");
-        urls1.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/1-2.png");
+        List<String> urls1 = getImageUrls("홍길동");
 
-        List<String> urls2 = new ArrayList<String>();
-        urls2.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/여혜민/2-1.png");
-        urls2.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/여혜민/2-2.png");
-        urls2.add("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/여혜민/2-3.png");
+        List<String> urls2 = getImageUrls("여혜민");
 
         return List.of(getDiary(1L, "Test Diary1", "Test diary subtitle1", getLocalDate("2023-06-01"), "place1", "contents1", urls1)
                 ,getDiary(2L, "Test Diary2", "Test diary subtitle2", getLocalDate("2023-06-01"), "place2", "contents2", urls2)
                 ,getDiary(3L, "Test Diary3", "Test diary subtitle3", getLocalDate("2023-06-01"), "place3", "contents3", urls2));
+    }
+
+    private List<String> getImageUrls(String name){
+        String url1="https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/"+name+"/1-1.png";
+        String url2="https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/"+name+"/1-2.png";
+
+        return new ArrayList<>(List.of(url1,url2));
     }
 
     private List<MultipartFile> getMemberMultipartFiles() {
