@@ -13,13 +13,16 @@ import com.ege.wooda.global.s3.fomatter.FileNameFormatter;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,6 +35,7 @@ public class MemberService {
 
     @Transactional
     public Long save(List<MultipartFile> images, MemberCreateRequest memberCreateRequest) throws IOException {
+        checkDuplicatedNickname(memberCreateRequest.nickname());
         String uuid = getUUID();
 
         ImageUploadRequest imageUploadRequest = getImageUploadRequest(images, uuid);
@@ -47,6 +51,8 @@ public class MemberService {
     @Transactional
     @CacheEvict(cacheNames = "member", key = "#nickname")
     public Long update(String nickname, List<MultipartFile> images, MemberUpdateRequest memberUpdateRequest) throws IOException {
+        checkDuplicatedNickname(memberUpdateRequest.nickname());
+
         Member member = findMemberByNickname(nickname);
         if(!images.isEmpty()) {
             ImageDeleteRequest imageDeleteRequest = getImageDeleteRequest(member.getUuid());
@@ -87,6 +93,16 @@ public class MemberService {
 
     private String getUUID() {
         return UUID.randomUUID().toString();
+    }
+
+    public void checkDuplicatedNickname(String nickname) {
+        memberRepository.findMemberByNickname(nickname).ifPresent(member -> {
+            try {
+                throw new SQLIntegrityConstraintViolationException();
+            } catch (SQLIntegrityConstraintViolationException e) {
+                throw new DataIntegrityViolationException(e.getMessage());
+            }
+        });
     }
 
     private ImageUploadRequest getImageUploadRequest(List<MultipartFile> images, String uuid) {
