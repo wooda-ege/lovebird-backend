@@ -6,7 +6,7 @@ import java.util.List;
 
 public record ImageDeleteRequest(@NotBlank List<String> fileNames,
                                  @NotBlank String domain,
-                                 @NotBlank String username) {
+                                 @NotBlank String uuid) {
 
     public ImageDeleteRequest {}
 
@@ -17,6 +17,6 @@ public record ImageDeleteRequest(@NotBlank List<String> fileNames,
     }
 
     private String getPath(String fileName) {
-        return "users/" + username + "/" + domain + "/" + fileName;
+        return "users/" + uuid + "/" + domain + "/" + fileName;
     }
 }

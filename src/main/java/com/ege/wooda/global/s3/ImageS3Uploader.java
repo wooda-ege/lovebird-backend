@@ -4,8 +4,10 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import com.ege.wooda.global.s3.dto.ImageDeleteRequest;
 import com.ege.wooda.global.s3.dto.ImageUploadRequest;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,7 +18,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Component
-public class ImageS3Uploader  {
+public class ImageS3Uploader {
     @Value("${cloud.aws.s3-bucket}")
     @Getter
     private String s3Bucket;
@@ -26,11 +28,13 @@ public class ImageS3Uploader  {
     public List<S3File> upload(ImageUploadRequest imageUploadRequest) throws IOException {
         List<S3File> s3Files = new ArrayList<>();
 
-        for (MultipartFile image : imageUploadRequest.images()) {
+        for (int i = 0; i < imageUploadRequest.images().size(); i++) {
+            MultipartFile image = imageUploadRequest.images().get(i);
+
             String fileName = createFileName(
                     imageUploadRequest.domain(),
-                    imageUploadRequest.username(),
-                    image.getOriginalFilename());
+                    imageUploadRequest.uuid(),
+                    imageUploadRequest.imageNames().get(i));
             s3Files.add(new S3File(fileName, putS3(image, fileName, getObjectMetadata(image))));
         }
 
@@ -48,12 +52,13 @@ public class ImageS3Uploader  {
     }
 
     private void validateFromS3(String fileName) {
-        if(!amazonS3Client.doesObjectExist(s3Bucket, fileName)) {
+        if (!amazonS3Client.doesObjectExist(s3Bucket, fileName)) {
             throw new AmazonS3Exception("Object " + fileName + " does not exist");
         }
     }
 
-    private String putS3(MultipartFile multipartFile, String fileName, ObjectMetadata objectMetadata) throws IOException {
+    private String putS3(MultipartFile multipartFile, String fileName, ObjectMetadata objectMetadata)
+            throws IOException {
         amazonS3Client.putObject(
                 new PutObjectRequest(s3Bucket, fileName, multipartFile.getInputStream(), objectMetadata)
                         .withCannedAcl(CannedAccessControlList.PublicRead));
@@ -64,8 +69,8 @@ public class ImageS3Uploader  {
         return amazonS3Client.getUrl(s3Bucket, fileName).toString();
     }
 
-    private String createFileName(String domain, String username, String originalName) {
-        return "users/" + username + "/" + domain + "/" + originalName;
+    private String createFileName(String domain, String uuid, String fileName) {
+        return "users/" + uuid + "/" + domain + "/" + fileName;
     }
 
     private ObjectMetadata getObjectMetadata(MultipartFile multipartFile) {
