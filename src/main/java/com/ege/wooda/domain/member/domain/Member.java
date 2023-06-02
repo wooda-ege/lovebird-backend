@@ -47,8 +47,8 @@ public class Member {
     private AuditEntity auditEntity;
 
     @Builder
-    public Member(String nickname, LocalDate firstDate, Gender gender, String pictureM, String pictureW) {
-        this.uuid = UUID.randomUUID().toString();
+    public Member(String uuid, String nickname, LocalDate firstDate, Gender gender, String pictureM, String pictureW) {
+        this.uuid = uuid;
         this.nickname = nickname;
         this.firstDate = firstDate;
         this.gender = gender;

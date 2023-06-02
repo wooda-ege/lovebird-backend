@@ -15,8 +15,9 @@ public record MemberCreateRequest(@NotBlank String nickname,
     @Builder
     public MemberCreateRequest {}
 
-    public Member toEntity(List<String> imageUrls) {
+    public Member toEntity(List<String> imageUrls, String uuid) {
         return Member.builder()
+                .uuid(uuid)
                 .nickname(nickname)
                 .firstDate(LocalDate.parse(firstDate))
                 .gender(StringUtils.equals(gender, "MALE") ? Gender.MALE : Gender.FEMALE)
