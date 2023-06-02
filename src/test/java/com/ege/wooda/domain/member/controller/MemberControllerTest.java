@@ -6,6 +6,7 @@ import com.ege.wooda.domain.member.dto.request.MemberCreateRequest;
 import com.ege.wooda.domain.member.dto.request.MemberUpdateRequest;
 import com.ege.wooda.domain.member.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -60,10 +61,10 @@ class MemberControllerTest {
         // given
         List<MockMultipartFile> mockImages = getMultipartFiles();
         MemberCreateRequest memberCreateRequest = MemberCreateRequest.builder()
-                .nickname("홍길동")
-                .firstDate("2023-05-15")
-                .gender("MALE")
-                .build();
+                                                                     .nickname("홍길동")
+                                                                     .firstDate("2023-05-15")
+                                                                     .gender("MALE")
+                                                                     .build();
         String contents = objectMapper.writeValueAsString(memberCreateRequest);
 
         given(memberService.save(anyList(), any()))
@@ -74,28 +75,32 @@ class MemberControllerTest {
                 multipart("/api/v0/members")
                         .file(mockImages.get(0))
                         .file(mockImages.get(1))
-                        .file(new MockMultipartFile("memberCreateRequest", "", "application/json", contents.getBytes(StandardCharsets.UTF_8)))
+                        .file(new MockMultipartFile("memberCreateRequest", "", "application/json",
+                                                    contents.getBytes(StandardCharsets.UTF_8)))
                         .contentType("multipart/form-data")
                         .accept(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8"));
 
         // then
         result.andExpect(status().is2xxSuccessful())
-                .andDo(print())
-                .andDo(document("member-add",
-                        getDocumentRequest(),
-                        getDocumentResponse(),
-                        requestPartBody("images"),
-                        requestPartFields("memberCreateRequest",
-                                fieldWithPath("nickname").type(JsonFieldType.STRING).description("수정할 닉네임"),
-                                fieldWithPath("firstDate").type(JsonFieldType.STRING).description("수정할 사귄 날짜"),
-                                fieldWithPath("gender").type(JsonFieldType.STRING).description("수정할 성별")
-                        ),
-                        responseFields(
-                                fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
-                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
-                                fieldWithPath("data").type(JsonFieldType.NUMBER).description("Member ID")
-                        )));
+              .andDo(print())
+              .andDo(document("member-add",
+                              getDocumentRequest(),
+                              getDocumentResponse(),
+                              requestPartBody("images"),
+                              requestPartFields("memberCreateRequest",
+                                                fieldWithPath("nickname").type(JsonFieldType.STRING)
+                                                                         .description("수정할 닉네임"),
+                                                fieldWithPath("firstDate").type(JsonFieldType.STRING)
+                                                                          .description("수정할 사귄 날짜"),
+                                                fieldWithPath("gender").type(JsonFieldType.STRING)
+                                                                       .description("수정할 성별")
+                              ),
+                              responseFields(
+                                      fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
+                                      fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                      fieldWithPath("data").type(JsonFieldType.NUMBER).description("Member ID")
+                              )));
     }
 
     @Test
@@ -117,23 +122,27 @@ class MemberControllerTest {
 
         // then
         result.andExpect(status().is2xxSuccessful())
-                .andDo(print())
-                .andDo(document("member-details",
-                        getDocumentRequest(),
-                        getDocumentResponse(),
-                        pathParameters(parameterWithName("nickname").description("닉네임")),
-                        responseFields(
-                                fieldWithPath("status").type(JsonFieldType.STRING).description("응답 코드"),
-                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+              .andDo(print())
+              .andDo(document("member-details",
+                              getDocumentRequest(),
+                              getDocumentResponse(),
+                              pathParameters(parameterWithName("nickname").description("닉네임")),
+                              responseFields(
+                                      fieldWithPath("status").type(JsonFieldType.STRING).description("응답 코드"),
+                                      fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
 
-                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
-                                fieldWithPath("data.uuid").type(JsonFieldType.STRING).description("UUID"),
-                                fieldWithPath("data.nickname").type(JsonFieldType.STRING).description("닉네임"),
-                                fieldWithPath("data.dDay").type(JsonFieldType.NUMBER).description("사귄 일수"),
-                                fieldWithPath("data.gender").type(JsonFieldType.STRING).description("성별"),
-                                fieldWithPath("data.pictureM").type(JsonFieldType.STRING).description("남자 사진"),
-                                fieldWithPath("data.pictureW").type(JsonFieldType.STRING).description("여자 사진")
-                        )));
+                                      fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
+                                      fieldWithPath("data.uuid").type(JsonFieldType.STRING).description("UUID"),
+                                      fieldWithPath("data.nickname").type(JsonFieldType.STRING)
+                                                                    .description("닉네임"),
+                                      fieldWithPath("data.dDay").type(JsonFieldType.NUMBER)
+                                                                .description("사귄 일수"),
+                                      fieldWithPath("data.gender").type(JsonFieldType.STRING).description("성별"),
+                                      fieldWithPath("data.pictureM").type(JsonFieldType.STRING)
+                                                                    .description("남자 사진"),
+                                      fieldWithPath("data.pictureW").type(JsonFieldType.STRING)
+                                                                    .description("여자 사진")
+                              )));
     }
 
     @Test
@@ -143,10 +152,10 @@ class MemberControllerTest {
         String mockNickname = "홍길동";
         List<MockMultipartFile> mockImages = getMultipartFiles();
         MemberUpdateRequest memberUpdateRequest = MemberUpdateRequest.builder()
-                .nickname(mockNickname)
-                .firstDate("2023-05-15")
-                .gender("MALE")
-                .build();
+                                                                     .nickname(mockNickname)
+                                                                     .firstDate("2023-05-15")
+                                                                     .gender("MALE")
+                                                                     .build();
         String contents = objectMapper.writeValueAsString(memberUpdateRequest);
 
         given(memberService.update(anyString(), anyList(), any()))
@@ -157,7 +166,8 @@ class MemberControllerTest {
                 multipart("/api/v0/members/{nickname}", mockNickname)
                         .file(mockImages.get(0))
                         .file(mockImages.get(1))
-                        .file(new MockMultipartFile("memberUpdateRequest", "", "application/json", contents.getBytes(StandardCharsets.UTF_8)))
+                        .file(new MockMultipartFile("memberUpdateRequest", "", "application/json",
+                                                    contents.getBytes(StandardCharsets.UTF_8)))
                         .with(request -> {
                             request.setMethod("PUT");
                             return request;
@@ -165,24 +175,27 @@ class MemberControllerTest {
 
         // then
         result.andExpect(status().is2xxSuccessful())
-                .andDo(print())
-                .andDo(document("member-modify",
-                        getDocumentRequest(),
-                        getDocumentResponse(),
-                        pathParameters(
-                                parameterWithName("nickname").description("닉네임")
-                        ),
-                        requestPartBody("images"),
-                        requestPartFields("memberUpdateRequest",
-                                fieldWithPath("nickname").type(JsonFieldType.STRING).description("수정할 닉네임"),
-                                fieldWithPath("firstDate").type(JsonFieldType.STRING).description("수정할 사귄 날짜"),
-                                fieldWithPath("gender").type(JsonFieldType.STRING).description("수정할 성별")
-                        ),
-                        responseFields(
-                                fieldWithPath("status").type(JsonFieldType.STRING).description("응답 코드"),
-                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
-                                fieldWithPath("data").type(JsonFieldType.NUMBER).description("Member ID")
-                        )));
+              .andDo(print())
+              .andDo(document("member-modify",
+                              getDocumentRequest(),
+                              getDocumentResponse(),
+                              pathParameters(
+                                      parameterWithName("nickname").description("닉네임")
+                              ),
+                              requestPartBody("images"),
+                              requestPartFields("memberUpdateRequest",
+                                                fieldWithPath("nickname").type(JsonFieldType.STRING)
+                                                                         .description("수정할 닉네임"),
+                                                fieldWithPath("firstDate").type(JsonFieldType.STRING)
+                                                                          .description("수정할 사귄 날짜"),
+                                                fieldWithPath("gender").type(JsonFieldType.STRING)
+                                                                       .description("수정할 성별")
+                              ),
+                              responseFields(
+                                      fieldWithPath("status").type(JsonFieldType.STRING).description("응답 코드"),
+                                      fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                      fieldWithPath("data").type(JsonFieldType.NUMBER).description("Member ID")
+                              )));
     }
 
     @Test
@@ -199,33 +212,35 @@ class MemberControllerTest {
 
         // then
         result.andExpect(status().is2xxSuccessful())
-                .andDo(print())
-                .andDo(document("member-remove",
-                        getDocumentRequest(),
-                        getDocumentResponse(),
-                        pathParameters(
-                                parameterWithName("nickname").description("닉네임")
-                        ),
-                        responseFields(
-                                fieldWithPath("status").type(JsonFieldType.STRING).description("응답 코드"),
-                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
-                                fieldWithPath("data").description("NULL")
-                        )));
+              .andDo(print())
+              .andDo(document("member-remove",
+                              getDocumentRequest(),
+                              getDocumentResponse(),
+                              pathParameters(
+                                      parameterWithName("nickname").description("닉네임")
+                              ),
+                              responseFields(
+                                      fieldWithPath("status").type(JsonFieldType.STRING).description("응답 코드"),
+                                      fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                      fieldWithPath("data").description("NULL")
+                              )));
     }
 
     private Member getMember(String nickname, Gender gender, LocalDate firstDate) {
         return Member.builder()
-                .uuid(UUID.randomUUID().toString())
-                .nickname(nickname)
-                .firstDate(firstDate)
-                .gender(gender)
-                .pictureM("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&prefix=member/"
-                        + nickname
-                        + "/male.png")
-                .pictureW("https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&prefix=member/"
-                        + nickname
-                        + "/female.png")
-                .build();
+                     .uuid(UUID.randomUUID().toString())
+                     .nickname(nickname)
+                     .firstDate(firstDate)
+                     .gender(gender)
+                     .pictureM(
+                             "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&prefix=member/"
+                             + nickname
+                             + "/male.png")
+                     .pictureW(
+                             "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&prefix=member/"
+                             + nickname
+                             + "/female.png")
+                     .build();
     }
 
     private List<MockMultipartFile> getMultipartFiles() {
@@ -241,6 +256,7 @@ class MemberControllerTest {
     private LocalDate getLocalDate(String firstDate) {
         return LocalDate.parse(firstDate, DateTimeFormatter.ISO_DATE);
     }
+
     private LocalDateTime getLocalDateTime(String date) {
         return LocalDateTime.parse(date, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
     }

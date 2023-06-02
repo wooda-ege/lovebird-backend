@@ -4,6 +4,7 @@ import com.ege.wooda.domain.member.domain.Gender;
 import com.ege.wooda.domain.member.domain.Member;
 import com.ege.wooda.domain.member.repository.MemberRepository;
 import com.ege.wooda.global.config.cache.CacheConfig;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,9 +38,8 @@ public class MemberServiceCacheTest {
     @MockBean
     private MemberRepository memberRepository;
 
-
     @AfterEach
-    public void cleanup(){
+    public void cleanup() {
         memberRepository.deleteAll();
     }
 
@@ -61,12 +61,12 @@ public class MemberServiceCacheTest {
 
     private Member getMember(String nickname, Gender gender, LocalDate firstDate) {
         return Member.builder()
-                .nickname(nickname)
-                .firstDate(firstDate)
-                .gender(gender)
-                .pictureM(null)
-                .pictureW(null)
-                .build();
+                     .nickname(nickname)
+                     .firstDate(firstDate)
+                     .gender(gender)
+                     .pictureM(null)
+                     .pictureW(null)
+                     .build();
     }
 
     private List<MultipartFile> getMultipartFiles() {

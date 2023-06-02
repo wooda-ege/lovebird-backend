@@ -6,9 +6,9 @@ spring:
       classpath:/application-aws.yml
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/lovebird
-    username: user
-    password: password
+    url: jdbc:postgresql://localhost:5432/wooda
+    username: wooda
+    password: dnekvmfhwprxm!
 
   h2:
     console:

@@ -14,12 +14,12 @@ import com.ege.wooda.global.s3.fomatter.FileNameFormatter;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,10 +31,11 @@ public class DiaryService {
     private final FileNameFormatter fileNameFormatter;
 
     @Transactional
-    public Long save(List<MultipartFile> images, DiaryCreateRequest diaryCreateRequest, String memberUUID) throws IOException {
+    public Long save(List<MultipartFile> images, DiaryCreateRequest diaryCreateRequest, String memberUUID)
+            throws IOException {
         Diary diary = diaryRepository.save(diaryCreateRequest.toEntity());
 
-        if(!images.isEmpty()) {
+        if (!images.isEmpty()) {
             ImageUploadRequest imageUploadRequest = getImageUploadRequest(images, memberUUID, diary.getId());
             diary.saveImages(imageS3Uploader.upload(imageUploadRequest).stream()
                                             .map(S3File::fileUrl)
@@ -45,17 +46,18 @@ public class DiaryService {
     }
 
     @Transactional
-    public Long update(Long id, List<MultipartFile> images, DiaryUpdateRequest diaryUpdateRequest, String memberUUID) throws IOException {
+    public Long update(Long id, List<MultipartFile> images, DiaryUpdateRequest diaryUpdateRequest,
+                       String memberUUID) throws IOException {
         Diary diary = findById(id);
         List<String> imgUrls = diary.getImgUrls();
 
-        if(!images.isEmpty()){
+        if (!images.isEmpty()) {
             imageS3Uploader.deleteFiles(getImageDeleteRequest(imgUrls, memberUUID));
 
             ImageUploadRequest imageUploadRequest = getImageUploadRequest(images, memberUUID, diary.getId());
             imgUrls = imageS3Uploader.upload(imageUploadRequest).stream()
-                                   .map(S3File::fileUrl)
-                                   .toList();
+                                     .map(S3File::fileUrl)
+                                     .toList();
         }
 
         diary.updateDiary(diaryUpdateRequest.toEntity(imgUrls));
@@ -63,12 +65,12 @@ public class DiaryService {
     }
 
     @Transactional
-    public void delete(Long id, String memberUUID){
+    public void delete(Long id, String memberUUID) {
         Diary diary = findById(id);
 
         ImageDeleteRequest imgDeleteRequest = getImageDeleteRequest(
                 diary.getImgUrls().stream()
-                     .map(s-> s.substring(s.lastIndexOf("/")+1))
+                     .map(s -> s.substring(s.lastIndexOf("/") + 1))
                      .toList(),
                 memberUUID
         );
@@ -78,12 +80,12 @@ public class DiaryService {
     }
 
     @Transactional(readOnly = true)
-    public List<Diary> findDiaries(){
+    public List<Diary> findDiaries() {
         return diaryRepository.findAll();
     }
 
     @Transactional(readOnly = true)
-    public Diary findById(Long id){
+    public Diary findById(Long id) {
         return diaryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
@@ -99,7 +101,7 @@ public class DiaryService {
     private ImageDeleteRequest getImageDeleteRequest(List<String> imgUrls, String uuid) {
         return new ImageDeleteRequest(
                 imgUrls.stream()
-                       .map(s-> s.substring(s.lastIndexOf("/")+1))
+                       .map(s -> s.substring(s.lastIndexOf("/") + 1))
                        .toList(),
                 DomainName.DIARY.getDomain(),
                 uuid

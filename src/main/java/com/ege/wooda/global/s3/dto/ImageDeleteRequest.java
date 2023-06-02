@@ -12,8 +12,8 @@ public record ImageDeleteRequest(@NotBlank List<String> fileNames,
 
     public List<String> getFileNamesWithPath() {
         return fileNames.stream()
-                .map(this::getPath)
-                .toList();
+                        .map(this::getPath)
+                        .toList();
     }
 
     private String getPath(String fileName) {

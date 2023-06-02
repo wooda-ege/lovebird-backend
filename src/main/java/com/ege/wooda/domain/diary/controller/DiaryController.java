@@ -7,7 +7,9 @@ import com.ege.wooda.domain.diary.dto.request.DiaryUpdateRequest;
 import com.ege.wooda.domain.member.service.MemberService;
 import com.ege.wooda.global.common.response.ApiResponse;
 import com.ege.wooda.domain.diary.service.DiaryService;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -49,16 +51,20 @@ public class DiaryController {
     public ResponseEntity<ApiResponse<Diary>> getOne(@PathVariable Long id) {
         Diary diary = diaryService.findById(id);
 
-        return ResponseEntity.ok(ApiResponse.createSuccessWithData(DiaryResponseMessage.READ_DIARY.getMessage(), diary));
+        return ResponseEntity.ok(
+                ApiResponse.createSuccessWithData(DiaryResponseMessage.READ_DIARY.getMessage(), diary));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Long>> update(@PathVariable Long id,
-                                                    @RequestPart(value = "images", required = false) List<MultipartFile> images,
-                                                    @Validated @RequestPart(value = "diaryUpdateRequest") DiaryUpdateRequest diaryUpdateRequest) throws IOException {
+                                                    @RequestPart(value = "images", required = false)
+                                                    List<MultipartFile> images,
+                                                    @Validated @RequestPart(value = "diaryUpdateRequest")
+                                                    DiaryUpdateRequest diaryUpdateRequest) throws IOException {
         String memberUUID = memberService.findById(diaryUpdateRequest.memberId()).getUuid();
         Long updatedId = diaryService.update(id, images, diaryUpdateRequest, memberUUID);
-        return ResponseEntity.ok(ApiResponse.createSuccessWithData(DiaryResponseMessage.UPDATE_DIARY.getMessage(), updatedId));
+        return ResponseEntity.ok(
+                ApiResponse.createSuccessWithData(DiaryResponseMessage.UPDATE_DIARY.getMessage(), updatedId));
     }
 
     @DeleteMapping("/{id}")

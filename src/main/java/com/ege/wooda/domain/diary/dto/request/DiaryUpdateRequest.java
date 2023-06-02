@@ -1,6 +1,7 @@
 package com.ege.wooda.domain.diary.dto.request;
 
 import com.ege.wooda.domain.diary.domain.Diary;
+
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 
@@ -18,15 +19,15 @@ public record DiaryUpdateRequest(Long memberId,
     @Builder
     public DiaryUpdateRequest {}
 
-    public Diary toEntity(List<String> imgUrls){
+    public Diary toEntity(List<String> imgUrls) {
         return Diary.builder()
-                .memberId(memberId)
-                .title(title)
-                .subTitle(subTitle)
-                .memoryDate(LocalDate.parse(memoryDate))
-                .place(place)
-                .contents(contents)
-                .imgUrls(imgUrls)
-                .build();
+                    .memberId(memberId)
+                    .title(title)
+                    .subTitle(subTitle)
+                    .memoryDate(LocalDate.parse(memoryDate))
+                    .place(place)
+                    .contents(contents)
+                    .imgUrls(imgUrls)
+                    .build();
     }
 }

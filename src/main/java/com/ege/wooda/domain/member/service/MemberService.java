@@ -50,11 +50,12 @@ public class MemberService {
 
     @Transactional
     @CacheEvict(cacheNames = "member", key = "#nickname")
-    public Long update(String nickname, List<MultipartFile> images, MemberUpdateRequest memberUpdateRequest) throws IOException {
+    public Long update(String nickname, List<MultipartFile> images, MemberUpdateRequest memberUpdateRequest)
+            throws IOException {
         checkDuplicatedNickname(memberUpdateRequest.nickname());
 
         Member member = findMemberByNickname(nickname);
-        if(!images.isEmpty()) {
+        if (!images.isEmpty()) {
             ImageDeleteRequest imageDeleteRequest = getImageDeleteRequest(member.getUuid());
 
             s3Uploader.deleteFiles(imageDeleteRequest);

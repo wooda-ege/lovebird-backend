@@ -4,7 +4,9 @@ import com.ege.wooda.global.s3.config.S3MockConfig;
 
 import com.ege.wooda.global.s3.dto.ImageDeleteRequest;
 import com.ege.wooda.global.s3.dto.ImageUploadRequest;
+
 import io.findify.s3mock.S3Mock;
+
 import org.junit.After;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +34,7 @@ public class ImageS3UploaderTest {
     private S3Mock s3Mock;
 
     @After
-    public void shutdownMockS3(){
+    public void shutdownMockS3() {
         s3Mock.stop();
     }
 
@@ -41,7 +43,8 @@ public class ImageS3UploaderTest {
     public void uploadTest() throws IOException {
         // given
         List<MultipartFile> mockFiles = getMultipartFiles();
-        ImageUploadRequest imageUploadRequest = new ImageUploadRequest(mockFiles, getImageNames(mockFiles), "test", "test");
+        ImageUploadRequest imageUploadRequest = new ImageUploadRequest(mockFiles, getImageNames(mockFiles),
+                                                                       "test", "test");
 
         // when
         List<S3File> savedFiles = imageS3Uploader.upload(imageUploadRequest);
@@ -55,18 +58,19 @@ public class ImageS3UploaderTest {
     public void deleteTest() throws IOException {
         // given
         List<MultipartFile> mockFiles = getMultipartFiles();
-        ImageUploadRequest imageUploadRequest = new ImageUploadRequest(mockFiles, getImageNames(mockFiles), "test", "test");
+        ImageUploadRequest imageUploadRequest = new ImageUploadRequest(mockFiles, getImageNames(mockFiles),
+                                                                       "test", "test");
         ImageDeleteRequest imageDeleteRequest = new ImageDeleteRequest(
                 getMultipartFiles().stream()
-                        .map(MultipartFile::getOriginalFilename)
-                        .toList(),
+                                   .map(MultipartFile::getOriginalFilename)
+                                   .toList(),
                 "test",
                 "test");
 
         // when
         List<String> fileNames = imageS3Uploader.upload(imageUploadRequest).stream()
-                .map(S3File::fileName)
-                .toList();
+                                                .map(S3File::fileName)
+                                                .toList();
 
         // then
         assertThatNoException()
@@ -86,6 +90,6 @@ public class ImageS3UploaderTest {
         String contentType2 = "image/png";
 
         return List.of(new MockMultipartFile("test1", path1, contentType1, "test1".getBytes())
-                     , new MockMultipartFile("test2", path2, contentType2, "test2".getBytes()));
+                , new MockMultipartFile("test2", path2, contentType2, "test2".getBytes()));
     }
 }
