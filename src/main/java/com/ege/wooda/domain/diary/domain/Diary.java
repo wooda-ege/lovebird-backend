@@ -64,6 +64,10 @@ public class Diary{
         auditEntity=new AuditEntity();
     }
 
+    public void saveImages(List<String> imagesUrls) {
+        this.imgUrls = imagesUrls;
+    }
+
     public void updateDiary(Diary d){
         memberId=d.getMemberId();
         title=d.getTitle();

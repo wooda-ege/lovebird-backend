@@ -13,7 +13,7 @@ public record DiaryCreateRequest(Long memberId,String title, String subTitle, St
     @Builder
     public DiaryCreateRequest {}
 
-    public Diary toEntity(List<String> imgUrls){
+    public Diary toEntity(){
         return Diary.builder()
                 .memberId(memberId)
                 .title(title)
@@ -21,7 +21,6 @@ public record DiaryCreateRequest(Long memberId,String title, String subTitle, St
                 .memoryDate(getLocalDate(memoryDate))
                 .place(place)
                 .contents(contents)
-                .imgUrls(imgUrls)
                 .build();
     }
 
