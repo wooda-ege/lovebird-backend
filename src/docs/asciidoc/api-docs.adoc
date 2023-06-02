@@ -10,13 +10,15 @@ ifndef::snippets[]
 :snippets: ./build/generated-snippets
 endif::[]
 
-== Member 등록
+== Member
 
-=== Request
+=== Member 등록
+
+==== Request
 
 include::{snippets}/member-add/httpie-request.adoc[]
 
-==== i) images
+===== i) images
 |===
 |Path|Type|Description
 
@@ -26,40 +28,40 @@ include::{snippets}/member-add/httpie-request.adoc[]
 
 |===
 
-==== ii) memberCreateRequest
+===== ii) memberCreateRequest
 include::{snippets}/member-add/request-part-memberCreateRequest-fields.adoc[]
 
-=== Response
+==== Response
 
 include::{snippets}/member-add/http-response.adoc[]
 
 include::{snippets}/member-add/response-fields.adoc[]
 
-== Member 조회
+=== Member 조회
 
-=== Request
+==== Request
 
 include::{snippets}/member-details/httpie-request.adoc[]
 
 include::{snippets}/member-details/path-parameters.adoc[]
 
-=== Response
+==== Response
 
 include::{snippets}/member-details/http-response.adoc[]
 
 include::{snippets}/member-details/response-fields.adoc[]
 
-== Member 수정
+=== Member 수정
 
-=== Request
+==== Request
 
 include::{snippets}/member-modify/httpie-request.adoc[]
 
-==== i) path
+===== i) path
 
 include::{snippets}/member-modify/path-parameters.adoc[]
 
-==== ii) images
+===== ii) images
 
 |===
 |Path|Type|Description
@@ -70,27 +72,125 @@ include::{snippets}/member-modify/path-parameters.adoc[]
 
 |===
 
-==== iii) memberUpdateRequest
+===== iii) memberUpdateRequest
 
 include::{snippets}/member-modify/request-part-memberUpdateRequest-fields.adoc[]
 
-=== Response
+==== Response
 
 include::{snippets}/member-modify/http-response.adoc[]
 
 include::{snippets}/member-modify/response-fields.adoc[]
 
-== Member 삭제
+=== Member 삭제
 
-=== Request
+==== Request
 
 include::{snippets}/member-remove/httpie-request.adoc[]
 
 include::{snippets}/member-remove/path-parameters.adoc[]
 
-=== Response
+==== Response
 
 include::{snippets}/member-remove/http-response.adoc[]
 
 include::{snippets}/member-remove/response-fields.adoc[]
 
+== Diary
+
+=== Diary 등록
+
+==== Request
+
+include::{snippets}/diary-add/httpie-request.adoc[]
+
+===== i) images
+|===
+|Path|Type|Description
+
+|`+[].images+`
+|`+image/png+`
+|다이어리 사진(필수 아님)
+
+|===
+
+===== ii) diaryCreateRequest
+include::{snippets}/diary-add/request-part-diaryCreateRequest-fields.adoc[]
+
+==== Response
+
+include::{snippets}/diary-add/http-response.adoc[]
+
+include::{snippets}/diary-add/response-fields.adoc[]
+
+=== Diary 모두 조회
+
+==== Request
+
+include::{snippets}/diary-getAll/httpie-request.adoc[]
+
+==== Response
+
+include::{snippets}/diary-getAll/http-response.adoc[]
+
+include::{snippets}/diary-getAll/response-fields.adoc[]
+
+
+=== Diary 조회
+
+==== Request
+
+include::{snippets}/diary-find/httpie-request.adoc[]
+
+include::{snippets}/diary-find/path-parameters.adoc[]
+
+==== Response
+
+include::{snippets}/diary-find/http-response.adoc[]
+
+include::{snippets}/diary-find/response-fields.adoc[]
+
+=== Diary 수정
+
+==== Request
+
+include::{snippets}/diary-update/httpie-request.adoc[]
+
+===== i) path
+
+include::{snippets}/diary-update/path-parameters.adoc[]
+
+===== ii) images
+
+|===
+|Path|Type|Description
+
+|`+[].images+`
+|`+image/png+`
+|다이어리 사진(필수 아님)
+
+|===
+
+===== iii) diaryUpdateRequest
+
+include::{snippets}/diary-update/request-part-diaryUpdateRequest-fields.adoc[]
+
+==== Response
+
+include::{snippets}/diary-update/http-response.adoc[]
+
+include::{snippets}/diary-update/response-fields.adoc[]
+
+=== Diary 삭제
+
+==== Request
+
+include::{snippets}/diary-delete/httpie-request.adoc[]
+
+include::{snippets}/diary-delete/path-parameters.adoc[]
+
+==== Response
+
+include::{snippets}/diary-delete/http-response.adoc[]
+
+include::{snippets}/diary-delete/response-fields.adoc[]

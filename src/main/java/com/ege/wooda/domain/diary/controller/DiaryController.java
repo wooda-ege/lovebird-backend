@@ -1,116 +1,67 @@
 package com.ege.wooda.domain.diary.controller;
 
-import com.ege.wooda.domain.diary.Diary;
-import com.ege.wooda.domain.diary.dto.DiaryCreateRequest;
-import com.ege.wooda.domain.diary.dto.DiaryUpdateRequest;
-import com.ege.wooda.global.common.response.DefaultResponse;
-import com.ege.wooda.global.common.response.ResponseMessage;
-import com.ege.wooda.global.common.response.StatusCode;
+import com.ege.wooda.domain.diary.domain.Diary;
+import com.ege.wooda.domain.diary.dto.request.DiaryCreateRequest;
+import com.ege.wooda.domain.diary.dto.response.DiaryDetailResponse;
+import com.ege.wooda.domain.diary.dto.response.DiaryResponseMessage;
+import com.ege.wooda.domain.diary.dto.request.DiaryUpdateRequest;
+import com.ege.wooda.global.common.response.ApiResponse;
 import com.ege.wooda.domain.diary.service.DiaryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/v0/diaries")
 public class DiaryController {
 
     private final DiaryService diaryService;
 
-    @PostMapping("/diaries")
-    public ResponseEntity save(@RequestBody DiaryCreateRequest diary){
-        try{
-            System.out.println(diary);
-            Long id = diaryService.save(diary);
-            System.out.printf(diary.title());
-        }catch (Exception e){
-            return new ResponseEntity(DefaultResponse.response(StatusCode.BAD_REQUEST, ResponseMessage.FAILED_CREATE_DIARY), HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity(DefaultResponse.response(StatusCode.OK, ResponseMessage.CREATED_DIARY), HttpStatus.OK);
+    @PostMapping("")
+    public ResponseEntity<ApiResponse<Long>> save(
+            @RequestPart(value = "images", required = false) List<MultipartFile> images,
+            @Validated @RequestPart(value = "diaryCreateRequest") DiaryCreateRequest diary) throws IOException {
+        Long id = diaryService.save(images, diary);
+        return new ResponseEntity<>(
+                ApiResponse.createSuccessWithData(DiaryResponseMessage.CREATE_DIARY.getMessage(), id),
+                HttpStatus.CREATED);
     }
 
-    @GetMapping("/diaries")
-    public ResponseEntity<Map<String,Object>> getList(){
-        Map<String, Object> result=new HashMap<>();
-        try{
-            List<Diary> diaryList=diaryService.findDiaries();
-            result.put("statusCode", StatusCode.OK);
-            result.put("responseMessage", ResponseMessage.READ_DIARY);
-            result.put("data", diaryList);
+    @GetMapping("")
+    public ResponseEntity<ApiResponse<List>> getList() {
+        List<Diary> diaryList = diaryService.findDiaries();
 
-        }catch (Exception e){
-            return new ResponseEntity(DefaultResponse.response(StatusCode.BAD_REQUEST, ResponseMessage.DIARY_NOT_FOUND),HttpStatus.BAD_REQUEST);
-        }
-
-        return new ResponseEntity<Map<String,Object>>(result,HttpStatus.OK);
+        return ResponseEntity.ok(
+                ApiResponse.createSuccessWithData(DiaryResponseMessage.READ_DIARY.getMessage(), diaryList)
+        );
     }
 
-    @GetMapping("/diaries/{id}")
-    public ResponseEntity<Map<String,Object>> getOne(@PathVariable Long id){
-        Map<String, Object> result=new HashMap<>();
-        try{
-            Optional<Diary> diary=diaryService.findOne(id);
-            result.put("statusCode", StatusCode.OK);
-            result.put("responseMessage", ResponseMessage.READ_DIARY);
-            result.put("data", diary);
-        }catch (Exception e){
-            return new ResponseEntity(DefaultResponse.response(StatusCode.BAD_REQUEST, ResponseMessage.DIARY_NOT_FOUND),HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<Map<String,Object>>(result,HttpStatus.OK);
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<Diary>> getOne(@PathVariable Long id) {
+        Diary diary = diaryService.findOne(id);
+
+        return ResponseEntity.ok(ApiResponse.createSuccessWithData(DiaryResponseMessage.READ_DIARY.getMessage(), diary));
     }
 
-    @PutMapping("/diaries/{id}")
-    public ResponseEntity<Map<String, Object>> update(@PathVariable Long id, @RequestBody DiaryUpdateRequest diaryUpdateRequest){
-        Map<String, Object> result=new HashMap<>();
-        try{
-            Long updatedId=diaryService.update(id, diaryUpdateRequest);
-            result.put("statusCode", StatusCode.OK);
-            result.put("responseMessage", ResponseMessage.READ_DIARY);
-            result.put("data", diaryService.findOne(updatedId));
-        }catch (Exception e){
-            return new ResponseEntity(DefaultResponse.response(StatusCode.BAD_REQUEST, ResponseMessage.DIARY_NOT_FOUND),HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<Map<String,Object>>(result,HttpStatus.OK);
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<Long>> update(@PathVariable Long id,
+                                                    @RequestPart(value = "images", required = false) List<MultipartFile> images,
+                                                    @Validated @RequestPart(value = "diaryUpdateRequest") DiaryUpdateRequest diaryUpdateRequest) throws IOException {
+
+        Long updatedId = diaryService.update(id, images, diaryUpdateRequest);
+        return ResponseEntity.ok(ApiResponse.createSuccessWithData(DiaryResponseMessage.UPDATE_DIARY.getMessage(), updatedId));
     }
 
-    @DeleteMapping("/diaries/{id}")
-    public ResponseEntity<Map<String, Object>> delete(@PathVariable Long id){
-        Map<String, Object> result=new HashMap<>();
-        try{
-            diaryService.delete(id);
-            result.put("statusCode", StatusCode.OK);
-            result.put("responseMessage", ResponseMessage.READ_DIARY);
-            diaryService.findOne(id);
-        }
-        catch (IllegalArgumentException ie){
-            return new ResponseEntity(DefaultResponse.response(StatusCode.OK, ResponseMessage.READ_DIARY),HttpStatus.OK);
-        }
-        catch (Exception e){
-            return new ResponseEntity(DefaultResponse.response(StatusCode.BAD_REQUEST, ResponseMessage.DIARY_NOT_FOUND),HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<Map<String,Object>>(result,HttpStatus.OK);
-    }
-
-    @PostMapping("/image")
-    public ResponseEntity<Map<String,Object>> postImage(@RequestBody List<MultipartFile> img) throws IOException {
-        Map<String, Object> result=new HashMap<>();
-        try{
-            List<String> urlList=diaryService.saveImage(img);
-            result.put("statusCode", StatusCode.OK);
-            result.put("responseMessage", ResponseMessage.CREATED_DIARY);
-            result.put("data", urlList);
-        }catch (Exception e){
-            e.printStackTrace();
-            return new ResponseEntity(DefaultResponse.response(StatusCode.BAD_REQUEST,ResponseMessage.FAILED_CREATE_DIARY),HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<Map<String,Object>>(result,HttpStatus.OK);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<?>> delete(@PathVariable Long id) {
+        diaryService.delete(id);
+        return ResponseEntity.ok(ApiResponse.createSuccess(DiaryResponseMessage.DELETE_DIARY.getMessage()));
     }
 }

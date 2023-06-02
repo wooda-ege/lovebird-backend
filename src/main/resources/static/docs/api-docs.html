@@ -448,28 +448,21 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_member_등록">Member 등록</a>
+<li><a href="#_member">Member</a>
 <ul class="sectlevel2">
-<li><a href="#_request">Request</a></li>
-<li><a href="#_response">Response</a></li>
+<li><a href="#_member_등록">Member 등록</a></li>
+<li><a href="#_member_조회">Member 조회</a></li>
+<li><a href="#_member_수정">Member 수정</a></li>
+<li><a href="#_member_삭제">Member 삭제</a></li>
 </ul>
 </li>
-<li><a href="#_member_조회">Member 조회</a>
+<li><a href="#_diary">Diary</a>
 <ul class="sectlevel2">
-<li><a href="#_request_2">Request</a></li>
-<li><a href="#_response_2">Response</a></li>
-</ul>
-</li>
-<li><a href="#_member_수정">Member 수정</a>
-<ul class="sectlevel2">
-<li><a href="#_request_3">Request</a></li>
-<li><a href="#_response_3">Response</a></li>
-</ul>
-</li>
-<li><a href="#_member_삭제">Member 삭제</a>
-<ul class="sectlevel2">
-<li><a href="#_request_4">Request</a></li>
-<li><a href="#_response_4">Response</a></li>
+<li><a href="#_diary_등록">Diary 등록</a></li>
+<li><a href="#_diary_모두_조회">Diary 모두 조회</a></li>
+<li><a href="#_diary_조회">Diary 조회</a></li>
+<li><a href="#_diary_수정">Diary 수정</a></li>
+<li><a href="#_diary_삭제">Diary 삭제</a></li>
 </ul>
 </li>
 </ul>
@@ -477,10 +470,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_member_등록"><a class="link" href="#_member_등록">Member 등록</a></h2>
+<h2 id="_member"><a class="link" href="#_member">Member</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_request"><a class="link" href="#_request">Request</a></h3>
+<h3 id="_member_등록"><a class="link" href="#_member_등록">Member 등록</a></h3>
+<div class="sect3">
+<h4 id="_request"><a class="link" href="#_request">Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ http --multipart POST 'https://www.lovebird-wooda.com/api/v0/members' \
@@ -490,8 +485,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
     'memberCreateRequest'='{"nickname":"홍길동","firstDate":"2023-05-15","gender":"MALE"}'</code></pre>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_i_images"><a class="link" href="#_i_images">i) images</a></h4>
+<div class="sect4">
+<h5 id="_i_images"><a class="link" href="#_i_images">i) images</a></h5>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -514,8 +509,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tbody>
 </table>
 </div>
-<div class="sect3">
-<h4 id="_ii_membercreaterequest"><a class="link" href="#_ii_membercreaterequest">ii) memberCreateRequest</a></h4>
+<div class="sect4">
+<h5 id="_ii_membercreaterequest"><a class="link" href="#_ii_membercreaterequest">ii) memberCreateRequest</a></h5>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -549,8 +544,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_response"><a class="link" href="#_response">Response</a></h3>
+<div class="sect3">
+<h4 id="_response"><a class="link" href="#_response">Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
@@ -597,12 +592,10 @@ Content-Length: 90
 </table>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_member_조회"><a class="link" href="#_member_조회">Member 조회</a></h2>
-<div class="sectionbody">
 <div class="sect2">
-<h3 id="_request_2"><a class="link" href="#_request_2">Request</a></h3>
+<h3 id="_member_조회"><a class="link" href="#_member_조회">Member 조회</a></h3>
+<div class="sect3">
+<h4 id="_request_2"><a class="link" href="#_request_2">Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ http GET 'https://www.lovebird-wooda.com/api/v0/members/%ED%99%8D%EA%B8%B8%EB%8F%99' \
@@ -630,8 +623,8 @@ Content-Length: 90
 </tbody>
 </table>
 </div>
-<div class="sect2">
-<h3 id="_response_2"><a class="link" href="#_response_2">Response</a></h3>
+<div class="sect3">
+<h4 id="_response_2"><a class="link" href="#_response_2">Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -642,9 +635,9 @@ Content-Length: 473
   "status" : "SUCCESS",
   "message" : "유저 조회에 성공하셨습니다.",
   "data" : {
-    "uuid" : "9c7f15e5-f71c-4091-a6e1-087aed6e47f7",
+    "uuid" : "7c7acb54-aca2-4fea-9a88-5b61561d8375",
     "nickname" : "홍길동",
-    "dDay" : 11,
+    "dDay" : 18,
     "gender" : "MALE",
     "pictureM" : "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/male.png",
     "pictureW" : "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/female.png"
@@ -715,12 +708,10 @@ Content-Length: 473
 </table>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_member_수정"><a class="link" href="#_member_수정">Member 수정</a></h2>
-<div class="sectionbody">
 <div class="sect2">
-<h3 id="_request_3"><a class="link" href="#_request_3">Request</a></h3>
+<h3 id="_member_수정"><a class="link" href="#_member_수정">Member 수정</a></h3>
+<div class="sect3">
+<h4 id="_request_3"><a class="link" href="#_request_3">Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ http --multipart PUT 'https://www.lovebird-wooda.com/api/v0/members/%ED%99%8D%EA%B8%B8%EB%8F%99' \
@@ -729,8 +720,8 @@ Content-Length: 473
     'memberUpdateRequest'='{"nickname":"홍길동","firstDate":"2023-05-15","gender":"MALE"}'</code></pre>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_i_path"><a class="link" href="#_i_path">i) path</a></h4>
+<div class="sect4">
+<h5 id="_i_path"><a class="link" href="#_i_path">i) path</a></h5>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 2. /api/v0/members/{nickname}</caption>
 <colgroup>
@@ -751,8 +742,8 @@ Content-Length: 473
 </tbody>
 </table>
 </div>
-<div class="sect3">
-<h4 id="_ii_images"><a class="link" href="#_ii_images">ii) images</a></h4>
+<div class="sect4">
+<h5 id="_ii_images"><a class="link" href="#_ii_images">ii) images</a></h5>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -775,8 +766,8 @@ Content-Length: 473
 </tbody>
 </table>
 </div>
-<div class="sect3">
-<h4 id="_iii_memberupdaterequest"><a class="link" href="#_iii_memberupdaterequest">iii) memberUpdateRequest</a></h4>
+<div class="sect4">
+<h5 id="_iii_memberupdaterequest"><a class="link" href="#_iii_memberupdaterequest">iii) memberUpdateRequest</a></h5>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -810,8 +801,8 @@ Content-Length: 473
 </table>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_response_3"><a class="link" href="#_response_3">Response</a></h3>
+<div class="sect3">
+<h4 id="_response_3"><a class="link" href="#_response_3">Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -858,12 +849,10 @@ Content-Length: 97
 </table>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_member_삭제"><a class="link" href="#_member_삭제">Member 삭제</a></h2>
-<div class="sectionbody">
 <div class="sect2">
-<h3 id="_request_4"><a class="link" href="#_request_4">Request</a></h3>
+<h3 id="_member_삭제"><a class="link" href="#_member_삭제">Member 삭제</a></h3>
+<div class="sect3">
+<h4 id="_request_4"><a class="link" href="#_request_4">Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ http DELETE 'https://www.lovebird-wooda.com/api/v0/members/%ED%99%8D%EA%B8%B8%EB%8F%99' \
@@ -891,8 +880,8 @@ Content-Length: 97
 </tbody>
 </table>
 </div>
-<div class="sect2">
-<h3 id="_response_4"><a class="link" href="#_response_4">Response</a></h3>
+<div class="sect3">
+<h4 id="_response_4"><a class="link" href="#_response_4">Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -941,10 +930,688 @@ Content-Length: 100
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_diary"><a class="link" href="#_diary">Diary</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_diary_등록"><a class="link" href="#_diary_등록">Diary 등록</a></h3>
+<div class="sect3">
+<h4 id="_request_5"><a class="link" href="#_request_5">Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ http --multipart POST 'https://www.lovebird-wooda.com/api/v0/diaries' \
+    'Accept:application/json' \
+    '1-1'@'1-1.png' \
+    '1-2'@'1-2.png' \
+    'diaryCreateRequest'='{"memberId":1,"title":"Diary title","subTitle":"Diary subtitle","memoryDate":"2023-04-09","place":"Diary place","contents":"Diary contents","imgUrls":["https://www.lovebird-wooda.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-1.png","https://www.lovebird-wooda.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-2.png"]}'</code></pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_i_images_2"><a class="link" href="#_i_images_2">i) images</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[].images</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>image/png</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">다이어리 사진(필수 아님)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_ii_diarycreaterequest"><a class="link" href="#_ii_diarycreaterequest">ii) diaryCreateRequest</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>memberId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Member Id</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>title</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">title</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subTitle</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">subTitle</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>memoryDate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">memoryDate</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>place</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">place</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contents</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">contents</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>imgUrls</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">imgUrls</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_response_5"><a class="link" href="#_response_5">Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
+Content-Type: application/json
+Content-Length: 96
+
+{
+  "status" : "SUCCESS",
+  "message" : "다이어리가 등록되었습니다.",
+  "data" : 0
+}</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">응답 상태</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>message</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">응답 메시지</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Diary Id</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_diary_모두_조회"><a class="link" href="#_diary_모두_조회">Diary 모두 조회</a></h3>
+<div class="sect3">
+<h4 id="_request_6"><a class="link" href="#_request_6">Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ http GET 'https://www.lovebird-wooda.com/api/v0/diaries' \
+    'Content-Type:application/json;charset=UTF-8' \
+    'Accept:application/json'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_response_6"><a class="link" href="#_response_6">Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 1977
+
+{
+  "status" : "SUCCESS",
+  "message" : "다이어리 조회에 성공하셨습니다.",
+  "data" : [ {
+    "id" : 1,
+    "memberId" : 1,
+    "title" : "Test Diary1",
+    "subTitle" : "Test diary subtitle1",
+    "memoryDate" : "2023-06-01",
+    "place" : "place1",
+    "contents" : "contents1",
+    "imgUrls" : [ "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-1.png", "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-2.png" ],
+    "auditEntity" : {
+      "createdAt" : "2023-05-15 17:13:06",
+      "updatedAt" : "2023-05-15 17:13:06"
+    }
+  }, {
+    "id" : 2,
+    "memberId" : 2,
+    "title" : "Test Diary2",
+    "subTitle" : "Test diary subtitle2",
+    "memoryDate" : "2023-06-01",
+    "place" : "place2",
+    "contents" : "contents2",
+    "imgUrls" : [ "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/여혜민/2-1.png", "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/여혜민/2-2.png", "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/여혜민/2-3.png" ],
+    "auditEntity" : {
+      "createdAt" : "2023-05-20 09:34:21",
+      "updatedAt" : "2023-05-31 23:11:42"
+    }
+  }, {
+    "id" : 3,
+    "memberId" : 3,
+    "title" : "Test Diary3",
+    "subTitle" : "Test diary subtitle3",
+    "memoryDate" : "2023-06-01",
+    "place" : "place3",
+    "contents" : "contents3",
+    "imgUrls" : [ "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/여혜민/2-1.png", "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/여혜민/2-2.png", "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/여혜민/2-3.png" ],
+    "auditEntity" : {
+      "createdAt" : "2023-06-02 06:23:41",
+      "updatedAt" : "2023-06-02 06:23:41"
+    }
+  } ]
+}</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">응답 코드</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>message</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">응답 메시지</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data[].id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Diary Id</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data[].memberId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Member Id</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data[].title</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">제목</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data[].subTitle</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">소제목</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data[].memoryDate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">데이트 날짜</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data[].place</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">장소</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data[].contents</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">내용</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data[].imgUrls</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이미지 URL 목록</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data[].auditEntity</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">생성된 시간</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data[].auditEntity.createdAt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">생성된 시간</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data[].auditEntity.updatedAt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">수정된 시간</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_diary_조회"><a class="link" href="#_diary_조회">Diary 조회</a></h3>
+<div class="sect3">
+<h4 id="_request_7"><a class="link" href="#_request_7">Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ http GET 'https://www.lovebird-wooda.com/api/v0/diaries/2' \
+    'Content-Type:application/json;charset=UTF-8' \
+    'Accept:application/json'</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. /api/v0/diaries/{id}</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">다이어리 Id</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_response_7"><a class="link" href="#_response_7">Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 651
+
+{
+  "status" : "SUCCESS",
+  "message" : "다이어리 조회에 성공하셨습니다.",
+  "data" : {
+    "id" : 2,
+    "memberId" : 2,
+    "title" : "Test Diary2",
+    "subTitle" : "Test diary subtitle2",
+    "memoryDate" : "2023-05-30",
+    "place" : "place2",
+    "contents" : "contents2",
+    "imgUrls" : [ "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-1.png", "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-2.png" ],
+    "auditEntity" : {
+      "createdAt" : "2023-06-01 19:02:14",
+      "updatedAt" : "2023-06-01 19:02:14"
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">응답 코드</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>message</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">응답 메시지</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">응답 데이터</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Diary Id</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.memberId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Member Id</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.title</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">제목</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.subTitle</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">소제목</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.memoryDate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">데이트 날짜</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.place</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">장소</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">내용</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.imgUrls</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이미지 URL 목록</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.auditEntity.createdAt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">생성된 시간</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.auditEntity.updatedAt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">수정된 시간</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_diary_수정"><a class="link" href="#_diary_수정">Diary 수정</a></h3>
+<div class="sect3">
+<h4 id="_request_8"><a class="link" href="#_request_8">Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ http --multipart PUT 'https://www.lovebird-wooda.com/api/v0/diaries/2' \
+    'Accept:application/json' \
+    '1-1'@'1-1.png' \
+    '1-2'@'1-2.png' \
+    'diaryUpdateRequest'='{"memberId":1,"title":"Diary title","subTitle":"Diary subtitle","memoryDate":"2023-04-09","place":"Diary place","contents":"Diary contents","imgUrls":["https://www.lovebird-wooda.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-1.png","https://www.lovebird-wooda.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-2.png"]}'</code></pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_i_path_2"><a class="link" href="#_i_path_2">i) path</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. /api/v0/diaries/{id}</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">다이어리 Id</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_ii_images_2"><a class="link" href="#_ii_images_2">ii) images</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[].images</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>image/png</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">다이어리 사진(필수 아님)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_iii_diaryupdaterequest"><a class="link" href="#_iii_diaryupdaterequest">iii) diaryUpdateRequest</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>memberId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Member Id</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>title</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">title</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subTitle</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">subTitle</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>memoryDate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">memoryDate</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>place</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">place</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contents</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">contents</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>imgUrls</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">imgUrls</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_response_8"><a class="link" href="#_response_8">Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 103
+
+{
+  "status" : "SUCCESS",
+  "message" : "다이어리 정보가 수정되었습니다.",
+  "data" : 0
+}</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">응답 상태</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>message</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">응답 메시지</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Diary Id</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_diary_삭제"><a class="link" href="#_diary_삭제">Diary 삭제</a></h3>
+<div class="sect3">
+<h4 id="_request_9"><a class="link" href="#_request_9">Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ http DELETE 'https://www.lovebird-wooda.com/api/v0/diaries/2' \
+    'Content-Type:application/json' \
+    'Accept:application/json'</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. /api/v0/diaries/{id}</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Diary Id</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_response_9"><a class="link" href="#_response_9">Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 106
+
+{
+  "status" : "SUCCESS",
+  "message" : "다이어리 정보가 삭제되었습니다.",
+  "data" : null
+}</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">응답 코드</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>message</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">응답 메시지</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NULL</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-05-18 14:23:24 +0900
+Last updated 2023-06-01 19:44:26 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
