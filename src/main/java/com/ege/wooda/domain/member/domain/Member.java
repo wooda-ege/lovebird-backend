@@ -2,11 +2,13 @@ package com.ege.wooda.domain.member.domain;
 
 import com.ege.wooda.domain.member.dto.response.MemberDetailResponse;
 import com.ege.wooda.global.audit.AuditEntity;
+
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
@@ -47,8 +49,9 @@ public class Member {
     private AuditEntity auditEntity;
 
     @Builder
-    public Member(String nickname, LocalDate firstDate, Gender gender, String pictureM, String pictureW) {
-        this.uuid = UUID.randomUUID().toString();
+    public Member(String uuid, String nickname, LocalDate firstDate, Gender gender, String pictureM,
+                  String pictureW) {
+        this.uuid = uuid;
         this.nickname = nickname;
         this.firstDate = firstDate;
         this.gender = gender;
@@ -67,12 +70,12 @@ public class Member {
 
     public MemberDetailResponse toMemberDetailResponse() {
         return MemberDetailResponse.builder()
-                .uuid(uuid)
-                .nickname(nickname)
-                .dDay(DAYS.between(firstDate, LocalDate.now()) + 1)
-                .gender(gender.toString())
-                .pictureM(pictureM)
-                .pictureW(pictureW)
-                .build();
+                                   .uuid(uuid)
+                                   .nickname(nickname)
+                                   .dDay(DAYS.between(firstDate, LocalDate.now()) + 1)
+                                   .gender(gender.toString())
+                                   .pictureM(pictureM)
+                                   .pictureW(pictureW)
+                                   .build();
     }
 }

@@ -3,7 +3,9 @@ package com.ege.wooda.domain.member.repository;
 import com.ege.wooda.domain.member.domain.Gender;
 import com.ege.wooda.domain.member.domain.Member;
 import com.ege.wooda.global.config.jpa.JpaConfig;
+
 import jakarta.persistence.EntityNotFoundException;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +18,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -40,7 +43,7 @@ public class MemberRepositoryTest {
 
         // when
         Member existMember = memberRepository.findById(member.getId())
-                .orElseThrow(EntityNotFoundException::new);
+                                             .orElseThrow(EntityNotFoundException::new);
 
         // then
         assertEquals(member.getId(), existMember.getId());
@@ -60,7 +63,7 @@ public class MemberRepositoryTest {
         // when
         Member secondMember = memberList.get(1);
         Member existMember = memberRepository.findMemberByNickname(secondMember.getNickname())
-                .orElseThrow(EntityNotFoundException::new);
+                                             .orElseThrow(EntityNotFoundException::new);
 
         //then
         assertEquals(secondMember.getId(), existMember.getId());
@@ -79,17 +82,19 @@ public class MemberRepositoryTest {
 
         // when
         assertThrows(EntityNotFoundException.class,
-                () -> memberRepository.findMemberByNickname("Data").orElseThrow(EntityNotFoundException::new));
+                     () -> memberRepository.findMemberByNickname("Data")
+                                           .orElseThrow(EntityNotFoundException::new));
     }
 
     private Member getMember(String nickname, Gender gender, LocalDate firstDate) {
         return Member.builder()
-                .nickname(nickname)
-                .firstDate(firstDate)
-                .gender(gender)
-                .pictureM(null)
-                .pictureW(null)
-                .build();
+                     .uuid(UUID.randomUUID().toString())
+                     .nickname(nickname)
+                     .firstDate(firstDate)
+                     .gender(gender)
+                     .pictureM(null)
+                     .pictureW(null)
+                     .build();
     }
 
     private List<Member> getMemberList() {

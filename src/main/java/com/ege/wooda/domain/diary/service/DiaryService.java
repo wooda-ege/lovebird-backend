@@ -4,21 +4,22 @@ import com.ege.wooda.domain.diary.dto.request.DiaryCreateRequest;
 import com.ege.wooda.domain.diary.repository.DiaryRepository;
 import com.ege.wooda.domain.diary.domain.Diary;
 import com.ege.wooda.domain.diary.dto.request.DiaryUpdateRequest;
-import com.ege.wooda.domain.member.domain.Member;
-import com.ege.wooda.domain.member.repository.MemberRepository;
 import com.ege.wooda.domain.member.service.MemberService;
 import com.ege.wooda.global.s3.ImageS3Uploader;
 import com.ege.wooda.global.s3.S3File;
+import com.ege.wooda.global.s3.dto.DomainName;
 import com.ege.wooda.global.s3.dto.ImageDeleteRequest;
 import com.ege.wooda.global.s3.dto.ImageUploadRequest;
+import com.ege.wooda.global.s3.fomatter.FileNameFormatter;
+
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,66 +28,83 @@ public class DiaryService {
     private final DiaryRepository diaryRepository;
     private final MemberService memberService;
     private final ImageS3Uploader imageS3Uploader;
+    private final FileNameFormatter fileNameFormatter;
 
     @Transactional
-    public Long save(List<MultipartFile> imgs, DiaryCreateRequest diaryCreateRequest) throws IOException {
-        Member member=memberService.findById(diaryCreateRequest.memberId());
-        List<String> imgUrls=new ArrayList<>();
-        if(!imgs.isEmpty()){
-            imgUrls=imageS3Uploader.upload(new ImageUploadRequest(imgs, "diary", member.getNickname())).stream()
-                    .map(S3File::fileUrl)
-                    .toList();
+    public Long save(List<MultipartFile> images, DiaryCreateRequest diaryCreateRequest, String memberUUID)
+            throws IOException {
+        Diary diary = diaryRepository.save(diaryCreateRequest.toEntity());
+
+        if (!images.isEmpty()) {
+            ImageUploadRequest imageUploadRequest = getImageUploadRequest(images, memberUUID, diary.getId());
+            diary.saveImages(imageS3Uploader.upload(imageUploadRequest).stream()
+                                            .map(S3File::fileUrl)
+                                            .toList());
         }
-        Diary diary=diaryCreateRequest.toEntity(imgUrls);
-        Diary saveDiary=diaryRepository.save(diary);
-        Long diaryId=saveDiary.getId();
-        return diaryId;
+
+        return diary.getId();
     }
 
     @Transactional
-    public Long update(Long id, List<MultipartFile> imgs, DiaryUpdateRequest updateDTO) throws IOException {
-        Diary diary = diaryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        Member member=memberService.findById(diary.getMemberId());
-        List<String> imgUrls=new ArrayList<>();
+    public Long update(Long id, List<MultipartFile> images, DiaryUpdateRequest diaryUpdateRequest,
+                       String memberUUID) throws IOException {
+        Diary diary = findById(id);
+        List<String> imgUrls = diary.getImgUrls();
 
-        if(!imgs.isEmpty()){
-            ImageDeleteRequest imgDeleteRequest=new ImageDeleteRequest(
-                    diary.getImgUrls().stream().map(s-> s.substring(s.lastIndexOf("/")+1)).toList(),
-                    "diary",
-                    member.getNickname());
-            imageS3Uploader.deleteFiles(imgDeleteRequest);
-            imgUrls=imageS3Uploader.upload(new ImageUploadRequest(imgs,"diary",member.getNickname())).stream()
-                    .map(S3File::fileUrl)
-                    .toList();
-            diary.getImgUrls().clear();
+        if (!images.isEmpty()) {
+            imageS3Uploader.deleteFiles(getImageDeleteRequest(imgUrls, memberUUID));
+
+            ImageUploadRequest imageUploadRequest = getImageUploadRequest(images, memberUUID, diary.getId());
+            imgUrls = imageS3Uploader.upload(imageUploadRequest).stream()
+                                     .map(S3File::fileUrl)
+                                     .toList();
         }
-        diary.updateDiary(updateDTO.toEntity(imgUrls));
+
+        diary.updateDiary(diaryUpdateRequest.toEntity(imgUrls));
         return id;
     }
 
     @Transactional
-    public void delete(Long id){
-        Diary diary=diaryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        Member member=memberService.findById(diary.getMemberId());
+    public void delete(Long id, String memberUUID) {
+        Diary diary = findById(id);
 
-        ImageDeleteRequest imgDeleteRequest=new ImageDeleteRequest(
-                diary.getImgUrls().stream().map(s-> s.substring(s.lastIndexOf("/")+1)).toList(),
-                "diary",
-                member.getNickname());
+        ImageDeleteRequest imgDeleteRequest = getImageDeleteRequest(
+                diary.getImgUrls().stream()
+                     .map(s -> s.substring(s.lastIndexOf("/") + 1))
+                     .toList(),
+                memberUUID
+        );
 
         imageS3Uploader.deleteFiles(imgDeleteRequest);
-        diaryRepository.deleteById(id);
+        diaryRepository.delete(diary);
     }
 
     @Transactional(readOnly = true)
-    public List<Diary> findDiaries(){
-        List<Diary> diaryList=diaryRepository.findAll();
-        return diaryList;
+    public List<Diary> findDiaries() {
+        return diaryRepository.findAll();
     }
 
     @Transactional(readOnly = true)
-    public Diary findOne(Long diaryId){
-        Diary findDiary=diaryRepository.findById(diaryId).orElseThrow(EntityNotFoundException::new);
-        return findDiary;
+    public Diary findById(Long id) {
+        return diaryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    }
+
+    private ImageUploadRequest getImageUploadRequest(List<MultipartFile> images, String uuid, Long diaryId) {
+        return ImageUploadRequest.builder()
+                                 .images(images)
+                                 .imageNames(fileNameFormatter.generateImageNames(images, uuid, diaryId))
+                                 .domain(DomainName.DIARY.getDomain())
+                                 .uuid(uuid)
+                                 .build();
+    }
+
+    private ImageDeleteRequest getImageDeleteRequest(List<String> imgUrls, String uuid) {
+        return new ImageDeleteRequest(
+                imgUrls.stream()
+                       .map(s -> s.substring(s.lastIndexOf("/") + 1))
+                       .toList(),
+                DomainName.DIARY.getDomain(),
+                uuid
+        );
     }
 }

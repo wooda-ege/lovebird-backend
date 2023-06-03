@@ -3,11 +3,13 @@ package com.ege.wooda.domain.diary.domain;
 import com.ege.wooda.domain.diary.dto.response.DiaryDetailResponse;
 import com.ege.wooda.global.audit.AuditEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -19,23 +21,24 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Diary{
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="diary_id")
+public class Diary {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "diary_id")
     private Long id;
 
-    @Column(name="user_id")
+    @Column(name = "user_id")
     private Long memberId;
 
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name="sub_title")
+    @Column(name = "sub_title")
     private String subTitle;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name="memory_date", nullable = false)
+    @Column(name = "memory_date", nullable = false)
     private LocalDate memoryDate;
 
     @Column(name = "place")
@@ -45,44 +48,49 @@ public class Diary{
     private String contents;
 
     @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name="diary_images", joinColumns = @JoinColumn(name = "diary_id"))
-    @Column(name="img_urls")
-    private List<String> imgUrls=new ArrayList<>();
+    @CollectionTable(name = "diary_images", joinColumns = @JoinColumn(name = "diary_id"))
+    @Column(name = "img_urls")
+    private List<String> imgUrls = new ArrayList<>();
 
     @Embedded
     private AuditEntity auditEntity;
 
     @Builder
-    public Diary(Long memberId, String title, String subTitle, LocalDate memoryDate, String place, String contents, List imgUrls) {
-        this.memberId=memberId;
+    public Diary(Long memberId, String title, String subTitle, LocalDate memoryDate, String place,
+                 String contents, List imgUrls) {
+        this.memberId = memberId;
         this.title = title;
         this.subTitle = subTitle;
         this.memoryDate = memoryDate;
         this.place = place;
         this.contents = contents;
-        this.imgUrls=imgUrls;
-        auditEntity=new AuditEntity();
+        this.imgUrls = imgUrls;
+        auditEntity = new AuditEntity();
     }
 
-    public void updateDiary(Diary d){
-        memberId=d.getMemberId();
-        title=d.getTitle();
-        subTitle=d.getSubTitle();
-        memoryDate=d.getMemoryDate();
-        place=d.getPlace();
-        contents=d.getContents();
-        imgUrls=d.getImgUrls();
+    public void saveImages(List<String> imagesUrls) {
+        this.imgUrls = imagesUrls;
     }
 
-    public DiaryDetailResponse toDiaryDetailResponse(){
+    public void updateDiary(Diary d) {
+        memberId = d.getMemberId();
+        title = d.getTitle();
+        subTitle = d.getSubTitle();
+        memoryDate = d.getMemoryDate();
+        place = d.getPlace();
+        contents = d.getContents();
+        imgUrls = d.getImgUrls();
+    }
+
+    public DiaryDetailResponse toDiaryDetailResponse() {
         return DiaryDetailResponse.builder()
-                .memberId(memberId)
-                .title(title)
-                .subTitle(subTitle)
-                .memoryDate(memoryDate)
-                .place(place)
-                .contents(contents)
-                .imgUrls(imgUrls)
-                .build();
+                                  .memberId(memberId)
+                                  .title(title)
+                                  .subTitle(subTitle)
+                                  .memoryDate(memoryDate)
+                                  .place(place)
+                                  .contents(contents)
+                                  .imgUrls(imgUrls)
+                                  .build();
     }
 }

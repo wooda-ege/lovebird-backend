@@ -2,7 +2,6 @@ package com.ege.wooda.domain.member.dto.response;
 
 import lombok.Builder;
 
-
 public record MemberDetailResponse(String uuid,
                                    String nickname,
                                    long dDay,
@@ -12,6 +11,5 @@ public record MemberDetailResponse(String uuid,
 
     @Builder
     public MemberDetailResponse {}
-
 
 }

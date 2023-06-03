@@ -1,6 +1,5 @@
 package com.ege.wooda.domain.diary.dto.response;
 
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

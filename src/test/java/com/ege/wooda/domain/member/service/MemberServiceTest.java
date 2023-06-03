@@ -7,7 +7,10 @@ import com.ege.wooda.domain.member.dto.request.MemberUpdateRequest;
 import com.ege.wooda.domain.member.repository.MemberRepository;
 import com.ege.wooda.global.s3.ImageS3Uploader;
 import com.ege.wooda.global.s3.S3File;
+import com.ege.wooda.global.s3.fomatter.FileNameFormatter;
+
 import jakarta.persistence.EntityNotFoundException;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,6 +32,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
@@ -42,8 +46,11 @@ class MemberServiceTest {
     @Mock
     private ImageS3Uploader imageS3Uploader;
 
+    @Mock
+    private FileNameFormatter fileNameFormatter;
+
     @AfterEach
-    public void cleanup(){
+    public void cleanup() {
         memberRepository.deleteAll();
     }
 
@@ -57,10 +64,10 @@ class MemberServiceTest {
         List<S3File> mockS3File = getS3File();
 
         MemberCreateRequest memberCreateRequest = MemberCreateRequest.builder()
-                .nickname("홍길동")
-                .firstDate("2023-05-15")
-                .gender("MALE")
-                .build();
+                                                                     .nickname("홍길동")
+                                                                     .firstDate("2023-05-15")
+                                                                     .gender("MALE")
+                                                                     .build();
 
         ReflectionTestUtils.setField(mockMember, "id", mockId);
         given(imageS3Uploader.upload(any()))
@@ -107,13 +114,14 @@ class MemberServiceTest {
         String mockNickname = "홍길동";
 
         MemberUpdateRequest memberUpdateRequest = MemberUpdateRequest.builder()
-                .nickname(updateNickname)
-                .gender(updateGender)
-                .firstDate(updateFirstDate)
-                .build();
+                                                                     .nickname(updateNickname)
+                                                                     .gender(updateGender)
+                                                                     .firstDate(updateFirstDate)
+                                                                     .build();
 
         ReflectionTestUtils.setField(mockMember, "nickname", mockNickname);
         given(memberRepository.findMemberByNickname(anyString()))
+                .willReturn(Optional.empty())
                 .willReturn(Optional.of(mockMember));
 
         // when
@@ -150,12 +158,12 @@ class MemberServiceTest {
 
     private Member getMember(String nickname, Gender gender, LocalDate firstDate) {
         return Member.builder()
-                .nickname(nickname)
-                .firstDate(firstDate)
-                .gender(gender)
-                .pictureM(null)
-                .pictureW(null)
-                .build();
+                     .nickname(nickname)
+                     .firstDate(firstDate)
+                     .gender(gender)
+                     .pictureM(null)
+                     .pictureW(null)
+                     .build();
     }
 
     private List<Member> getMemberList() {
@@ -175,8 +183,10 @@ class MemberServiceTest {
     }
 
     private List<S3File> getS3File() {
-        return List.of(new S3File("male.png", "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&prefix=member/홍길동/male.png"),
-                new S3File("male.png", "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&prefix=member/홍길동/female.png"));
+        return List.of(new S3File("male.png",
+                                  "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&prefix=member/홍길동/male.png"),
+                       new S3File("male.png",
+                                  "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&prefix=member/홍길동/female.png"));
     }
 
     private LocalDate getLocalDate(String firstDate) {
