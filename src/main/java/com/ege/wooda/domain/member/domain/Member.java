@@ -63,8 +63,6 @@ public class Member {
     public void update(Member user) {
         nickname = user.getNickname();
         firstDate = user.getFirstDate();
-        pictureM = user.getPictureM();
-        pictureW = user.getPictureW();
         gender = user.getGender();
     }
 
