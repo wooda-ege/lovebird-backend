@@ -1,7 +1,5 @@
 package com.ege.wooda.global.advice;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-
 import com.ege.wooda.domain.member.dto.response.MemberResponseMessage;
 import com.ege.wooda.global.common.response.ApiResponse;
 
