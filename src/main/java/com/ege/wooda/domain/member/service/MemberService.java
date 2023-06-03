@@ -43,7 +43,7 @@ public class MemberService {
         List<String> imageUrls = s3Uploader.upload(imageUploadRequest).stream()
                                            .map(S3File::fileUrl)
                                            .toList();
-        Member member = memberCreateRequest.toEntity(imageUrls, getUUID());
+        Member member = memberCreateRequest.toEntity(imageUrls, uuid);
 
         return memberRepository.save(member).getId();
     }
