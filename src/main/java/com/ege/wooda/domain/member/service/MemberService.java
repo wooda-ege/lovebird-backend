@@ -57,7 +57,10 @@ public class MemberService {
 
         Member member = findMemberByNickname(nickname);
         if (!images.isEmpty()) {
-            ImageDeleteRequest imageDeleteRequest = getImageDeleteRequest(member.getUuid());
+            String extensionM = fileNameFormatter.getFileExtension(member.getPictureM());
+            String extensionW = fileNameFormatter.getFileExtension(member.getPictureW());
+
+            ImageDeleteRequest imageDeleteRequest = getImageDeleteRequest(member.getUuid(),extensionM, extensionW);
 
             s3Uploader.deleteFiles(imageDeleteRequest);
 
@@ -75,7 +78,6 @@ public class MemberService {
     public void delete(String nickname) {
         Member member = findMemberByNickname(nickname);
         String uuid = member.getUuid();
-        member.getPictureM();
 
         String extensionM = fileNameFormatter.getFileExtension(member.getPictureM());
         String extensionW = fileNameFormatter.getFileExtension(member.getPictureW());
