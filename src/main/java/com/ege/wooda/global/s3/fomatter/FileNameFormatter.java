@@ -22,7 +22,7 @@ public class FileNameFormatter {
         List<String> imageNames = new ArrayList<>();
         for (int i = 1; i <= images.size(); i++) {
             imageNames.add(uuid +
-                           "-" +
+                           "_" +
                            diaryId +
                            "-" +
                            i +
