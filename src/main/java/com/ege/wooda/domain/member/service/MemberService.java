@@ -14,6 +14,7 @@ import com.ege.wooda.global.s3.fomatter.FileNameFormatter;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
+import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -35,7 +36,7 @@ public class MemberService {
 
     @Transactional
     public Long save(List<MultipartFile> images, MemberCreateRequest memberCreateRequest) throws IOException {
-        checkDuplicatedNickname(memberCreateRequest.nickname());
+        checkDuplicatedNickname("", memberCreateRequest.nickname());
         String uuid = getUUID();
 
         ImageUploadRequest imageUploadRequest = getImageUploadRequest(images, uuid);
@@ -43,7 +44,7 @@ public class MemberService {
         List<String> imageUrls = s3Uploader.upload(imageUploadRequest).stream()
                                            .map(S3File::fileUrl)
                                            .toList();
-        Member member = memberCreateRequest.toEntity(imageUrls, getUUID());
+        Member member = memberCreateRequest.toEntity(imageUrls, uuid);
 
         return memberRepository.save(member).getId();
     }
@@ -52,16 +53,22 @@ public class MemberService {
     @CacheEvict(cacheNames = "member", key = "#nickname")
     public Long update(String nickname, List<MultipartFile> images, MemberUpdateRequest memberUpdateRequest)
             throws IOException {
-        checkDuplicatedNickname(memberUpdateRequest.nickname());
+        checkDuplicatedNickname(nickname, memberUpdateRequest.nickname());
 
         Member member = findMemberByNickname(nickname);
         if (!images.isEmpty()) {
-            ImageDeleteRequest imageDeleteRequest = getImageDeleteRequest(member.getUuid());
+            String extensionM = fileNameFormatter.getFileExtension(member.getPictureM());
+            String extensionW = fileNameFormatter.getFileExtension(member.getPictureW());
+
+            ImageDeleteRequest imageDeleteRequest = getImageDeleteRequest(member.getUuid(),extensionM, extensionW);
 
             s3Uploader.deleteFiles(imageDeleteRequest);
 
             ImageUploadRequest imageUploadRequest = getImageUploadRequest(images, member.getUuid());
-            s3Uploader.upload(imageUploadRequest);
+            List<String> newImgUrls = s3Uploader.upload(imageUploadRequest).stream()
+                                                .map(S3File::fileUrl)
+                                                .toList();
+            member.updateImgUrls(newImgUrls);
         }
 
         member.update(memberUpdateRequest.toEntity());
@@ -75,7 +82,10 @@ public class MemberService {
         Member member = findMemberByNickname(nickname);
         String uuid = member.getUuid();
 
-        ImageDeleteRequest imageDeleteRequest = getImageDeleteRequest(uuid);
+        String extensionM = fileNameFormatter.getFileExtension(member.getPictureM());
+        String extensionW = fileNameFormatter.getFileExtension(member.getPictureW());
+
+        ImageDeleteRequest imageDeleteRequest = getImageDeleteRequest(uuid, extensionM, extensionW);
 
         s3Uploader.deleteFiles(imageDeleteRequest);
         memberRepository.delete(findMemberByNickname(nickname));
@@ -96,8 +106,10 @@ public class MemberService {
         return UUID.randomUUID().toString();
     }
 
-    public void checkDuplicatedNickname(String nickname) {
-        memberRepository.findMemberByNickname(nickname).ifPresent(member -> {
+    public void checkDuplicatedNickname(String oldNickname, String newNickname) {
+        if(StringUtils.equals(oldNickname, newNickname)) { return; }
+
+        memberRepository.findMemberByNickname(newNickname).ifPresent(member -> {
             try {
                 throw new SQLIntegrityConstraintViolationException();
             } catch (SQLIntegrityConstraintViolationException e) {
@@ -115,9 +127,9 @@ public class MemberService {
                                  .build();
     }
 
-    private ImageDeleteRequest getImageDeleteRequest(String uuid) {
+    private ImageDeleteRequest getImageDeleteRequest(String uuid, String extensionM, String extensionW) {
         return new ImageDeleteRequest(
-                List.of(uuid + "-male.png", uuid + "-female.png"),
+                List.of(uuid + "-male" + extensionM, uuid + "-female" + extensionW),
                 DomainName.MEMBER.getDomain(),
                 uuid);
     }

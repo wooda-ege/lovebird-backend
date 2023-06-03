@@ -35,6 +35,7 @@ public class ImageS3Uploader {
                     imageUploadRequest.domain(),
                     imageUploadRequest.uuid(),
                     imageUploadRequest.imageNames().get(i));
+            System.out.println(imageUploadRequest.imageNames().get(i));
             s3Files.add(new S3File(fileName, putS3(image, fileName, getObjectMetadata(image))));
         }
 

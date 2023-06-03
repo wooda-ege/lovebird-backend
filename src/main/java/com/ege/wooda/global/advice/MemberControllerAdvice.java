@@ -1,7 +1,5 @@
 package com.ege.wooda.global.advice;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-
 import com.ege.wooda.domain.member.dto.response.MemberResponseMessage;
 import com.ege.wooda.global.common.response.ApiResponse;
 
@@ -34,11 +32,9 @@ public class MemberControllerAdvice {
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ApiResponse<?>> duplicateExHandler(BindingResult bindingResult) {
+    public ResponseEntity<ApiResponse<?>> duplicateExHandler(DataIntegrityViolationException exception) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponse.createFailWithData(
-                        MemberResponseMessage.FAIL_READ_MEMBER.getMessage(),
-                        bindingResult.getFieldErrors()));
+                .body(ApiResponse.createFail(MemberResponseMessage.DUPLICATED_NICKNAME.getMessage()));
     }
 }

@@ -32,6 +32,6 @@ public class FileNameFormatter {
     }
 
     public String getFileExtension(String originalFileName) {
-        return originalFileName.substring(originalFileName.lastIndexOf("/") + 1);
+        return "." + originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
     }
 }

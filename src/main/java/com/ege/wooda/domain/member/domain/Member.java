@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -63,9 +64,12 @@ public class Member {
     public void update(Member user) {
         nickname = user.getNickname();
         firstDate = user.getFirstDate();
-        pictureM = user.getPictureM();
-        pictureW = user.getPictureW();
         gender = user.getGender();
+    }
+
+    public void updateImgUrls(List<String> imgUrls) {
+        this.pictureM = imgUrls.get(0);
+        this.pictureW = imgUrls.get(1);
     }
 
     public MemberDetailResponse toMemberDetailResponse() {
