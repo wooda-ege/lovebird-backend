@@ -34,11 +34,9 @@ public class MemberControllerAdvice {
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ApiResponse<?>> duplicateExHandler(BindingResult bindingResult) {
+    public ResponseEntity<ApiResponse<?>> duplicateExHandler(DataIntegrityViolationException exception) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponse.createFailWithData(
-                        MemberResponseMessage.FAIL_READ_MEMBER.getMessage(),
-                        bindingResult.getFieldErrors()));
+                .body(ApiResponse.createFail(MemberResponseMessage.DUPLICATED_NICKNAME.getMessage()));
     }
 }

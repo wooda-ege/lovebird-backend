@@ -14,6 +14,7 @@ import com.ege.wooda.global.s3.fomatter.FileNameFormatter;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
+import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -35,7 +36,7 @@ public class MemberService {
 
     @Transactional
     public Long save(List<MultipartFile> images, MemberCreateRequest memberCreateRequest) throws IOException {
-        checkDuplicatedNickname(memberCreateRequest.nickname());
+        checkDuplicatedNickname("", memberCreateRequest.nickname());
         String uuid = getUUID();
 
         ImageUploadRequest imageUploadRequest = getImageUploadRequest(images, uuid);
@@ -52,7 +53,7 @@ public class MemberService {
     @CacheEvict(cacheNames = "member", key = "#nickname")
     public Long update(String nickname, List<MultipartFile> images, MemberUpdateRequest memberUpdateRequest)
             throws IOException {
-        checkDuplicatedNickname(memberUpdateRequest.nickname());
+        checkDuplicatedNickname(nickname, memberUpdateRequest.nickname());
 
         Member member = findMemberByNickname(nickname);
         if (!images.isEmpty()) {
@@ -96,8 +97,10 @@ public class MemberService {
         return UUID.randomUUID().toString();
     }
 
-    public void checkDuplicatedNickname(String nickname) {
-        memberRepository.findMemberByNickname(nickname).ifPresent(member -> {
+    public void checkDuplicatedNickname(String oldNickname, String newNickname) {
+        if(StringUtils.equals(oldNickname, newNickname)) { return; }
+
+        memberRepository.findMemberByNickname(newNickname).ifPresent(member -> {
             try {
                 throw new SQLIntegrityConstraintViolationException();
             } catch (SQLIntegrityConstraintViolationException e) {
