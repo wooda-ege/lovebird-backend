@@ -65,7 +65,10 @@ public class MemberService {
             s3Uploader.deleteFiles(imageDeleteRequest);
 
             ImageUploadRequest imageUploadRequest = getImageUploadRequest(images, member.getUuid());
-            s3Uploader.upload(imageUploadRequest);
+            List<String> newImgUrls = s3Uploader.upload(imageUploadRequest).stream()
+                                                .map(S3File::fileUrl)
+                                                .toList();
+            member.updateImgUrls(newImgUrls);
         }
 
         member.update(memberUpdateRequest.toEntity());
