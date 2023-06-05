@@ -31,10 +31,10 @@ public class MemberControllerAdvice {
                         bindingResult.getFieldErrors()));
     }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ApiResponse<?>> duplicateExHandler(DataIntegrityViolationException exception) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponse.createFail(MemberResponseMessage.DUPLICATED_NICKNAME.getMessage()));
-    }
+//    @ExceptionHandler(DataIntegrityViolationException.class)
+//    public ResponseEntity<ApiResponse<?>> duplicateExHandler(DataIntegrityViolationException exception) {
+//        return ResponseEntity
+//                .status(HttpStatus.BAD_REQUEST)
+//                .body(ApiResponse.createFail(MemberResponseMessage.DUPLICATED_NICKNAME.getMessage()));
+//    }
 }
