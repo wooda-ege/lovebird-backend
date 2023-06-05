@@ -104,18 +104,18 @@ class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("해당 Nickname의 Member를 조회한다.")
+    @DisplayName("해당 id의 Member를 조회한다.")
     void details() throws Exception {
         // given
-        String mockNickname = "홍길동";
-        Member mockMember = getMember(mockNickname, Gender.MALE, getLocalDate("2023-05-15"));
+        Long mockId = 1L;
+        Member mockMember = getMember("홍길동", Gender.MALE, getLocalDate("2023-05-15"));
 
-        given(memberService.findMemberByNickname(anyString()))
+        given(memberService.findById(anyLong()))
                 .willReturn(mockMember);
 
         // when
         ResultActions result = this.mockMvc.perform(
-                get("/api/v0/members/{nickname}", mockNickname)
+                get("/api/v0/members/{id}", mockId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8"));
@@ -126,7 +126,7 @@ class MemberControllerTest {
               .andDo(document("member-details",
                               getDocumentRequest(),
                               getDocumentResponse(),
-                              pathParameters(parameterWithName("nickname").description("닉네임")),
+                              pathParameters(parameterWithName("id").description("member id")),
                               responseFields(
                                       fieldWithPath("status").type(JsonFieldType.STRING).description("응답 코드"),
                                       fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
@@ -135,13 +135,25 @@ class MemberControllerTest {
                                       fieldWithPath("data.uuid").type(JsonFieldType.STRING).description("UUID"),
                                       fieldWithPath("data.nickname").type(JsonFieldType.STRING)
                                                                     .description("닉네임"),
-                                      fieldWithPath("data.dDay").type(JsonFieldType.NUMBER)
-                                                                .description("사귄 일수"),
                                       fieldWithPath("data.gender").type(JsonFieldType.STRING).description("성별"),
                                       fieldWithPath("data.pictureM").type(JsonFieldType.STRING)
                                                                     .description("남자 사진"),
                                       fieldWithPath("data.pictureW").type(JsonFieldType.STRING)
-                                                                    .description("여자 사진")
+                                                                    .description("여자 사진"),
+                                      fieldWithPath("data.anniversaryList.dDay").type(JsonFieldType.NUMBER).description("사귄 일수"),
+                                      fieldWithPath("data.anniversaryList.oneHundred").type(JsonFieldType.STRING).description("백일"),
+                                      fieldWithPath("data.anniversaryList.twoHundreds").type(JsonFieldType.STRING).description("이백일"),
+                                      fieldWithPath("data.anniversaryList.threeHundreds").type(JsonFieldType.STRING).description("삼백일"),
+                                      fieldWithPath("data.anniversaryList.1years").type(JsonFieldType.STRING).description("1주년"),
+                                      fieldWithPath("data.anniversaryList.2years").type(JsonFieldType.STRING).description("2주년"),
+                                      fieldWithPath("data.anniversaryList.3years").type(JsonFieldType.STRING).description("3주년"),
+                                      fieldWithPath("data.anniversaryList.4years").type(JsonFieldType.STRING).description("4주년"),
+                                      fieldWithPath("data.anniversaryList.5years").type(JsonFieldType.STRING).description("5주년"),
+                                      fieldWithPath("data.anniversaryList.6years").type(JsonFieldType.STRING).description("6주년"),
+                                      fieldWithPath("data.anniversaryList.7years").type(JsonFieldType.STRING).description("7주년"),
+                                      fieldWithPath("data.anniversaryList.8years").type(JsonFieldType.STRING).description("8주년"),
+                                      fieldWithPath("data.anniversaryList.9years").type(JsonFieldType.STRING).description("9주년"),
+                                      fieldWithPath("data.anniversaryList.10years").type(JsonFieldType.STRING).description("10주년")
                               )));
     }
 
