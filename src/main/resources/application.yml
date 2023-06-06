@@ -1,0 +1,11 @@
+spring:
+  profiles:
+    default: local
+  application:
+    title: Lovebird
+    version: 0.1
+  banner:
+    location: classpath:/app-banner.dat
+  jpa:
+    hibernate:
+      ddl-auto: none
