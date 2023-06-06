@@ -26,7 +26,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DiaryService {
     private final DiaryRepository diaryRepository;
-    private final MemberService memberService;
     private final ImageS3Uploader imageS3Uploader;
     private final FileNameFormatter fileNameFormatter;
 

@@ -79,7 +79,7 @@ public class DiaryControllerTest {
                                                                   .subTitle("Diary subtitle")
                                                                   .memoryDate("2023-04-09")
                                                                   .place("Diary place")
-                                                                  .contents("Diary contents")
+                                                                  .content("Diary content")
                                                                   .imgUrls(urls)
                                                                   .build();
         String request = objectMapper.writeValueAsString(diaryCreateRequest);
@@ -116,8 +116,8 @@ public class DiaryControllerTest {
                                                                            .description("memoryDate"),
                                                 fieldWithPath("place").type(JsonFieldType.STRING)
                                                                       .description("place"),
-                                                fieldWithPath("contents").type(JsonFieldType.STRING)
-                                                                         .description("contents"),
+                                                fieldWithPath("content").type(JsonFieldType.STRING)
+                                                                         .description("content"),
                                                 fieldWithPath("imgUrls").type(JsonFieldType.ARRAY)
                                                                         .description("imgUrls")
                               ),
@@ -201,7 +201,7 @@ public class DiaryControllerTest {
     public void findById() throws Exception {
         List<String> urls = getImageUrls("홍길동");
         Diary mockDiary = getDiary(2L, "Test Diary2", "Test diary subtitle2", getLocalDate("2023-05-30"),
-                                   "place2", "contents2", urls);
+                                   "place2", "content2", urls);
         Long mockId = 2L;
 
         ReflectionTestUtils.setField(mockDiary, "id", mockId);
@@ -265,13 +265,13 @@ public class DiaryControllerTest {
                                                                   .subTitle("Diary subtitle")
                                                                   .memoryDate("2023-04-09")
                                                                   .place("Diary place")
-                                                                  .contents("Diary contents")
+                                                                  .content("Diary content")
                                                                   .imgUrls(urls)
                                                                   .build();
         String request = objectMapper.writeValueAsString(diaryUpdateRequest);
 
         Diary mockDiary = getDiary(2L, "Test Diary2", "Test diary subtitle2", getLocalDate("2023-05-30"),
-                                   "place2", "contents2", urls);
+                                   "place2", "content2", urls);
         Long mockId = 2L;
 
         ReflectionTestUtils.setField(mockDiary, "id", mockId);
@@ -315,8 +315,8 @@ public class DiaryControllerTest {
                                                                            .description("memoryDate"),
                                                 fieldWithPath("place").type(JsonFieldType.STRING)
                                                                       .description("place"),
-                                                fieldWithPath("contents").type(JsonFieldType.STRING)
-                                                                         .description("contents"),
+                                                fieldWithPath("content").type(JsonFieldType.STRING)
+                                                                         .description("content"),
                                                 fieldWithPath("imgUrls").type(JsonFieldType.ARRAY)
                                                                         .description("imgUrls")
                               ),
@@ -335,7 +335,7 @@ public class DiaryControllerTest {
         Member mockMember = getMember(mockNickname, Gender.MALE, getLocalDate("2023-05-15"));
         List<String> urls = getImageUrls("홍길동");
         Diary mockDiary = getDiary(2L, "Test Diary2", "Test diary subtitle2", getLocalDate("2023-05-30"),
-                                   "place2", "contents2", urls);
+                                   "place2", "content2", urls);
         Long mockId = 2L;
 
         given(memberService.findById(anyLong()))
@@ -364,14 +364,14 @@ public class DiaryControllerTest {
     }
 
     private Diary getDiary(Long memberId, String title, String subTitle, LocalDate memoryDate, String place,
-                           String contents, List imgUrls) {
+                           String content, List imgUrls) {
         return Diary.builder()
                     .memberId(memberId)
                     .title(title)
                     .subTitle(subTitle)
                     .memoryDate(memoryDate)
                     .place(place)
-                    .contents(contents)
+                    .content(content)
                     .imgUrls(imgUrls)
                     .build();
     }
@@ -380,11 +380,11 @@ public class DiaryControllerTest {
         List<String> urls1 = getImageUrls("홍길동");
         List<String> urls2 = getImageUrls("여혜민");
         return List.of(getDiary(1L, "Test Diary1", "Test diary subtitle1", getLocalDate("2023-06-01"), "place1",
-                                "contents1", urls1)
+                                "content1", urls1)
                 , getDiary(2L, "Test Diary2", "Test diary subtitle2", getLocalDate("2023-06-01"), "place2",
-                           "contents2", urls2)
+                           "content2", urls2)
                 , getDiary(3L, "Test Diary3", "Test diary subtitle3", getLocalDate("2023-06-01"), "place3",
-                           "contents3", urls2));
+                           "content3", urls2));
     }
 
     private List<MockMultipartFile> getMultipartFiles() {

@@ -13,8 +13,8 @@ public record DiaryUpdateRequest(Long memberId,
                                  @NotBlank String subTitle,
                                  @NotBlank String memoryDate,
                                  @NotBlank String place,
-                                 @NotBlank String contents,
-                                 List imgUrls) {
+                                 @NotBlank String content,
+                                 List<String> imgUrls) {
 
     @Builder
     public DiaryUpdateRequest {}
@@ -26,7 +26,7 @@ public record DiaryUpdateRequest(Long memberId,
                     .subTitle(subTitle)
                     .memoryDate(LocalDate.parse(memoryDate))
                     .place(place)
-                    .contents(contents)
+                    .content(content)
                     .imgUrls(imgUrls)
                     .build();
     }

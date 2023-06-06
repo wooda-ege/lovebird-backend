@@ -80,14 +80,14 @@ public class DiaryRepositoryTest {
     }
 
     private Diary getDiary(Long memberId, String title, String subTitle, LocalDate memoryDate, String place,
-                           String contents, List imgUrls) {
+                           String content, List<String> imgUrls) {
         return Diary.builder()
                     .memberId(memberId)
                     .title(title)
                     .subTitle(subTitle)
                     .memoryDate(memoryDate)
                     .place(place)
-                    .contents(contents)
+                    .content(content)
                     .imgUrls(imgUrls)
                     .build();
     }
