@@ -57,13 +57,13 @@ public class Diary {
 
     @Builder
     public Diary(Long memberId, String title, String subTitle, LocalDate memoryDate, String place,
-                 String contents, List imgUrls) {
+                 String content, List imgUrls) {
         this.memberId = memberId;
         this.title = title;
         this.subTitle = subTitle;
         this.memoryDate = memoryDate;
         this.place = place;
-        this.content = contents;
+        this.content = content;
         this.imgUrls = imgUrls;
         auditEntity = new AuditEntity();
     }

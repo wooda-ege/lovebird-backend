@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public record DiaryCreateRequest(Long memberId, String title, String subTitle, String memoryDate, String place,
-                                 String contents, List<String> imgUrls) {
+                                 String content, List<String> imgUrls) {
 
     @Builder
     public DiaryCreateRequest {}
@@ -22,7 +22,7 @@ public record DiaryCreateRequest(Long memberId, String title, String subTitle, S
                     .subTitle(subTitle)
                     .memoryDate(getLocalDate(memoryDate))
                     .place(place)
-                    .contents(contents)
+                    .content(content)
                     .build();
     }
 
