@@ -183,7 +183,7 @@ public class DiaryControllerTest {
                                                                         .description("데이트 날짜"),
                                       fieldWithPath("data[].place").type(JsonFieldType.STRING)
                                                                    .description("장소"),
-                                      fieldWithPath("data[].contents").type(JsonFieldType.STRING)
+                                      fieldWithPath("data[].content").type(JsonFieldType.STRING)
                                                                       .description("내용"),
                                       fieldWithPath("data[].imgUrls").type(JsonFieldType.ARRAY)
                                                                      .description("이미지 URL 목록"),
@@ -239,7 +239,7 @@ public class DiaryControllerTest {
                                       fieldWithPath("data.memoryDate").type(JsonFieldType.STRING)
                                                                       .description("데이트 날짜"),
                                       fieldWithPath("data.place").type(JsonFieldType.STRING).description("장소"),
-                                      fieldWithPath("data.contents").type(JsonFieldType.STRING)
+                                      fieldWithPath("data.content").type(JsonFieldType.STRING)
                                                                     .description("내용"),
                                       fieldWithPath("data.imgUrls").type(JsonFieldType.ARRAY)
                                                                    .description("이미지 URL 목록"),

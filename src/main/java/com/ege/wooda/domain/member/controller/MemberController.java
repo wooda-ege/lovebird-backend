@@ -35,10 +35,9 @@ public class MemberController {
                 HttpStatus.CREATED);
     }
 
-    @GetMapping("/{nickname}")
-    public ResponseEntity<ApiResponse<MemberDetailResponse>> details(@PathVariable String nickname) {
-        MemberDetailResponse memberDetailResponse = memberService.findMemberByNickname(nickname)
-                                                                 .toMemberDetailResponse();
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<MemberDetailResponse>> detailsById(@PathVariable Long id) {
+        MemberDetailResponse memberDetailResponse = memberService.findById(id).toMemberDetailResponse();
         return ResponseEntity.ok(
                 ApiResponse.createSuccessWithData(MemberResponseMessage.READ_MEMBER.getMessage(),
                                                   memberDetailResponse));

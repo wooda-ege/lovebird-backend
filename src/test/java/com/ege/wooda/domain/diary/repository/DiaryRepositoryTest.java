@@ -49,7 +49,7 @@ public class DiaryRepositoryTest {
         assertEquals(diary.getSubTitle(), existDiary.getSubTitle());
         assertEquals(diary.getMemoryDate(), existDiary.getMemoryDate());
         assertEquals(diary.getPlace(), existDiary.getPlace());
-        assertEquals(diary.getContents(), existDiary.getContents());
+        assertEquals(diary.getContent(), existDiary.getContent());
         assertEquals(diary.getImgUrls(), existDiary.getImgUrls());
     }
 

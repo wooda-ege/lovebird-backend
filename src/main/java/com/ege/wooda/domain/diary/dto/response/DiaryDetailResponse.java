@@ -10,8 +10,8 @@ public record DiaryDetailResponse(Long memberId,
                                   String subTitle,
                                   LocalDate memoryDate,
                                   String place,
-                                  String contents,
-                                  List imgUrls) {
+                                  String content,
+                                  List<String> imgUrls) {
 
     @Builder
     public DiaryDetailResponse {}

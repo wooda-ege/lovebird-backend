@@ -12,7 +12,9 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -30,13 +32,13 @@ public class Member {
     @Column(name = "uuid", unique = true, nullable = false)
     private String uuid;
 
-    @Column(name = "nickname", unique = true, nullable = false)
+    @Column(name = "nickname", nullable = false)
     private String nickname;
 
     @Column(name = "first_date", nullable = false)
     private LocalDate firstDate;
 
-    @Column(name = "gender", nullable = false)
+    @Column(name = "gender")
     @Enumerated(value = EnumType.STRING)
     private Gender gender;
 
@@ -73,10 +75,21 @@ public class Member {
     }
 
     public MemberDetailResponse toMemberDetailResponse() {
+        Map<String, Object> anniversaryList = new HashMap<>() {{
+            put("dDay", DAYS.between(firstDate, LocalDate.now()) + 1);
+            put("oneHundred", firstDate.plusDays(100));
+            put("twoHundreds", firstDate.plusDays(200));
+            put("threeHundreds", firstDate.plusDays(300));
+        }};
+
+        for(int i=1 ; i<=10 ; i++) {
+            anniversaryList.put(i + "years", firstDate.plusYears(i));
+        }
+
         return MemberDetailResponse.builder()
                                    .uuid(uuid)
                                    .nickname(nickname)
-                                   .dDay(DAYS.between(firstDate, LocalDate.now()) + 1)
+                                   .anniversaryList(anniversaryList)
                                    .gender(gender.toString())
                                    .pictureM(pictureM)
                                    .pictureW(pictureW)

@@ -14,16 +14,13 @@ import com.ege.wooda.global.s3.fomatter.FileNameFormatter;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
-import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,7 +33,6 @@ public class MemberService {
 
     @Transactional
     public Long save(List<MultipartFile> images, MemberCreateRequest memberCreateRequest) throws IOException {
-        checkDuplicatedNickname("", memberCreateRequest.nickname());
         String uuid = getUUID();
 
         ImageUploadRequest imageUploadRequest = getImageUploadRequest(images, uuid);
@@ -53,8 +49,6 @@ public class MemberService {
     @CacheEvict(cacheNames = "member", key = "#nickname")
     public Long update(String nickname, List<MultipartFile> images, MemberUpdateRequest memberUpdateRequest)
             throws IOException {
-        checkDuplicatedNickname(nickname, memberUpdateRequest.nickname());
-
         Member member = findMemberByNickname(nickname);
         if (!images.isEmpty()) {
             String extensionM = fileNameFormatter.getFileExtension(member.getPictureM());
@@ -98,24 +92,19 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "member", key = "#id", value = "member")
     public Member findById(Long id) {
         return memberRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
-    private String getUUID() {
-        return UUID.randomUUID().toString();
+    @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "member", key = "#uuid", value = "member")
+    public Member findByUuid(String uuid) {
+        return memberRepository.findMemberByUuid(uuid).orElseThrow(EntityNotFoundException::new);
     }
 
-    public void checkDuplicatedNickname(String oldNickname, String newNickname) {
-        if(StringUtils.equals(oldNickname, newNickname)) { return; }
-
-        memberRepository.findMemberByNickname(newNickname).ifPresent(member -> {
-            try {
-                throw new SQLIntegrityConstraintViolationException();
-            } catch (SQLIntegrityConstraintViolationException e) {
-                throw new DataIntegrityViolationException(e.getMessage());
-            }
-        });
+    private String getUUID() {
+        return UUID.randomUUID().toString();
     }
 
     private ImageUploadRequest getImageUploadRequest(List<MultipartFile> images, String uuid) {
@@ -133,4 +122,16 @@ public class MemberService {
                 DomainName.MEMBER.getDomain(),
                 uuid);
     }
+
+//    public void checkDuplicatedNickname(String oldNickname, String newNickname) {
+//        if(StringUtils.equals(oldNickname, newNickname)) { return; }
+//
+//        memberRepository.findMemberByNickname(newNickname).ifPresent(member -> {
+//            try {
+//                throw new SQLIntegrityConstraintViolationException();
+//            } catch (SQLIntegrityConstraintViolationException e) {
+//                throw new DataIntegrityViolationException(e.getMessage());
+//            }
+//        });
+//    }
 }
