@@ -635,7 +635,7 @@ Content-Length: 927
   "status" : "SUCCESS",
   "message" : "유저 조회에 성공하셨습니다.",
   "data" : {
-    "uuid" : "53bc11cd-eb9c-4efd-997d-24697a931981",
+    "uuid" : "83663738-564d-49f8-b99a-71f78147002b",
     "nickname" : "홍길동",
     "anniversaryList" : {
       "9years" : "2032-05-15",
@@ -645,7 +645,7 @@ Content-Length: 927
       "2years" : "2025-05-15",
       "1years" : "2024-05-15",
       "oneHundred" : "2023-08-23",
-      "dDay" : 22,
+      "dDay" : 23,
       "4years" : "2027-05-15",
       "threeHundreds" : "2024-03-10",
       "8years" : "2031-05-15",
@@ -1023,7 +1023,7 @@ Content-Length: 100
     'Accept:application/json' \
     '1-1'@'1-1.png' \
     '1-2'@'1-2.png' \
-    'diaryCreateRequest'='{"memberId":1,"title":"Diary title","subTitle":"Diary subtitle","memoryDate":"2023-04-09","place":"Diary place","contents":"Diary contents","imgUrls":["https://www.lovebird-wooda.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-1.png","https://www.lovebird-wooda.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-2.png"]}'</code></pre>
+    'diaryCreateRequest'='{"memberId":1,"title":"Diary title","subTitle":"Diary subtitle","memoryDate":"2023-04-09","place":"Diary place","content":"Diary content","imgUrls":["https://www.lovebird-wooda.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-1.png","https://www.lovebird-wooda.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-2.png"]}'</code></pre>
 </div>
 </div>
 <div class="sect4">
@@ -1092,9 +1092,9 @@ Content-Length: 100
 <td class="tableblock halign-left valign-top"><p class="tableblock">place</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contents</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">contents</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">content</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>imgUrls</code></p></td>
@@ -1171,7 +1171,7 @@ Content-Length: 96
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 1754
+Content-Length: 1751
 
 {
   "status" : "SUCCESS",
@@ -1183,7 +1183,7 @@ Content-Length: 1754
     "subTitle" : "Test diary subtitle1",
     "memoryDate" : "2023-06-01",
     "place" : "place1",
-    "content" : "contents1",
+    "content" : "content1",
     "imgUrls" : [ "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-1.png", "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-2.png" ],
     "auditEntity" : {
       "createdAt" : "2023-05-15 17:13:06",
@@ -1196,7 +1196,7 @@ Content-Length: 1754
     "subTitle" : "Test diary subtitle2",
     "memoryDate" : "2023-06-01",
     "place" : "place2",
-    "content" : "contents2",
+    "content" : "content2",
     "imgUrls" : [ "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/여혜민/1-1.png", "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/여혜민/1-2.png" ],
     "auditEntity" : {
       "createdAt" : "2023-05-20 09:34:21",
@@ -1209,7 +1209,7 @@ Content-Length: 1754
     "subTitle" : "Test diary subtitle3",
     "memoryDate" : "2023-06-01",
     "place" : "place3",
-    "content" : "contents3",
+    "content" : "content3",
     "imgUrls" : [ "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/여혜민/1-1.png", "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/여혜민/1-2.png" ],
     "auditEntity" : {
       "createdAt" : "2023-06-02 06:23:41",
@@ -1339,7 +1339,7 @@ Content-Length: 1754
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 650
+Content-Length: 649
 
 {
   "status" : "SUCCESS",
@@ -1351,7 +1351,7 @@ Content-Length: 650
     "subTitle" : "Test diary subtitle2",
     "memoryDate" : "2023-05-30",
     "place" : "place2",
-    "content" : "contents2",
+    "content" : "content2",
     "imgUrls" : [ "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-1.png", "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-2.png" ],
     "auditEntity" : {
       "createdAt" : "2023-06-01 19:02:14",
@@ -1454,7 +1454,7 @@ Content-Length: 650
     'Accept:application/json' \
     '1-1'@'1-1.png' \
     '1-2'@'1-2.png' \
-    'diaryUpdateRequest'='{"memberId":1,"title":"Diary title","subTitle":"Diary subtitle","memoryDate":"2023-04-09","place":"Diary place","contents":"Diary contents","imgUrls":["https://www.lovebird-wooda.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-1.png","https://www.lovebird-wooda.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-2.png"]}'</code></pre>
+    'diaryUpdateRequest'='{"memberId":1,"title":"Diary title","subTitle":"Diary subtitle","memoryDate":"2023-04-09","place":"Diary place","content":"Diary content","imgUrls":["https://www.lovebird-wooda.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-1.png","https://www.lovebird-wooda.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-2.png"]}'</code></pre>
 </div>
 </div>
 <div class="sect4">
@@ -1545,9 +1545,9 @@ Content-Length: 650
 <td class="tableblock halign-left valign-top"><p class="tableblock">place</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contents</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">contents</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">content</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>imgUrls</code></p></td>
