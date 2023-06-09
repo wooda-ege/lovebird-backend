@@ -598,7 +598,7 @@ Content-Length: 90
 <h4 id="_request_2"><a class="link" href="#_request_2">Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ http GET 'https://www.lovebird-wooda.com/api/v0/members/1' \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ http GET 'https://www.lovebird-wooda.com/api/v0/members/%ED%99%8D%EA%B8%B8%EB%8F%99' \
     'Content-Type:application/json;charset=UTF-8' \
     'Accept:application/json'</code></pre>
 </div>
@@ -1023,7 +1023,7 @@ Content-Length: 100
     'Accept:application/json' \
     '1-1'@'1-1.png' \
     '1-2'@'1-2.png' \
-    'diaryCreateRequest'='{"memberId":1,"title":"Diary title","subTitle":"Diary subtitle","memoryDate":"2023-04-09","place":"Diary place","content":"Diary content","imgUrls":["https://www.lovebird-wooda.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-1.png","https://www.lovebird-wooda.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-2.png"]}'</code></pre>
+    'diaryCreateRequest'='{"memberId":1,"title":"Diary title","subTitle":"Diary subtitle","memoryDate":"2023-04-09","place":"Diary place","contents":"Diary contents","imgUrls":["https://www.lovebird-wooda.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-1.png","https://www.lovebird-wooda.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-2.png"]}'</code></pre>
 </div>
 </div>
 <div class="sect4">
@@ -1159,7 +1159,7 @@ Content-Length: 96
 <h4 id="_request_6"><a class="link" href="#_request_6">Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ http GET 'https://www.lovebird-wooda.com/api/v0/diaries' \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ http GET 'https://www.lovebird-wooda.com/api/v0/diaries?memberId=2' \
     'Content-Type:application/json;charset=UTF-8' \
     'Accept:application/json'</code></pre>
 </div>
@@ -1178,7 +1178,7 @@ Content-Length: 1751
   "message" : "다이어리 조회에 성공하셨습니다.",
   "data" : [ {
     "id" : 1,
-    "memberId" : 1,
+    "memberId" : 2,
     "title" : "Test Diary1",
     "subTitle" : "Test diary subtitle1",
     "memoryDate" : "2023-06-01",
@@ -1204,7 +1204,7 @@ Content-Length: 1751
     }
   }, {
     "id" : 3,
-    "memberId" : 3,
+    "memberId" : 2,
     "title" : "Test Diary3",
     "subTitle" : "Test diary subtitle3",
     "memoryDate" : "2023-06-01",
@@ -1244,6 +1244,11 @@ Content-Length: 1751
 <td class="tableblock halign-left valign-top"><p class="tableblock">응답 메시지</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">응답 데이터</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data[].id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Diary Id</p></td>
@@ -1275,6 +1280,7 @@ Content-Length: 1751
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data[].content</code></p></td>
+
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">내용</p></td>
 </tr>
@@ -1691,7 +1697,7 @@ Content-Length: 106
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-06-03 12:05:35 +0900
+Last updated 2023-06-03 12:05:04 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

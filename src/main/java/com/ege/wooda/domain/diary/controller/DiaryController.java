@@ -39,8 +39,8 @@ public class DiaryController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ApiResponse<List<Diary>>> getList() {
-        List<Diary> diaryList = diaryService.findDiaries();
+    public ResponseEntity<ApiResponse<List<Diary>>> getDiary(@RequestParam Long memberId) {
+        List<Diary> diaryList = diaryService.findByMemberId(memberId);
 
         return ResponseEntity.ok(
                 ApiResponse.createSuccessWithData(DiaryResponseMessage.READ_DIARY.getMessage(), diaryList)
