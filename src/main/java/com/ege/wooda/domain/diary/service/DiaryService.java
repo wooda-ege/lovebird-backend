@@ -35,7 +35,7 @@ public class DiaryService {
             throws IOException {
         Diary diary = diaryRepository.save(diaryCreateRequest.toEntity());
 
-        if (!images.isEmpty()) {
+        if (images!=null) {
             ImageUploadRequest imageUploadRequest = getImageUploadRequest(images, memberUUID, diary.getId());
             diary.saveImages(imageS3Uploader.upload(imageUploadRequest).stream()
                                             .map(S3File::fileUrl)
@@ -51,7 +51,7 @@ public class DiaryService {
         Diary diary = findById(id);
         List<String> imgUrls = diary.getImgUrls();
 
-        if (!images.isEmpty()) {
+        if (images!=null) {
             imageS3Uploader.deleteFiles(getImageDeleteRequest(imgUrls, memberUUID));
 
             ImageUploadRequest imageUploadRequest = getImageUploadRequest(images, memberUUID, diary.getId());
@@ -87,6 +87,11 @@ public class DiaryService {
     @Transactional(readOnly = true)
     public Diary findById(Long id) {
         return diaryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Diary> findByMemberId(Long id) {
+        return diaryRepository.findByMemberId(id);
     }
 
     private ImageUploadRequest getImageUploadRequest(List<MultipartFile> images, String uuid, Long diaryId) {
