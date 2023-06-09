@@ -26,7 +26,7 @@ public class FileNameFormatter {
                            diaryId +
                            "-" +
                            i +
-                           getFileExtension(Objects.requireNonNull(images.get(i).getOriginalFilename())));
+                           getFileExtension(Objects.requireNonNull(images.get(i-1).getOriginalFilename())));
         }
         return imageNames;
     }

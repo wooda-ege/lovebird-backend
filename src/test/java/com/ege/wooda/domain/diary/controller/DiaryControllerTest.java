@@ -20,6 +20,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
@@ -154,11 +155,12 @@ public class DiaryControllerTest {
         ReflectionTestUtils.setField(diaryList.get(2).getAuditEntity(), "updatedAt",
                                      getLocalDateTime(mockAuditList.get(3)));
 
-        given(diaryService.findDiaries())
+        given(diaryService.findByMemberId(2L))
                 .willReturn(diaryList);
 
         ResultActions result = this.mockMvc.perform(
-                get("/api/v0/diaries")
+                get("/api/v0/diaries?memberId=2")
+                        .param("memberId", String.valueOf(2L))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8"));
@@ -171,28 +173,29 @@ public class DiaryControllerTest {
                               responseFields(
                                       fieldWithPath("status").type(JsonFieldType.STRING).description("응답 코드"),
                                       fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                      fieldWithPath("data").type(JsonFieldType.ARRAY).description("응답 데이터"),
                                       fieldWithPath("data[].id").type(JsonFieldType.NUMBER)
-                                                                .description("Diary Id"),
+                                                                .description("Diary Id").optional(),
                                       fieldWithPath("data[].memberId").type(JsonFieldType.NUMBER)
-                                                                      .description("Member Id"),
+                                                                      .description("Member Id").optional(),
                                       fieldWithPath("data[].title").type(JsonFieldType.STRING)
-                                                                   .description("제목"),
+                                                                   .description("제목").optional(),
                                       fieldWithPath("data[].subTitle").type(JsonFieldType.STRING)
-                                                                      .description("소제목"),
+                                                                      .description("소제목").optional(),
                                       fieldWithPath("data[].memoryDate").type(JsonFieldType.STRING)
-                                                                        .description("데이트 날짜"),
+                                                                        .description("데이트 날짜").optional(),
                                       fieldWithPath("data[].place").type(JsonFieldType.STRING)
                                                                    .description("장소"),
                                       fieldWithPath("data[].content").type(JsonFieldType.STRING)
                                                                       .description("내용"),
                                       fieldWithPath("data[].imgUrls").type(JsonFieldType.ARRAY)
-                                                                     .description("이미지 URL 목록"),
+                                                                     .description("이미지 URL 목록").optional(),
                                       fieldWithPath("data[].auditEntity").type(JsonFieldType.OBJECT)
-                                                                         .description("생성된 시간"),
+                                                                         .description("생성된 시간").optional(),
                                       fieldWithPath("data[].auditEntity.createdAt").type(JsonFieldType.STRING)
-                                                                                   .description("생성된 시간"),
+                                                                                   .description("생성된 시간").optional(),
                                       fieldWithPath("data[].auditEntity.updatedAt").type(JsonFieldType.STRING)
-                                                                                   .description("수정된 시간")
+                                                                                   .description("수정된 시간").optional()
                               )));
     }
 
@@ -379,11 +382,11 @@ public class DiaryControllerTest {
     private List<Diary> getDiaryList() {
         List<String> urls1 = getImageUrls("홍길동");
         List<String> urls2 = getImageUrls("여혜민");
-        return List.of(getDiary(1L, "Test Diary1", "Test diary subtitle1", getLocalDate("2023-06-01"), "place1",
+        return List.of(getDiary(2L, "Test Diary1", "Test diary subtitle1", getLocalDate("2023-06-01"), "place1",
                                 "content1", urls1)
                 , getDiary(2L, "Test Diary2", "Test diary subtitle2", getLocalDate("2023-06-01"), "place2",
                            "content2", urls2)
-                , getDiary(3L, "Test Diary3", "Test diary subtitle3", getLocalDate("2023-06-01"), "place3",
+                , getDiary(2L, "Test Diary3", "Test diary subtitle3", getLocalDate("2023-06-01"), "place3",
                            "content3", urls2));
     }
 
