@@ -604,7 +604,7 @@ Content-Length: 90
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. /api/v0/members/{nickname}</caption>
+<caption class="title">Table 1. /api/v0/members/{id}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -617,8 +617,8 @@ Content-Length: 90
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>nickname</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">닉네임</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">member id</p></td>
 </tr>
 </tbody>
 </table>
@@ -629,15 +629,30 @@ Content-Length: 90
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 473
+Content-Length: 927
 
 {
   "status" : "SUCCESS",
   "message" : "유저 조회에 성공하셨습니다.",
   "data" : {
-    "uuid" : "fba20e76-650d-45a8-908c-52c0895fed73",
+    "uuid" : "83663738-564d-49f8-b99a-71f78147002b",
     "nickname" : "홍길동",
-    "dDay" : 26,
+    "anniversaryList" : {
+      "9years" : "2032-05-15",
+      "10years" : "2033-05-15",
+      "5years" : "2028-05-15",
+      "7years" : "2030-05-15",
+      "2years" : "2025-05-15",
+      "1years" : "2024-05-15",
+      "oneHundred" : "2023-08-23",
+      "dDay" : 23,
+      "4years" : "2027-05-15",
+      "threeHundreds" : "2024-03-10",
+      "8years" : "2031-05-15",
+      "twoHundreds" : "2023-12-01",
+      "3years" : "2026-05-15",
+      "6years" : "2029-05-15"
+    },
     "gender" : "MALE",
     "pictureM" : "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/male.png",
     "pictureW" : "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/홍길동/female.png"
@@ -685,11 +700,6 @@ Content-Length: 473
 <td class="tableblock halign-left valign-top"><p class="tableblock">닉네임</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.dDay</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">사귄 일수</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.gender</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">성별</p></td>
@@ -703,6 +713,76 @@ Content-Length: 473
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.pictureW</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">여자 사진</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.anniversaryList.dDay</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">사귄 일수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.anniversaryList.oneHundred</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">백일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.anniversaryList.twoHundreds</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이백일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.anniversaryList.threeHundreds</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">삼백일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.anniversaryList.1years</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1주년</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.anniversaryList.2years</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2주년</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.anniversaryList.3years</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3주년</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.anniversaryList.4years</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4주년</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.anniversaryList.5years</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5주년</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.anniversaryList.6years</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6주년</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.anniversaryList.7years</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7주년</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.anniversaryList.8years</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8주년</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.anniversaryList.9years</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9주년</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.anniversaryList.10years</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10주년</p></td>
 </tr>
 </tbody>
 </table>
@@ -1012,9 +1092,9 @@ Content-Length: 100
 <td class="tableblock halign-left valign-top"><p class="tableblock">place</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contents</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">contents</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">content</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>imgUrls</code></p></td>
@@ -1091,7 +1171,7 @@ Content-Length: 96
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 1757
+Content-Length: 1751
 
 {
   "status" : "SUCCESS",
@@ -1103,7 +1183,7 @@ Content-Length: 1757
     "subTitle" : "Test diary subtitle1",
     "memoryDate" : "2023-06-01",
     "place" : "place1",
-    "contents" : "contents1",
+    "content" : "content1",
     "imgUrls" : [ "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-1.png", "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-2.png" ],
     "auditEntity" : {
       "createdAt" : "2023-05-15 17:13:06",
@@ -1116,7 +1196,7 @@ Content-Length: 1757
     "subTitle" : "Test diary subtitle2",
     "memoryDate" : "2023-06-01",
     "place" : "place2",
-    "contents" : "contents2",
+    "content" : "content2",
     "imgUrls" : [ "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/여혜민/1-1.png", "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/여혜민/1-2.png" ],
     "auditEntity" : {
       "createdAt" : "2023-05-20 09:34:21",
@@ -1129,7 +1209,7 @@ Content-Length: 1757
     "subTitle" : "Test diary subtitle3",
     "memoryDate" : "2023-06-01",
     "place" : "place3",
-    "contents" : "contents3",
+    "content" : "content3",
     "imgUrls" : [ "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/여혜민/1-1.png", "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/여혜민/1-2.png" ],
     "auditEntity" : {
       "createdAt" : "2023-06-02 06:23:41",
@@ -1199,7 +1279,8 @@ Content-Length: 1757
 <td class="tableblock halign-left valign-top"><p class="tableblock">장소</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data[].contents</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data[].content</code></p></td>
+
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">내용</p></td>
 </tr>
@@ -1264,7 +1345,7 @@ Content-Length: 1757
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 651
+Content-Length: 649
 
 {
   "status" : "SUCCESS",
@@ -1276,7 +1357,7 @@ Content-Length: 651
     "subTitle" : "Test diary subtitle2",
     "memoryDate" : "2023-05-30",
     "place" : "place2",
-    "contents" : "contents2",
+    "content" : "content2",
     "imgUrls" : [ "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-1.png", "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-2.png" ],
     "auditEntity" : {
       "createdAt" : "2023-06-01 19:02:14",
@@ -1346,7 +1427,7 @@ Content-Length: 651
 <td class="tableblock halign-left valign-top"><p class="tableblock">장소</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.contents</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.content</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">내용</p></td>
 </tr>
@@ -1379,7 +1460,7 @@ Content-Length: 651
     'Accept:application/json' \
     '1-1'@'1-1.png' \
     '1-2'@'1-2.png' \
-    'diaryUpdateRequest'='{"memberId":1,"title":"Diary title","subTitle":"Diary subtitle","memoryDate":"2023-04-09","place":"Diary place","contents":"Diary contents","imgUrls":["https://www.lovebird-wooda.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-1.png","https://www.lovebird-wooda.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-2.png"]}'</code></pre>
+    'diaryUpdateRequest'='{"memberId":1,"title":"Diary title","subTitle":"Diary subtitle","memoryDate":"2023-04-09","place":"Diary place","content":"Diary content","imgUrls":["https://www.lovebird-wooda.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-1.png","https://www.lovebird-wooda.com/s3/object/test?region=ap-northeast-2&amp;amp;prefix=member/홍길동/1-2.png"]}'</code></pre>
 </div>
 </div>
 <div class="sect4">
@@ -1470,9 +1551,9 @@ Content-Length: 651
 <td class="tableblock halign-left valign-top"><p class="tableblock">place</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contents</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">contents</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">content</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>imgUrls</code></p></td>

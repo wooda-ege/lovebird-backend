@@ -121,7 +121,6 @@ class MemberServiceTest {
 
         ReflectionTestUtils.setField(mockMember, "nickname", mockNickname);
         given(memberRepository.findMemberByNickname(anyString()))
-                .willReturn(Optional.empty())
                 .willReturn(Optional.of(mockMember));
 
         // when

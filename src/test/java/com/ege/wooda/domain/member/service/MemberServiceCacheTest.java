@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -44,7 +45,7 @@ public class MemberServiceCacheTest {
     }
 
     @Test
-    @DisplayName("indMemberByNickname() 메서드를 호출하면 처음을 제외한 나머지는 Cache가 인터셉트한다.")
+    @DisplayName("findMemberByNickname() 메서드를 호출하면 처음을 제외한 나머지는 Cache가 인터셉트한다.")
     void findMemberByNicknameUsedCache() throws IOException {
         // given
         Member mockMember = getMember("홍길동", Gender.MALE, getLocalDate("2023-05-15"));
@@ -57,6 +58,38 @@ public class MemberServiceCacheTest {
 
         // then
         verify(memberRepository, times((1))).findMemberByNickname("홍길동");
+    }
+
+    @Test
+    @DisplayName("findById() 메서드를 호출하면 처음을 제외한 나머지는 Cache가 인터셉트한다.")
+    void findMemberByIdUsedCache() throws IOException {
+        // given
+        Member mockMember = getMember("홍길동", Gender.MALE, getLocalDate("2023-05-15"));
+
+        given(memberRepository.findById(anyLong()))
+                .willReturn(Optional.of(mockMember));
+
+        // when
+        IntStream.range(0, 10).forEach((i) -> memberService.findById(1L));
+
+        // then
+        verify(memberRepository, times((1))).findById(1L);
+    }
+
+    @Test
+    @DisplayName("findByUuid() 메서드를 호출하면 처음을 제외한 나머지는 Cache가 인터셉트한다.")
+    void findMemberByUuidUsedCache() throws IOException {
+        // given
+        Member mockMember = getMember("홍길동", Gender.MALE, getLocalDate("2023-05-15"));
+
+        given(memberRepository.findMemberByUuid(anyString()))
+                .willReturn(Optional.of(mockMember));
+
+        // when
+        IntStream.range(0, 10).forEach((i) -> memberService.findByUuid("dweu14-dfbu-tiqqvmnbi24"));
+
+        // then
+        verify(memberRepository, times((1))).findMemberByUuid("dweu14-dfbu-tiqqvmnbi24");
     }
 
     private Member getMember(String nickname, Gender gender, LocalDate firstDate) {

@@ -44,8 +44,8 @@ public class Diary {
     @Column(name = "place")
     private String place;
 
-    @Column(name = "contents")
-    private String contents;
+    @Column(name = "content")
+    private String content;
 
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "diary_images", joinColumns = @JoinColumn(name = "diary_id"))
@@ -57,13 +57,13 @@ public class Diary {
 
     @Builder
     public Diary(Long memberId, String title, String subTitle, LocalDate memoryDate, String place,
-                 String contents, List imgUrls) {
+                 String content, List imgUrls) {
         this.memberId = memberId;
         this.title = title;
         this.subTitle = subTitle;
         this.memoryDate = memoryDate;
         this.place = place;
-        this.contents = contents;
+        this.content = content;
         this.imgUrls = imgUrls;
         auditEntity = new AuditEntity();
     }
@@ -78,7 +78,7 @@ public class Diary {
         subTitle = d.getSubTitle();
         memoryDate = d.getMemoryDate();
         place = d.getPlace();
-        contents = d.getContents();
+        content = d.getContent();
         imgUrls = d.getImgUrls();
     }
 
@@ -89,7 +89,7 @@ public class Diary {
                                   .subTitle(subTitle)
                                   .memoryDate(memoryDate)
                                   .place(place)
-                                  .contents(contents)
+                                  .content(content)
                                   .imgUrls(imgUrls)
                                   .build();
     }

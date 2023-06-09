@@ -49,7 +49,7 @@ public class DiaryRepositoryTest {
         assertEquals(diary.getSubTitle(), existDiary.getSubTitle());
         assertEquals(diary.getMemoryDate(), existDiary.getMemoryDate());
         assertEquals(diary.getPlace(), existDiary.getPlace());
-        assertEquals(diary.getContents(), existDiary.getContents());
+        assertEquals(diary.getContent(), existDiary.getContent());
         assertEquals(diary.getImgUrls(), existDiary.getImgUrls());
     }
 
@@ -80,14 +80,14 @@ public class DiaryRepositoryTest {
     }
 
     private Diary getDiary(Long memberId, String title, String subTitle, LocalDate memoryDate, String place,
-                           String contents, List imgUrls) {
+                           String content, List<String> imgUrls) {
         return Diary.builder()
                     .memberId(memberId)
                     .title(title)
                     .subTitle(subTitle)
                     .memoryDate(memoryDate)
                     .place(place)
-                    .contents(contents)
+                    .content(content)
                     .imgUrls(imgUrls)
                     .build();
     }

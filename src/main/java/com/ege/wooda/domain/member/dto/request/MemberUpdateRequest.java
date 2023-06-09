@@ -12,7 +12,7 @@ import java.time.LocalDate;
 
 public record MemberUpdateRequest(@NotBlank String nickname,
                                   @NotBlank String firstDate,
-                                  @NotBlank String gender) {
+                                  String gender) {
 
     @Builder
     public MemberUpdateRequest {}

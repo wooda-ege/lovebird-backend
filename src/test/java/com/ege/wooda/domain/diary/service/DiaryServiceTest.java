@@ -6,8 +6,6 @@ import com.ege.wooda.domain.diary.dto.request.DiaryUpdateRequest;
 import com.ege.wooda.domain.diary.repository.DiaryRepository;
 import com.ege.wooda.domain.member.domain.Gender;
 import com.ege.wooda.domain.member.domain.Member;
-import com.ege.wooda.domain.member.repository.MemberRepository;
-import com.ege.wooda.domain.member.service.MemberService;
 import com.ege.wooda.global.config.jpa.JpaConfig;
 import com.ege.wooda.global.s3.ImageS3Uploader;
 import com.ege.wooda.global.s3.S3File;
@@ -79,7 +77,7 @@ public class DiaryServiceTest {
                                                                   .subTitle("Test diary subtitle1")
                                                                   .memoryDate("2023-05-28")
                                                                   .place("place1")
-                                                                  .contents("contents1")
+                                                                  .content("contents1")
                                                                   .imgUrls(urls1)
                                                                   .build();
 
@@ -189,14 +187,14 @@ public class DiaryServiceTest {
     }
 
     private Diary getDiary(Long memberId, String title, String subTitle, LocalDate memoryDate, String place,
-                           String contents, List imgUrls) {
+                           String content, List<String> imgUrls) {
         return Diary.builder()
                     .memberId(memberId)
                     .title(title)
                     .subTitle(subTitle)
                     .memoryDate(memoryDate)
                     .place(place)
-                    .contents(contents)
+                    .content(content)
                     .imgUrls(imgUrls)
                     .build();
     }

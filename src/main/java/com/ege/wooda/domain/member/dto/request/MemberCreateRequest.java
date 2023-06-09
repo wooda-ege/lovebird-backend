@@ -13,7 +13,7 @@ import java.util.List;
 
 public record MemberCreateRequest(@NotBlank String nickname,
                                   @NotBlank String firstDate,
-                                  @NotBlank String gender) {
+                                  String gender) {
     @Builder
     public MemberCreateRequest {}
 
