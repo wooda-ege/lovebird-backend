@@ -7,8 +7,8 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5432/lovebird
-    username: user
-    password: password
+    username: "${DB_USERNAME}"
+    password: "${DB_PASSWORD}"
 
   h2:
     console:
@@ -30,8 +30,24 @@ spring:
       max-request-size: 100MB
 
   logging.level:
-    org.hibernate.SQL: debug
-    org.hibernate.type: trace
+    org:
+      hibernate:
+        SQL: debug
+        type: trace
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: "${GOOGLE_CLIENT_ID}"
+            client-secret: "${GOOGLE_CLIENT_Secret}"
+            scope: profile,email
+
+jwt:
+  access-header: Authorization
+  refresh-header: Refresh
+  secret: lovebirdwoodaegelovebirdwoodaegelovebirdwoodaegelovebirdwoodaegelovebirdwoodaegelovebirdwoodaege
 
 cloud:
   aws:
