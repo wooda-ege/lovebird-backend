@@ -2,6 +2,7 @@ package com.ege.wooda.global.security.oauth.service;
 
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
@@ -23,10 +24,18 @@ public class CustomOidcUserService extends OidcUserService {
 
     @Override
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
-        OidcUser oidcUser = super.loadUser(userRequest);
+        ClientRegistration clientRegistration = ClientRegistration.withClientRegistration(
+                userRequest.getClientRegistration()).userNameAttributeName("sub").build();
+
+        OidcUserRequest oidcUserRequest =
+                new OidcUserRequest(clientRegistration, userRequest.getAccessToken(),
+                                    userRequest.getIdToken(), userRequest.getAdditionalParameters());
+
+        OidcUser oidcUser = super.loadUser(oidcUserRequest);
         SocialProvider socialProvider = SocialProvider.valueOf(userRequest.getClientRegistration()
                                                                           .getClientName()
                                                                           .toUpperCase());
+
         OAuth2Request oAuth2Request = attributeMapperFactory.getAttributeMapper(socialProvider)
                                                             .mapToDto(oidcUser.getAttributes());
 

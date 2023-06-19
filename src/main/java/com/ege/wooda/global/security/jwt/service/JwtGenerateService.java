@@ -1,7 +1,6 @@
 package com.ege.wooda.global.security.jwt.service;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 
 import com.ege.wooda.global.security.jwt.dto.JwtToken;

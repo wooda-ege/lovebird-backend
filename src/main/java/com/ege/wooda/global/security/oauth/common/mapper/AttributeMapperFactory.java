@@ -11,16 +11,19 @@ import com.ege.wooda.global.security.oauth.model.enums.SocialProvider;
 public class AttributeMapperFactory {
     private final Map<SocialProvider, AttributeMapper> mapperMap;
     private final GoogleAttributeMapper googleAttributeMapper;
+    private final KakaoAttributeMapper kakaoAttributeMapper;
 
-    public AttributeMapperFactory(GoogleAttributeMapper googleAttributeMapper) {
+    public AttributeMapperFactory(GoogleAttributeMapper googleAttributeMapper, KakaoAttributeMapper kakaoAttributeMapper) {
         this.mapperMap = new EnumMap<>(SocialProvider.class);
         this.googleAttributeMapper = googleAttributeMapper;
+        this.kakaoAttributeMapper = kakaoAttributeMapper;
 
         initialize();
     }
 
     private void initialize() {
         mapperMap.put(SocialProvider.GOOGLE, googleAttributeMapper);
+        mapperMap.put(SocialProvider.KAKAO, kakaoAttributeMapper);
     }
 
     public AttributeMapper getAttributeMapper(SocialProvider socialProvider) {
