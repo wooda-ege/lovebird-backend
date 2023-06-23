@@ -9,24 +9,19 @@ import java.util.Objects;
 
 @Component
 public class FileNameFormatter {
-
-    // 로그인 구현 시 변경 예정
-    public List<String> generateImageNames(List<MultipartFile> images, String uuid) {
-        return List.of(
-                uuid + "-male" + getFileExtension(Objects.requireNonNull(images.get(0).getOriginalFilename())),
-                uuid + "-female" + getFileExtension(Objects.requireNonNull(images.get(1).getOriginalFilename()))
-        );
+    public String generateImageName(MultipartFile image, Long memberId) {
+        return memberId + "-profile" + getFileExtension(Objects.requireNonNull(image.getOriginalFilename()));
     }
 
-    public List<String> generateImageNames(List<MultipartFile> images, String uuid, Long diaryId) {
+    public List<String> generateImageNames(List<MultipartFile> images, Long memberId, Long diaryId) {
         List<String> imageNames = new ArrayList<>();
         for (int i = 1; i <= images.size(); i++) {
-            imageNames.add(uuid +
+            imageNames.add(memberId +
                            "_" +
                            diaryId +
                            "-" +
                            i +
-                           getFileExtension(Objects.requireNonNull(images.get(i-1).getOriginalFilename())));
+                           getFileExtension(Objects.requireNonNull(images.get(i - 1).getOriginalFilename())));
         }
         return imageNames;
     }
