@@ -1,15 +1,14 @@
 package com.ege.wooda.domain.diary.service;
 
 import com.ege.wooda.domain.diary.dto.request.DiaryCreateRequest;
+import com.ege.wooda.domain.diary.dto.request.DiaryUpdateRequest;
 import com.ege.wooda.domain.diary.repository.DiaryRepository;
 import com.ege.wooda.domain.diary.domain.Diary;
-import com.ege.wooda.domain.diary.dto.request.DiaryUpdateRequest;
-import com.ege.wooda.domain.member.service.MemberService;
 import com.ege.wooda.global.s3.ImageS3Uploader;
-import com.ege.wooda.global.s3.S3File;
-import com.ege.wooda.global.s3.dto.DomainName;
+import com.ege.wooda.global.common.enums.DomainName;
 import com.ege.wooda.global.s3.dto.ImageDeleteRequest;
 import com.ege.wooda.global.s3.dto.ImageUploadRequest;
+import com.ege.wooda.global.s3.dto.S3File;
 import com.ege.wooda.global.s3.fomatter.FileNameFormatter;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -30,12 +29,12 @@ public class DiaryService {
     private final FileNameFormatter fileNameFormatter;
 
     @Transactional
-    public Long save(List<MultipartFile> images, DiaryCreateRequest diaryCreateRequest, String memberUUID)
+    public Long save(List<MultipartFile> images, DiaryCreateRequest diaryCreateRequest, Long memberId)
             throws IOException {
-        Diary diary = diaryRepository.save(diaryCreateRequest.toEntity());
+        Diary diary = diaryRepository.save(diaryCreateRequest.toEntity(memberId));
 
-        if (images!=null) {
-            ImageUploadRequest imageUploadRequest = getImageUploadRequest(images, memberUUID, diary.getId());
+        if (images != null) {
+            ImageUploadRequest imageUploadRequest = getImageUploadRequest(images, memberId, diary.getId());
             diary.saveImages(imageS3Uploader.upload(imageUploadRequest).stream()
                                             .map(S3File::fileUrl)
                                             .toList());
@@ -46,32 +45,32 @@ public class DiaryService {
 
     @Transactional
     public Long update(Long id, List<MultipartFile> images, DiaryUpdateRequest diaryUpdateRequest,
-                       String memberUUID) throws IOException {
+                       Long memberId) throws IOException {
         Diary diary = findById(id);
         List<String> imgUrls = diary.getImgUrls();
 
-        if (images!=null) {
-            imageS3Uploader.deleteFiles(getImageDeleteRequest(imgUrls, memberUUID));
+        if (images != null) {
+            imageS3Uploader.deleteFiles(getImageDeleteRequest(imgUrls, memberId));
 
-            ImageUploadRequest imageUploadRequest = getImageUploadRequest(images, memberUUID, diary.getId());
+            ImageUploadRequest imageUploadRequest = getImageUploadRequest(images, memberId, diary.getId());
             imgUrls = imageS3Uploader.upload(imageUploadRequest).stream()
                                      .map(S3File::fileUrl)
                                      .toList();
         }
 
-        diary.updateDiary(diaryUpdateRequest.toEntity(imgUrls));
+        diary.updateDiary(diaryUpdateRequest.toEntity(memberId, imgUrls));
         return id;
     }
 
     @Transactional
-    public void delete(Long id, String memberUUID) {
-        Diary diary = findById(id);
+    public void delete(Long memberId, Long diaryId) {
+        Diary diary = findByMemberIdAndDiaryId(memberId, diaryId);
 
         ImageDeleteRequest imgDeleteRequest = getImageDeleteRequest(
                 diary.getImgUrls().stream()
                      .map(s -> s.substring(s.lastIndexOf("/") + 1))
                      .toList(),
-                memberUUID
+                memberId
         );
 
         imageS3Uploader.deleteFiles(imgDeleteRequest);
@@ -89,26 +88,31 @@ public class DiaryService {
     }
 
     @Transactional(readOnly = true)
-    public List<Diary> findByMemberId(Long id) {
-        return diaryRepository.findByMemberId(id);
+    public Diary findByMemberIdAndDiaryId(Long memberId, Long diaryId) {
+        return diaryRepository.findDiariesByMemberIdAndId(memberId, diaryId).orElseThrow(
+                EntityNotFoundException::new);
     }
 
-    private ImageUploadRequest getImageUploadRequest(List<MultipartFile> images, String uuid, Long diaryId) {
+    @Transactional(readOnly = true)
+    public List<Diary> findByMemberId(Long id) {
+        return diaryRepository.findDiariesByMemberId(id);
+    }
+
+    private ImageUploadRequest getImageUploadRequest(List<MultipartFile> images, Long memberId, Long diaryId) {
         return ImageUploadRequest.builder()
                                  .images(images)
-                                 .imageNames(fileNameFormatter.generateImageNames(images, uuid, diaryId))
+                                 .imageNames(fileNameFormatter.generateImageNames(images, memberId, diaryId))
                                  .domain(DomainName.DIARY.getDomain())
-                                 .uuid(uuid)
+                                 .memberId(memberId)
                                  .build();
     }
 
-    private ImageDeleteRequest getImageDeleteRequest(List<String> imgUrls, String uuid) {
+    private ImageDeleteRequest getImageDeleteRequest(List<String> imgUrls, Long memberId) {
         return new ImageDeleteRequest(
                 imgUrls.stream()
                        .map(s -> s.substring(s.lastIndexOf("/") + 1))
                        .toList(),
                 DomainName.DIARY.getDomain(),
-                uuid
-        );
+                memberId);
     }
 }

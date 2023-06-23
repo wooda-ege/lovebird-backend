@@ -27,7 +27,7 @@ public class Diary {
     @Column(name = "diary_id")
     private Long id;
 
-    @Column(name = "user_id")
+    @Column(name = "member_id")
     private Long memberId;
 
     @Column(name = "title", nullable = false)
@@ -48,8 +48,8 @@ public class Diary {
     private String content;
 
     @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "diary_images", joinColumns = @JoinColumn(name = "diary_id"))
-    @Column(name = "img_urls")
+    @CollectionTable(name = "diary_image", joinColumns = @JoinColumn(name = "diary_id"))
+    @Column(name = "image_url")
     private List<String> imgUrls = new ArrayList<>();
 
     @Embedded
