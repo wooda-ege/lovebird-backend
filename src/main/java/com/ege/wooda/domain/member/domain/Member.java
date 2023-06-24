@@ -1,6 +1,6 @@
 package com.ege.wooda.domain.member.domain;
 
-import com.ege.wooda.domain.member.dto.response.MemberDetailResponse;
+import com.ege.wooda.domain.member.domain.enums.Role;
 import com.ege.wooda.global.audit.AuditEntity;
 
 import jakarta.persistence.*;
@@ -10,14 +10,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.time.LocalDate;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import static java.time.temporal.ChronoUnit.DAYS;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,73 +22,33 @@ import static java.time.temporal.ChronoUnit.DAYS;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "member_id")
     private Long id;
 
-    @Column(name = "uuid", unique = true, nullable = false)
-    private String uuid;
+    @ElementCollection(fetch = FetchType.EAGER)
 
-    @Column(name = "nickname", nullable = false)
-    private String nickname;
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "member_role", joinColumns = @JoinColumn(name = "member_id"))
+    @Column(name = "role")
+    private List<Role> role;
 
-    @Column(name = "first_date", nullable = false)
-    private LocalDate firstDate;
-
-    @Column(name = "gender")
-    @Enumerated(value = EnumType.STRING)
-    private Gender gender;
-
-    @Column(name = "picture_m")
-    private String pictureM;
-
-    @Column(name = "picture_w")
-    private String pictureW;
+    @Embedded
+    private Oauth2Entity oauth2Entity;
 
     @Embedded
     private AuditEntity auditEntity;
 
     @Builder
-    public Member(String uuid, String nickname, LocalDate firstDate, Gender gender, String pictureM,
-                  String pictureW) {
-        this.uuid = uuid;
-        this.nickname = nickname;
-        this.firstDate = firstDate;
-        this.gender = gender;
-        this.pictureM = pictureM;
-        this.pictureW = pictureW;
+    public Member(Oauth2Entity oauth2Entity) {
+        this.oauth2Entity = oauth2Entity;
+        this.role = new ArrayList<>(List.of(Role.MEMBER));
         this.auditEntity = new AuditEntity();
     }
 
-    public void update(Member user) {
-        nickname = user.getNickname();
-        firstDate = user.getFirstDate();
-        gender = user.getGender();
-    }
-
-    public void updateImgUrls(List<String> imgUrls) {
-        this.pictureM = imgUrls.get(0);
-        this.pictureW = imgUrls.get(1);
-    }
-
-    public MemberDetailResponse toMemberDetailResponse() {
-        Map<String, Object> anniversaryList = new HashMap<>() {{
-            put("dDay", DAYS.between(firstDate, LocalDate.now()) + 1);
-            put("oneHundred", firstDate.plusDays(100));
-            put("twoHundreds", firstDate.plusDays(200));
-            put("threeHundreds", firstDate.plusDays(300));
-        }};
-
-        for(int i=1 ; i<=10 ; i++) {
-            anniversaryList.put(i + "years", firstDate.plusYears(i));
-        }
-
-        return MemberDetailResponse.builder()
-                                   .uuid(uuid)
-                                   .nickname(nickname)
-                                   .anniversaryList(anniversaryList)
-                                   .gender(gender.toString())
-                                   .pictureM(pictureM)
-                                   .pictureW(pictureW)
-                                   .build();
+    public List<SimpleGrantedAuthority> getRole() {
+        return role.stream()
+                   .map(Role::name)
+                   .map(SimpleGrantedAuthority::new)
+                   .toList();
     }
 }

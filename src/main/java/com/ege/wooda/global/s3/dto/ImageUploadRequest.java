@@ -11,7 +11,7 @@ import java.util.List;
 public record ImageUploadRequest(@Nonnull List<MultipartFile> images,
                                  @Nonnull List<String> imageNames,
                                  @NotBlank String domain,
-                                 @NotBlank String uuid) {
+                                 @NotBlank Long memberId) {
     @Builder
     public ImageUploadRequest {}
 }

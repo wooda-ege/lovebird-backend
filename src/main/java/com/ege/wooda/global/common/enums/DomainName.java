@@ -1,4 +1,4 @@
-package com.ege.wooda.global.s3.dto;
+package com.ege.wooda.global.common.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
