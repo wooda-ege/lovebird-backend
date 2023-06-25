@@ -90,11 +90,12 @@ public class Profile {
     public void initAnniversaryMap() {
         Anniversary[] anniversaries = Anniversary.values();
 
+        anniversaryMap.put(Anniversary.FIRST_DATE, this.firstDate);
         anniversaryMap.put(Anniversary.ONE_HUNDRED, this.firstDate.plusDays(100));
         anniversaryMap.put(Anniversary.TWO_HUNDREDS, this.firstDate.plusDays(200));
         anniversaryMap.put(Anniversary.THREE_HUNDREDS, this.firstDate.plusDays(300));
 
-        for(int i=3 ; i<anniversaries.length ; i++) {
+        for(int i=4 ; i<anniversaries.length ; i++) {
             anniversaryMap.put(anniversaries[i], this.firstDate.plusYears(i-2));
         }
     }

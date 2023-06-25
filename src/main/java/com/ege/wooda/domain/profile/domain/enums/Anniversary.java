@@ -1,6 +1,7 @@
 package com.ege.wooda.domain.profile.domain.enums;
 
 public enum Anniversary {
+    FIRST_DATE,
     ONE_HUNDRED,
     TWO_HUNDREDS,
     THREE_HUNDREDS,

@@ -89,6 +89,7 @@ class ProfileControllerTest extends RestDocsTest {
                                       fieldWithPath("data.profileImageUrl").type(JsonFieldType.STRING).description("프로필 이미지 URL").optional(),
                                       fieldWithPath("data.linkedFlag").type(JsonFieldType.BOOLEAN).description("커플 연동 여부"),
                                       fieldWithPath("data.anniversaryList").type(JsonFieldType.OBJECT).description("기념일 정보"),
+                                      fieldWithPath("data.anniversaryList.FIRST_DATE").type(JsonFieldType.STRING).description("사귄 날짜"),
                                       fieldWithPath("data.anniversaryList.ONE_HUNDRED").type(JsonFieldType.STRING).description("백일"),
                                       fieldWithPath("data.anniversaryList.TWO_HUNDREDS").type(JsonFieldType.STRING).description("이백일"),
                                       fieldWithPath("data.anniversaryList.THREE_HUNDREDS").type(JsonFieldType.STRING).description("삼백일"),
@@ -125,7 +126,7 @@ class ProfileControllerTest extends RestDocsTest {
         // then
         result.andExpect(status().isOk())
               .andDo(print())
-              .andDo(document("member-details",
+              .andDo(document("profile-details",
                               getDocumentRequest(),
                               getDocumentResponse(),
                               pathParameters(parameterWithName("id").description("member id")),
@@ -139,6 +140,7 @@ class ProfileControllerTest extends RestDocsTest {
                                       fieldWithPath("data.profileImageUrl").type(JsonFieldType.STRING).description("프로필 이미지 URL").optional(),
                                       fieldWithPath("data.linkedFlag").type(JsonFieldType.BOOLEAN).description("커플 연동 여부"),
                                       fieldWithPath("data.anniversaryList").type(JsonFieldType.OBJECT).description("기념일 정보"),
+                                      fieldWithPath("data.anniversaryList.FIRST_DATE").type(JsonFieldType.STRING).description("사귄 날짜"),
                                       fieldWithPath("data.anniversaryList.ONE_HUNDRED").type(JsonFieldType.STRING).description("백일"),
                                       fieldWithPath("data.anniversaryList.TWO_HUNDREDS").type(JsonFieldType.STRING).description("이백일"),
                                       fieldWithPath("data.anniversaryList.THREE_HUNDREDS").type(JsonFieldType.STRING).description("삼백일"),
@@ -209,6 +211,7 @@ class ProfileControllerTest extends RestDocsTest {
                                       fieldWithPath("data.profileImageUrl").type(JsonFieldType.STRING).description("프로필 이미지 URL").optional(),
                                       fieldWithPath("data.linkedFlag").type(JsonFieldType.BOOLEAN).description("커플 연동 여부"),
                                       fieldWithPath("data.anniversaryList").type(JsonFieldType.OBJECT).description("기념일 정보"),
+                                      fieldWithPath("data.anniversaryList.FIRST_DATE").type(JsonFieldType.STRING).description("사귄 날짜"),
                                       fieldWithPath("data.anniversaryList.ONE_HUNDRED").type(JsonFieldType.STRING).description("백일"),
                                       fieldWithPath("data.anniversaryList.TWO_HUNDREDS").type(JsonFieldType.STRING).description("이백일"),
                                       fieldWithPath("data.anniversaryList.THREE_HUNDREDS").type(JsonFieldType.STRING).description("삼백일"),

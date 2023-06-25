@@ -49,7 +49,7 @@ public class RestDocsTest {
                                          documentationConfiguration(provider)
                                                  .uris()
                                                  .withScheme("http")
-                                                 .withHost("localhost")
+                                                 .withHost("127.0.0.1")
                                                  .withPort(8080))
                                  .apply(springSecurity(new MockSecurityFilter()))
                                  .addFilter(new CharacterEncodingFilter("UTF-8", true))

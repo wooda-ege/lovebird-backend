@@ -12,7 +12,6 @@ import com.ege.wooda.domain.member.dto.request.AuthRequest;
 import com.ege.wooda.global.docs.RestDocsTest;
 import com.ege.wooda.global.security.jwt.dto.JwtToken;
 import com.ege.wooda.global.security.jwt.service.JwtGenerateService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import static com.ege.wooda.global.docs.ApiDocumentUtils.getDocumentRequest;
 import static com.ege.wooda.global.docs.ApiDocumentUtils.getDocumentResponse;
