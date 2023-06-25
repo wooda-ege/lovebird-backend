@@ -19,7 +19,7 @@ public class MemberController {
     private final JwtGenerateService jwtGenerateService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<AuthTokenResponse>> authToken(
+    public ResponseEntity<ApiResponse<AuthTokenResponse>> getAuthToken(
             @RequestBody @Validated AuthRequest authRequest) {
         AuthTokenResponse tokenData = AuthTokenResponse.of(
                 jwtGenerateService.createJwtTokenByAuthToken(authRequest.authToken()));

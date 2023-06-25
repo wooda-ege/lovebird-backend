@@ -90,7 +90,6 @@ public class ProfileService {
 
     private ImageUploadRequest getImageUploadRequest(MultipartFile image, Long memberId) {
         String imageName = fileNameFormatter.generateImageName(image, memberId);
-
         return ImageUploadRequest.builder()
                                  .images(List.of(image))
                                  .imageNames(List.of(imageName))
@@ -108,7 +107,7 @@ public class ProfileService {
                 memberId);
     }
 
-    //    public void checkDuplicatedNickname(String oldNickname, String newNickname) {
+//    public void checkDuplicatedNickname(String oldNickname, String newNickname) {
 //        if(StringUtils.equals(oldNickname, newNickname)) { return; }
 //
 //        memberRepository.findMemberByNickname(newNickname).ifPresent(member -> {
