@@ -34,7 +34,6 @@ public class DiaryRepositoryTest {
     @Test
     @DisplayName("새 다이어리 글을 생성한다")
     public void save() {
-        //Diary diary
         List<String> urls2 = getImageUrls("여혜민");
         Diary diary = getDiary(2L, "Test Diary2", "Test diary subtitle2", LocalDate.now(), "place2",
                                "contents2", urls2);

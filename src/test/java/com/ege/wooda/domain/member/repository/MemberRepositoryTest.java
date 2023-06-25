@@ -1,8 +1,9 @@
 package com.ege.wooda.domain.member.repository;
 
-import com.ege.wooda.domain.member.domain.Gender;
 import com.ege.wooda.domain.member.domain.Member;
+import com.ege.wooda.domain.member.domain.Oauth2Entity;
 import com.ege.wooda.global.config.jpa.JpaConfig;
+import com.ege.wooda.global.security.oauth.model.enums.SocialProvider;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -15,10 +16,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 public class MemberRepositoryTest {
     @Autowired
-    MemberRepository memberRepository;
+    private MemberRepository memberRepository;
 
     @AfterEach
     void cleanUp() {
@@ -38,72 +36,91 @@ public class MemberRepositoryTest {
     @DisplayName("새로운 Member 생성한다")
     public void save() {
         // given
-        Member member = getMember("홍길동", Gender.MALE, getLocalDate("2023-05-09"));
+        Member member = getMember("abc12fea", SocialProvider.valueOf("GOOGLE"), "홍길동");
         memberRepository.save(member);
 
         // when
-        Member existMember = memberRepository.findById(member.getId())
+        Member saveMember = memberRepository.findById(member.getId())
                                              .orElseThrow(EntityNotFoundException::new);
 
         // then
-        assertEquals(member.getId(), existMember.getId());
-        assertEquals(member.getGender(), existMember.getGender());
-        assertEquals(member.getFirstDate(), existMember.getFirstDate());
-        assertEquals(member.getNickname(), existMember.getNickname());
+        assertEquals(member, saveMember);
     }
 
     @Test
-    @DisplayName("Nickname을 통해 Member를 찾는 데 성공한다.")
-    public void findMemberByNicknameSuccess() {
+    @DisplayName("특정 id로 Member를 찾는 데 성공한다.")
+    public void findByIdSuccess() {
         // given
-        List<Member> memberList = getMemberList();
-
-        memberRepository.saveAll(memberList);
+        memberRepository.saveAll(getMemberList());
+        Long findId = 2L;
 
         // when
-        Member secondMember = memberList.get(1);
-        Member existMember = memberRepository.findMemberByNickname(secondMember.getNickname())
-                                             .orElseThrow(EntityNotFoundException::new);
+        Member findMember = memberRepository.findById(findId).orElseThrow(EntityNotFoundException::new);
 
         //then
-        assertEquals(secondMember.getId(), existMember.getId());
-        assertEquals(secondMember.getGender(), existMember.getGender());
-        assertEquals(secondMember.getFirstDate(), existMember.getFirstDate());
-        assertEquals(secondMember.getNickname(), existMember.getNickname());
+        assertEquals(findMember.getId(), findId);
     }
 
     @Test
-    @DisplayName("Nickname을 통해 Member를 찾는 데 실패한다.")
-    public void findMemberByNicknameFail() {
+    @DisplayName("특정 id로 Member를 찾는 데 실패한다.")
+    public void findByIdFail() {
         // given
-        List<Member> memberList = getMemberList();
+        memberRepository.saveAll(getMemberList());
+        Long findId = Long.MAX_VALUE;
 
-        memberRepository.saveAll(memberList);
+        // then
+        assertThrows(EntityNotFoundException.class,
+                     () -> memberRepository.findById(findId).orElseThrow(EntityNotFoundException::new));
+    }
+
+    @Test
+    @DisplayName("accountId를 통해 Member를 찾는 데 성공한다.")
+    public void findByOauth2EntityAccountIdSuccess() {
+        // given
+        memberRepository.saveAll(getMemberList());
+        String accountId = "abc12fea";
 
         // when
+        Member findMember = memberRepository.findByOauth2EntityAccountId(accountId).orElseThrow(
+                EntityNotFoundException::new);
+
+        //then
+        assertEquals(findMember.getOauth2Entity().getAccountId(), accountId);
+    }
+
+    @Test
+    @DisplayName("accountId를 통해 Member를 찾는 데 실패한다.")
+    public void findByOauth2EntityAccountIdFail() {
+        // given
+        memberRepository.saveAll(getMemberList());
+        String accountId = "bhq21kv2oq4";
+
+        //then
         assertThrows(EntityNotFoundException.class,
-                     () -> memberRepository.findMemberByNickname("Data")
+                     () -> memberRepository.findByOauth2EntityAccountId(accountId)
                                            .orElseThrow(EntityNotFoundException::new));
     }
 
-    private Member getMember(String nickname, Gender gender, LocalDate firstDate) {
+    private Member getMember(String accountId, SocialProvider socialProvider, String username) {
         return Member.builder()
-                     .uuid(UUID.randomUUID().toString())
-                     .nickname(nickname)
-                     .firstDate(firstDate)
-                     .gender(gender)
-                     .pictureM(null)
-                     .pictureW(null)
+                     .oauth2Entity(getOauth2Entity(accountId,
+                                                   socialProvider,
+                                                   username))
                      .build();
     }
 
-    private List<Member> getMemberList() {
-        return List.of(getMember("홍길동", Gender.MALE, getLocalDate("2023-05-09"))
-                , getMember("청길동", Gender.FEMALE, getLocalDate("2023-05-10"))
-                , getMember("녹길동", Gender.MALE, getLocalDate("2021-04-16")));
+    private Oauth2Entity getOauth2Entity(String accountId, SocialProvider socialProvider, String username) {
+        return Oauth2Entity.builder()
+                           .accountId(accountId)
+                           .socialProvider(socialProvider)
+                           .email("test@" + socialProvider.toString().toLowerCase() + "." + "com")
+                           .username(username)
+                           .build();
     }
 
-    private LocalDate getLocalDate(String firstDate) {
-        return LocalDate.parse(firstDate, DateTimeFormatter.ISO_DATE);
+    private List<Member> getMemberList() {
+        return List.of(getMember("abc12fea", SocialProvider.valueOf("GOOGLE"), "홍길동")
+                , getMember("ebu2ap3o1", SocialProvider.valueOf("KAKAO"), "청길동")
+                , getMember("vqu41ob9", SocialProvider.valueOf("APPLE"), "녹길동"));
     }
 }
