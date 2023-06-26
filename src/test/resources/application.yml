@@ -10,7 +10,7 @@ spring:
       path: /h2-console
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
-    hibernate.ddl-auto: create-drop
+    hibernate.ddl-auto: create
 
 cloud:
   aws:

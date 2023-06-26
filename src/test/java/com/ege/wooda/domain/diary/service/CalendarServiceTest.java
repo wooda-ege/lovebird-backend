@@ -38,7 +38,7 @@ import static org.mockito.BDDMockito.given;
 
 @Import(JpaConfig.class)
 @ExtendWith(MockitoExtension.class)
-public class DiaryServiceTest {
+public class CalendarServiceTest {
 
     @InjectMocks
     private DiaryService diaryService;
