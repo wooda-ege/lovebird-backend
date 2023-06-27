@@ -6,5 +6,5 @@ import jakarta.validation.constraints.NotBlank;
 
 public record ProfileUpdateRequest(@NotBlank String nickname,
                                    @NotBlank String firstDate,
-                                   @NotBlank Gender gender) {
+                                   @NotBlank String gender) {
 }

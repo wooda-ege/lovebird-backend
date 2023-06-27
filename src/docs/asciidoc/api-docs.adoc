@@ -10,91 +10,143 @@ ifndef::snippets[]
 :snippets: ./build/generated-snippets
 endif::[]
 
+== 소셜 로그인
+
+=== Google 인가 코드 발급
+
+==== Request
+
+http://127.0.0.1:8080/auth2/authorize/google
+
+==== Response
+
+----
+eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjEiLCJleHAiOjE2ODc2ODE2MzB9.dWIbrC0spNgY9EBDIZ9skEhmNXIJqjt5hdo_nPw4QHNAWYhEXiCEV9_pmObbWvlxOx-CnDUMm-IhooKwPaPKCA
+----
+
+|===
+|Path|Type|Description
+
+|`+authToken+`
+|`+String+`
+|인가 코드
+
+|===
+
+=== Kakao 인가 코드 발급
+
+==== Request
+
+http://127.0.0.1:8080/auth2/authorize/kakao
+
+==== Response
+
+----
+eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjIiLCJleHAiOjE2ODc2ODE3MzB9.HyPVJRKqAMm75NRmVMb22PuzZNQoIoJrRyjVsuYooMfRGx6nQikvuoUA5byLo7chrzORHinvMFOw86EdmzjJRQ
+----
+
+|===
+|Path|Type|Description
+
+|`+authToken+`
+|`+String+`
+|인가 코드
+
+|===
+
 == Member
 
-=== Member 등록
+=== Token 발급
 
 ==== Request
 
-include::{snippets}/member-add/httpie-request.adoc[]
+include::{snippets}/auth/http-request.adoc[]
 
-===== i) images
-|===
-|Path|Type|Description
-
-|`+[].images+`
-|`+image/png+`
-|프로필 사진 (남, 여)
-
-|===
-
-===== ii) memberCreateRequest
-include::{snippets}/member-add/request-part-memberCreateRequest-fields.adoc[]
+include::{snippets}/auth/request-fields.adoc[]
 
 ==== Response
 
-include::{snippets}/member-add/http-response.adoc[]
+include::{snippets}/auth/http-response.adoc[]
 
-include::{snippets}/member-add/response-fields.adoc[]
+include::{snippets}/auth/response-fields.adoc[]
 
-=== Member 조회
+== Profile
+
+=== 프로필 등록
 
 ==== Request
 
-include::{snippets}/member-details/httpie-request.adoc[]
+include::{snippets}/profile-add/http-request.adoc[]
 
-include::{snippets}/member-details/path-parameters.adoc[]
+===== i) id
 
-==== Response
+include::{snippets}/profile-add/path-parameters.adoc[]
 
-include::{snippets}/member-details/http-response.adoc[]
-
-include::{snippets}/member-details/response-fields.adoc[]
-
-=== Member 수정
-
-==== Request
-
-include::{snippets}/member-modify/httpie-request.adoc[]
-
-===== i) path
-
-include::{snippets}/member-modify/path-parameters.adoc[]
-
-===== ii) images
+===== ii) image
 
 |===
-|Path|Type|Description
+|Path|Type|Description|Optional
 
-|`+[].images+`
-|`+image/png+`
-|프로필 사진 (남, 여)
+|`+image+`
+|`+image+`
+|프로필 사진
+|O
 
 |===
 
-===== iii) memberUpdateRequest
+===== iii) profileCreateRequest
 
-include::{snippets}/member-modify/request-part-memberUpdateRequest-fields.adoc[]
+include::{snippets}/profile-add/request-part-profileCreateRequest-fields.adoc[]
 
 ==== Response
 
-include::{snippets}/member-modify/http-response.adoc[]
+include::{snippets}/profile-add/http-response.adoc[]
 
-include::{snippets}/member-modify/response-fields.adoc[]
+include::{snippets}/profile-add/response-fields.adoc[]
 
-=== Member 삭제
+=== 프로필 조회
 
 ==== Request
 
-include::{snippets}/member-remove/httpie-request.adoc[]
+include::{snippets}/profile-details/http-request.adoc[]
 
-include::{snippets}/member-remove/path-parameters.adoc[]
+include::{snippets}/profile-details/path-parameters.adoc[]
 
 ==== Response
 
-include::{snippets}/member-remove/http-response.adoc[]
+include::{snippets}/profile-details/http-response.adoc[]
 
-include::{snippets}/member-remove/response-fields.adoc[]
+include::{snippets}/profile-details/response-fields.adoc[]
+
+=== 프로필 수정
+
+include::{snippets}/profile-modify/http-request.adoc[]
+
+===== i) id
+
+include::{snippets}/profile-modify/path-parameters.adoc[]
+
+===== ii) image
+
+|===
+|Path|Type|Description|Optional
+
+|`+image+`
+|`+image+`
+|프로필 사진
+|O
+
+|===
+
+===== iii) profileUpdateRequest
+
+include::{snippets}/profile-modify/request-part-profileUpdateRequest-fields.adoc[]
+
+==== Response
+
+include::{snippets}/profile-modify/http-response.adoc[]
+
+include::{snippets}/profile-modify/response-fields.adoc[]
 
 == Diary
 

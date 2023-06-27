@@ -22,6 +22,7 @@ public record ProfileUpdateParam(@NotBlank Long memberId,
 
     public Profile toEntity() {
         return Profile.builder()
+                      .memberId(memberId)
                       .nickname(nickname)
                       .firstDate(getLocalDate(firstDate))
                       .gender(gender)

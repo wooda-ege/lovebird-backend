@@ -100,5 +100,6 @@ dependencies {
 	implementation 'junit:junit:4.13.1'
 	testImplementation 'junit:junit:4.13.2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'io.findify:s3mock_2.13:0.2.6'
 }

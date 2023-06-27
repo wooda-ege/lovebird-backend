@@ -83,12 +83,13 @@ public class ProfileController {
                                                                   .image(image)
                                                                   .nickname(profileUpdateRequest.nickname())
                                                                   .firstDate(profileUpdateRequest.firstDate())
-                                                                  .gender(profileUpdateRequest.gender())
+                                                                  .gender(Gender.valueOf(
+                                                                          profileUpdateRequest.gender()))
                                                                   .build();
         Profile profile = profileService.update(profileUpdateParam);
 
         return ResponseEntity.ok(
-                ApiResponse.createSuccessWithData(ProfileResponseMessage.READ_PROFILE.getMessage(),
+                ApiResponse.createSuccessWithData(ProfileResponseMessage.UPDATE_PROFILE.getMessage(),
                                                   profile.toProfileDetailResponse()));
     }
 }
