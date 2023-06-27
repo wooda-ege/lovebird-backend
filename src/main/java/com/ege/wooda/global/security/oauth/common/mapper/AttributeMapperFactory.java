@@ -12,11 +12,13 @@ public class AttributeMapperFactory {
     private final Map<SocialProvider, AttributeMapper> mapperMap;
     private final GoogleAttributeMapper googleAttributeMapper;
     private final KakaoAttributeMapper kakaoAttributeMapper;
+    private final NaverAttributeMapper naverAttributeMapper;
 
-    public AttributeMapperFactory(GoogleAttributeMapper googleAttributeMapper, KakaoAttributeMapper kakaoAttributeMapper) {
+    public AttributeMapperFactory(GoogleAttributeMapper googleAttributeMapper, KakaoAttributeMapper kakaoAttributeMapper, NaverAttributeMapper naverAttributeMapper) {
         this.mapperMap = new EnumMap<>(SocialProvider.class);
         this.googleAttributeMapper = googleAttributeMapper;
         this.kakaoAttributeMapper = kakaoAttributeMapper;
+        this.naverAttributeMapper = naverAttributeMapper;
 
         initialize();
     }
@@ -24,6 +26,7 @@ public class AttributeMapperFactory {
     private void initialize() {
         mapperMap.put(SocialProvider.GOOGLE, googleAttributeMapper);
         mapperMap.put(SocialProvider.KAKAO, kakaoAttributeMapper);
+        mapperMap.put(SocialProvider.NAVER, naverAttributeMapper);
     }
 
     public AttributeMapper getAttributeMapper(SocialProvider socialProvider) {
