@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ege.wooda.domain.member.domain.enums.Gender;
+import com.ege.wooda.domain.member.service.MemberService;
 import com.ege.wooda.domain.profile.domain.Profile;
 import com.ege.wooda.domain.profile.dto.param.ProfileCreateParam;
 import com.ege.wooda.domain.profile.dto.param.ProfileUpdateParam;
@@ -32,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/{id}/profile")
 public class ProfileController {
     private final ProfileService profileService;
+    private final MemberService memberService;
 
     @PostMapping("")
     @PreAuthorize("#id == authentication.principal.id")
@@ -51,6 +53,7 @@ public class ProfileController {
                                                                   .build();
 
         Profile profile = profileService.save(profileCreateParam);
+        memberService.registerDeviceToken(id, profileCreateRequest.deviceToken());
 
         return new ResponseEntity<>(
                 ApiResponse.createSuccessWithData(ProfileResponseMessage.CREATE_PROFILE.getMessage(),

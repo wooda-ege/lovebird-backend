@@ -24,6 +24,13 @@ public class MemberService {
                 () -> save(oAuth2Request.toOauth2Entity()));
     }
 
+    @Transactional
+    public void registerDeviceToken(Long id, String deviceToken) {
+        Member member = findById(id);
+        member.registerDeviceToken(deviceToken);
+
+    }
+
     public Member save(Oauth2Entity oauth2Entity) {
         return memberRepository.save(new Member(oauth2Entity));
     }

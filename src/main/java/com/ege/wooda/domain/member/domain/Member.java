@@ -25,8 +25,10 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @Column(name = "device_token")
+    private String deviceToken;
 
+    @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "member_role", joinColumns = @JoinColumn(name = "member_id"))
     @Column(name = "role")
@@ -43,6 +45,10 @@ public class Member {
         this.oauth2Entity = oauth2Entity;
         this.role = new ArrayList<>(List.of(Role.MEMBER));
         this.auditEntity = new AuditEntity();
+    }
+
+    public void registerDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
     }
 
     public List<SimpleGrantedAuthority> getRole() {
