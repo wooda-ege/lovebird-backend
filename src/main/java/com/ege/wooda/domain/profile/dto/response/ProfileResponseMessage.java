@@ -9,6 +9,8 @@ public enum ProfileResponseMessage {
     CREATE_PROFILE("프로필이 생성되었습니다."),
     READ_PROFILE("프로필 조회에 성공하셨습니다."),
     READ_PROFILE_FAIL("프로필 조회에 실패하셨습니다."),
-    UPDATE_PROFILE("프로필이 성공적으로 수정되었습니다.");
+    UPDATE_PROFILE("프로필이 성공적으로 수정되었습니다."),
+    GENERATE_COUPLE_CODE("커플 연동 코드가 발급되었습니다."),
+    LINK_SUCCESS("커플 연동에 성공하셨습니다");
     private final String message;
 }

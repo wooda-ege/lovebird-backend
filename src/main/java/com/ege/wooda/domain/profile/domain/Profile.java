@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.ege.wooda.domain.member.domain.enums.Gender;
 import com.ege.wooda.domain.profile.domain.enums.Anniversary;
+import com.ege.wooda.domain.profile.dto.response.CoupleCodeResponse;
 import com.ege.wooda.domain.profile.dto.response.ProfileDetailResponse;
 import com.ege.wooda.global.audit.AuditEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -108,6 +109,19 @@ public class Profile {
         this.imageUrl = null;
     }
 
+    public void updateCoupleCode(String coupleCode) {
+        this.coupleCode = coupleCode;
+    }
+
+    public void deleteCoupleCode() { this.coupleCode = null; }
+
+    public void connectCouple(String coupleCode) {
+        this.coupleCode = coupleCode;
+        this.linkedFlag = true;
+    }
+
+    public void disconnectFlag() { this.linkedFlag = false; }
+
     public void update(Profile profile) {
         this.nickname = profile.getNickname();
         this.gender = profile.getGender();
@@ -126,5 +140,9 @@ public class Profile {
                                    .gender(gender.toString())
                                    .profileImageUrl(imageUrl)
                                    .build();
+    }
+
+    public CoupleCodeResponse toCoupleCodeResponse() {
+        return new CoupleCodeResponse(memberId, coupleCode);
     }
 }
