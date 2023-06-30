@@ -28,14 +28,14 @@ public class CoupleService {
     }
 
     @Transactional
-    public void connectCouple(ConnectCoupleParam connectCoupleParam) {
+    public Long connectCouple(ConnectCoupleParam connectCoupleParam) {
         Profile self = findByMemberId(connectCoupleParam.memberId());
         Profile partner = findByCoupleCode(connectCoupleParam.coupleCode());
 
         self.connectCouple(connectCoupleParam.coupleCode());
         partner.connectCouple(connectCoupleParam.coupleCode());
 
-        // FCM 필요
+        return partner.getMemberId();
     }
 
     @Transactional(readOnly = true)
