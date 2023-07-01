@@ -21,7 +21,6 @@ import java.util.List;
 @RequestMapping("/api/v1/calendar")
 public class CalendarController {
     private final CalendarService calendarService;
-    private final MemberService memberService;
 
     @PostMapping("")
     public ResponseEntity<ApiResponse<Long>> save(
@@ -56,6 +55,7 @@ public class CalendarController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<?>> delete(@PathVariable Long id){
+        calendarService.delete(id);
         return ResponseEntity.ok(ApiResponse.createSuccess(CalendarResponseMessage.DELETE_CALENDAR.getMessage()));
     }
 }
