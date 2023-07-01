@@ -24,7 +24,7 @@ public class CalendarController {
 
     @PostMapping("")
     public ResponseEntity<ApiResponse<Long>> save(
-            @Validated @RequestPart(value = "calendarCreateRequest")CalendarCreateRequest calendar
+            @Validated @RequestBody CalendarCreateRequest calendar
             ) throws IOException {
         Long id = calendarService.save(calendar);
         return new ResponseEntity<>(
@@ -42,10 +42,20 @@ public class CalendarController {
         );
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<Calendar>> getCalendarById(
+            @PathVariable Long id){
+        Calendar calendar= calendarService.findById(id);
+        return ResponseEntity.ok(
+                ApiResponse.createSuccessWithData(CalendarResponseMessage.READ_CALENDAR.getMessage(),
+                        calendar)
+        );
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Long>> update(
             @PathVariable Long id,
-            @Validated @RequestPart(value = "calendarUpdateRequest") CalendarUpdateRequest calendarUpdateRequest
+            @Validated @RequestBody CalendarUpdateRequest calendarUpdateRequest
     ) throws IOException{
         Long updatedId=calendarService.update(id, calendarUpdateRequest);
         return ResponseEntity.ok(

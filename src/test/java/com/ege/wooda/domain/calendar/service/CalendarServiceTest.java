@@ -2,6 +2,7 @@ package com.ege.wooda.domain.calendar.service;
 
 import com.ege.wooda.domain.calendar.domain.Calendar;
 import com.ege.wooda.domain.calendar.dto.request.CalendarCreateRequest;
+import com.ege.wooda.domain.calendar.dto.request.CalendarUpdateRequest;
 import com.ege.wooda.domain.calendar.repository.CalendarRepository;
 import com.ege.wooda.domain.member.domain.Gender;
 import com.ege.wooda.domain.member.domain.Member;
@@ -15,16 +16,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.io.IOException;
 import java.sql.Ref;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -91,8 +90,39 @@ public class CalendarServiceTest {
     @Test
     @DisplayName("Calendar 정보를 수정하면 해당 calendar의 ID가 반환된다.")
     public void update() throws IOException{
-        List<Calendar> calendarList=getScheduleList();
+        Calendar calendar=getSchedule(2L, "Test schedule", "Test memo", LocalDateTime.now(), LocalDateTime.now());
 
+        Long mockId=3L;
+        String updateTitle="Update calendar title";
+
+        CalendarUpdateRequest calendarUpdateRequest=CalendarUpdateRequest.builder()
+                .memberId(1L)
+                .title(updateTitle)
+                .build();
+
+        ReflectionTestUtils.setField(calendar, "id", mockId);
+
+        given(calendarRepository.findById(anyLong()))
+                .willReturn(Optional.of(calendar));
+
+        Long updateId=calendarService.update(mockId, calendarUpdateRequest);
+
+        Long findId=calendarService.findById(mockId).getId();
+        assertEquals(updateId, findId);
+
+    }
+
+    @Test
+    @DisplayName("Calendar를 삭제하면 해당 ID가 반환된다.")
+    public void delete(){
+        Calendar calendar=getSchedule(2L, "Test schedule", "Test memo", LocalDateTime.now(), LocalDateTime.now());
+
+        Long mockId=3L;
+
+        given(calendarRepository.findById(anyLong()))
+                .willReturn(Optional.of(calendar));
+
+        assertDoesNotThrow(()->calendarService.delete(mockId));
     }
 
     private Calendar getSchedule(Long memberId,
@@ -114,7 +144,6 @@ public class CalendarServiceTest {
                 getSchedule(2L, "Test schedule2", "Test test 2", LocalDateTime.now(), LocalDateTime.now()),
                 getSchedule(2L, "Test schedule3", "Test test 3", LocalDateTime.now(), LocalDateTime.now())
         );
-
     }
 
     private Member getMember(String nickname, Gender gender, LocalDate firstDate) {
