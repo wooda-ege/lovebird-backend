@@ -1,7 +1,6 @@
 package com.ege.wooda.domain.calendar.dto.request;
 
 import com.ege.wooda.domain.calendar.domain.Calendar;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 

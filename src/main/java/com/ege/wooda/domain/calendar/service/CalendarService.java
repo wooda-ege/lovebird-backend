@@ -5,6 +5,7 @@ import com.ege.wooda.domain.calendar.dto.request.CalendarCreateRequest;
 import com.ege.wooda.domain.calendar.dto.request.CalendarUpdateRequest;
 import com.ege.wooda.domain.calendar.repository.CalendarRepository;
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,7 @@ public class CalendarService {
 
     @Transactional
     public Long save(CalendarCreateRequest calendarCreateRequest) throws IOException {
+        System.out.println(calendarCreateRequest.endDate());
         Calendar calendar = calRepository.save(calendarCreateRequest.toEntity());
 
         return calendar.getId();
@@ -39,7 +41,7 @@ public class CalendarService {
     }
 
     @Transactional(readOnly = true)
-    public Calendar findById(Long id){ return calRepository.findById(id).orElseThrow(EntityExistsException::new);}
+    public Calendar findById(Long id){ return calRepository.findById(id).orElseThrow(EntityNotFoundException::new);}
 
     @Transactional(readOnly = true)
     public List<Calendar> findByMemberId(Long id) {return calRepository.findByMemberId(id);}
