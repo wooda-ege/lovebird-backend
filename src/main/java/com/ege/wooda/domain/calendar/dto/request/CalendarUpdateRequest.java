@@ -8,10 +8,10 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 public record CalendarUpdateRequest(@NotNull Long memberId,
-                                    @NotBlank String title,
-                                    @NotBlank String memo,
-                                    LocalDateTime startDate,
-                                    LocalDateTime endDate)
+                                    String title,
+                                    String memo,
+                                    @NotNull LocalDateTime startDate,
+                                    @NotNull LocalDateTime endDate)
 {
     @Builder
     public CalendarUpdateRequest {}

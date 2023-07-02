@@ -644,7 +644,7 @@ Content-Length: 927
   "status" : "SUCCESS",
   "message" : "유저 조회에 성공하셨습니다.",
   "data" : {
-    "uuid" : "e11cf74f-08cd-49c8-8363-b8d101ba6919",
+    "uuid" : "e1bb5a56-76fe-4b00-841e-20d55fcb7249",
     "nickname" : "홍길동",
     "anniversaryList" : {
       "9years" : "2032-05-15",
@@ -1748,15 +1748,15 @@ Content-Length: 106
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/v1/calendar HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Content-Length: 168
+Content-Length: 154
 Host: www.lovebird-wooda.com
 
 {
   "memberId" : 1,
   "title" : "Calendar title",
   "memo" : "Calendar memo",
-  "startDate" : "2023-07-02T16:49:29.338001",
-  "endDate" : "2023-07-02T16:49:29.338015"
+  "startDate" : "2023-06-30T20:00:00",
+  "endDate" : "2023-06-30T22:00:00"
 }</code></pre>
 </div>
 </div>
@@ -1768,8 +1768,8 @@ Host: www.lovebird-wooda.com
   "memberId" : 1,
   "title" : "Calendar title",
   "memo" : "Calendar memo",
-  "startDate" : "2023-07-02T16:49:29.338001",
-  "endDate" : "2023-07-02T16:49:29.338015"
+  "startDate" : "2023-06-30T20:00:00",
+  "endDate" : "2023-06-30T22:00:00"
 }</code></pre>
 </div>
 </div>
@@ -1855,8 +1855,8 @@ Content-Length: 674
   "data" : [ {
     "id" : 1,
     "memberId" : 2,
-    "startDate" : "2023-07-02 16:49",
-    "endDate" : "2023-07-02 16:49",
+    "startDate" : "2023-07-02 17:00",
+    "endDate" : "2023-07-02 19:00",
     "title" : "Test schedule2",
     "memo" : "Test test 2",
     "auditEntity" : {
@@ -1866,8 +1866,8 @@ Content-Length: 674
   }, {
     "id" : 2,
     "memberId" : 2,
-    "startDate" : "2023-07-02 16:49",
-    "endDate" : "2023-07-02 16:49",
+    "startDate" : "2023-07-13 10:00",
+    "endDate" : "2023-07-13 11:00",
     "title" : "Test schedule3",
     "memo" : "Test test 3",
     "auditEntity" : {
@@ -1980,7 +1980,7 @@ Host: www.lovebird-wooda.com</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 274
+Content-Length: 260
 
 {
   "status" : "SUCCESS",
@@ -1989,8 +1989,8 @@ Content-Length: 274
     "memberId" : 2,
     "title" : "Test schedule1",
     "memo" : "Test test 1",
-    "startDate" : "2023-07-02T16:49:29.316527",
-    "endDate" : "2023-07-02T16:49:29.316541"
+    "startDate" : "2023-06-28T21:00:00",
+    "endDate" : "2023-06-28T23:00:00"
   }
 }</code></pre>
 </div>
@@ -2062,15 +2062,15 @@ Content-Length: 274
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /api/v1/calendar/6 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
-Content-Length: 125
+Content-Length: 150
 Host: www.lovebird-wooda.com
 
 {
   "memberId" : 1,
   "title" : "Update calendar title",
-  "memo" : "Update memo",
-  "startDate" : null,
-  "endDate" : null
+  "memo" : null,
+  "startDate" : "2023-07-02T16:00:00",
+  "endDate" : "2023-07-02T18:00:00"
 }</code></pre>
 </div>
 </div>
@@ -2103,9 +2103,9 @@ Host: www.lovebird-wooda.com
 <pre class="highlightjs highlight nowrap"><code data-lang="json" class="language-json hljs">{
   "memberId" : 1,
   "title" : "Update calendar title",
-  "memo" : "Update memo",
-  "startDate" : null,
-  "endDate" : null
+  "memo" : null,
+  "startDate" : "2023-07-02T16:00:00",
+  "endDate" : "2023-07-02T18:00:00"
 }</code></pre>
 </div>
 </div>

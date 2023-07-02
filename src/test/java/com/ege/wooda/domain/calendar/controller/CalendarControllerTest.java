@@ -72,8 +72,8 @@ public class CalendarControllerTest {
                 .memberId(1L)
                 .title("Calendar title")
                 .memo("Calendar memo")
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now())
+                .startDate(toLocalDateTime("2023-06-30 20:00"))
+                .endDate(toLocalDateTime("2023-06-30 22:00"))
                 .build();
 
         String request=objectMapper.writeValueAsString(calendarCreateRequest);
@@ -167,7 +167,7 @@ public class CalendarControllerTest {
     @Test
     @DisplayName("특정한 일정을 조회한다.")
     public void findById() throws Exception{
-        Calendar calendar = getSchedule(2L, "Test schedule1", "Test test 1", LocalDateTime.now(), LocalDateTime.now());
+        Calendar calendar = getSchedule(2L, "Test schedule1", "Test test 1", toLocalDateTime("2023-06-28 21:00"), toLocalDateTime("2023-06-28 23:00"));
 
         ReflectionTestUtils.setField(calendar, "id", 6L);
         ReflectionTestUtils.setField(calendar.getAuditEntity(), "createdAt",
@@ -210,7 +210,7 @@ public class CalendarControllerTest {
     @Test
     @DisplayName("해당 ID의 일정 정보를 수정한다.")
     public void modify() throws Exception{
-        Calendar calendar = getSchedule(2L, "Test schedule1", "Test test 1", LocalDateTime.now(), LocalDateTime.now());
+        Calendar calendar = getSchedule(2L, "Test schedule1", "Test test 1", toLocalDateTime("2023-06-29 09:00"), toLocalDateTime("2023-06-29 10:00"));
 
         ReflectionTestUtils.setField(calendar, "id", 6L);
         ReflectionTestUtils.setField(calendar.getAuditEntity(), "createdAt",
@@ -226,7 +226,8 @@ public class CalendarControllerTest {
         CalendarUpdateRequest calendarUpdateRequest=CalendarUpdateRequest.builder()
                 .memberId(1L)
                 .title("Update calendar title")
-                .memo("Update memo")
+                .startDate(toLocalDateTime("2023-07-02 16:00"))
+                .endDate(toLocalDateTime("2023-07-02 18:00"))
                 .build();
 
         String request=objectMapper.writeValueAsString(calendarUpdateRequest);
@@ -324,8 +325,8 @@ public class CalendarControllerTest {
 
     private List<Calendar> getScheduleList() {
         return List.of(
-                getSchedule(2L, "Test schedule2", "Test test 2", LocalDateTime.now(), LocalDateTime.now()),
-                getSchedule(2L, "Test schedule3", "Test test 3", LocalDateTime.now(), LocalDateTime.now())
+                getSchedule(2L, "Test schedule2", "Test test 2", toLocalDateTime("2023-07-02 17:00"), toLocalDateTime("2023-07-02 19:00")),
+                getSchedule(2L, "Test schedule3", "Test test 3", toLocalDateTime("2023-07-13 10:00"), toLocalDateTime("2023-07-13 11:00"))
         );
     }
 
@@ -335,5 +336,9 @@ public class CalendarControllerTest {
 
     private LocalDateTime getLocalDateTime(String date) {
         return LocalDateTime.parse(date, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+    }
+
+    private LocalDateTime toLocalDateTime(String date){
+        return LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
 }
