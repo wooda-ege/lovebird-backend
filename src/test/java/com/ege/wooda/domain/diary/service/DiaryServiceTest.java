@@ -4,11 +4,9 @@ import com.ege.wooda.domain.diary.domain.Diary;
 import com.ege.wooda.domain.diary.dto.request.DiaryCreateRequest;
 import com.ege.wooda.domain.diary.dto.request.DiaryUpdateRequest;
 import com.ege.wooda.domain.diary.repository.DiaryRepository;
-import com.ege.wooda.domain.member.domain.Gender;
-import com.ege.wooda.domain.member.domain.Member;
 import com.ege.wooda.global.config.jpa.JpaConfig;
 import com.ege.wooda.global.s3.ImageS3Uploader;
-import com.ege.wooda.global.s3.S3File;
+import com.ege.wooda.global.s3.dto.S3File;
 import com.ege.wooda.global.s3.fomatter.FileNameFormatter;
 
 import org.junit.jupiter.api.Test;
@@ -60,25 +58,21 @@ public class DiaryServiceTest {
     @Test
     @DisplayName("Diary를 생성하면 해당 Diary의 ID를 반환한다.")
     public void save() throws Exception {
-        List<String> urls1 = getImageUrls("홍길동");
-
-        Member mockMember = getMember("홍길동", Gender.MALE, getLocalDate("2023-05-09"));
-
-        List<MultipartFile> mockImgs = getMultipartFiles();
+        // given
+        List<String> urls = getImageUrls("홍길동");
+        List<MultipartFile> mockImages = getMultipartFiles();
         List<S3File> mockS3File = getS3Files();
-
         Diary mockDiary = getDiary(1L, "Test Diary1", "Test diary subtitle1", getLocalDate("2023-05-28"),
-                                   "place1", "contents1", urls1);
+                                   "place1", "contents1", urls);
         Long mockId = 1L;
 
+        // when
         DiaryCreateRequest diaryCreateRequest = DiaryCreateRequest.builder()
-                                                                  .memberId(1L)
                                                                   .title("Test Diary1")
                                                                   .subTitle("Test diary subtitle1")
                                                                   .memoryDate("2023-05-28")
                                                                   .place("place1")
                                                                   .content("contents1")
-                                                                  .imgUrls(urls1)
                                                                   .build();
 
         ReflectionTestUtils.setField(mockDiary, "id", mockId);
@@ -87,7 +81,7 @@ public class DiaryServiceTest {
         given(diaryRepository.save(any()))
                 .willReturn(mockDiary);
 
-        Long saveDiaryId = diaryService.save(mockImgs, diaryCreateRequest, getUUID());
+        Long saveDiaryId = diaryService.save(mockImages, diaryCreateRequest, mockId);
 
         assertEquals(saveDiaryId, mockId);
     }
@@ -153,7 +147,7 @@ public class DiaryServiceTest {
                 .willReturn(Optional.of(mockDiary));
 
         // when
-        Long updateId = diaryService.update(mockId, mockImgs, diaryUpdateRequest, getUUID());
+        Long updateId = diaryService.update(mockId, mockImgs, diaryUpdateRequest, mockId);
 
         // then
         Long findId = diaryService.findById(mockId).getId();
@@ -161,29 +155,20 @@ public class DiaryServiceTest {
     }
 
     @Test
-    @DisplayName("Diary를 삭제하면 해당 ID가 반환된다.")
+    @DisplayName("Member ID와 Diary ID를 통해 Diary 삭제에 성공한다.")
     public void delete() {
         // given
+        Long mockMemberId = 2L;
+        Long mockDiaryId = 2L;
         List<String> urls2 = getImageUrls("홍길동");
-        Diary mockDiary = getDiary(2L, "Test Diary2", "Test diary subtitle2", getLocalDate("2023-05-30"),
+        Diary mockDiary = getDiary(mockMemberId, "Test Diary2", "Test diary subtitle2", getLocalDate("2023-05-30"),
                                    "place2", "contents2", urls2);
-        Long mockId = 2L;
 
-        given(diaryRepository.findById(anyLong()))
+        given(diaryRepository.findDiariesByMemberIdAndId(anyLong(), anyLong()))
                 .willReturn(Optional.of(mockDiary));
 
         // then
-        assertDoesNotThrow(() -> diaryService.delete(mockId, getUUID()));
-    }
-
-    private Member getMember(String nickname, Gender gender, LocalDate firstDate) {
-        return Member.builder()
-                     .nickname(nickname)
-                     .firstDate(firstDate)
-                     .gender(gender)
-                     .pictureM(null)
-                     .pictureW(null)
-                     .build();
+        assertDoesNotThrow(() -> diaryService.delete(mockMemberId, mockDiaryId));
     }
 
     private Diary getDiary(Long memberId, String title, String subTitle, LocalDate memoryDate, String place,

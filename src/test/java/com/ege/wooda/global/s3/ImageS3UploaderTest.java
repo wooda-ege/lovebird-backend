@@ -4,6 +4,7 @@ import com.ege.wooda.global.s3.config.S3MockConfig;
 
 import com.ege.wooda.global.s3.dto.ImageDeleteRequest;
 import com.ege.wooda.global.s3.dto.ImageUploadRequest;
+import com.ege.wooda.global.s3.dto.S3File;
 
 import io.findify.s3mock.S3Mock;
 
@@ -44,7 +45,7 @@ public class ImageS3UploaderTest {
         // given
         List<MultipartFile> mockFiles = getMultipartFiles();
         ImageUploadRequest imageUploadRequest = new ImageUploadRequest(mockFiles, getImageNames(mockFiles),
-                                                                       "test", "test");
+                                                                       "test", 1L);
 
         // when
         List<S3File> savedFiles = imageS3Uploader.upload(imageUploadRequest);
@@ -59,13 +60,13 @@ public class ImageS3UploaderTest {
         // given
         List<MultipartFile> mockFiles = getMultipartFiles();
         ImageUploadRequest imageUploadRequest = new ImageUploadRequest(mockFiles, getImageNames(mockFiles),
-                                                                       "test", "test");
+                                                                       "test", 1L);
         ImageDeleteRequest imageDeleteRequest = new ImageDeleteRequest(
                 getMultipartFiles().stream()
                                    .map(MultipartFile::getOriginalFilename)
                                    .toList(),
                 "test",
-                "test");
+                1L);
 
         // when
         List<String> fileNames = imageS3Uploader.upload(imageUploadRequest).stream()

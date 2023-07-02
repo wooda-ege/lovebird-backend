@@ -7,15 +7,17 @@ import lombok.Builder;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
-public record DiaryCreateRequest(Long memberId, String title, String subTitle, String memoryDate, String place,
-                                 String content, List<String> imgUrls) {
+public record DiaryCreateRequest(String title,
+                                 String subTitle,
+                                 String memoryDate,
+                                 String place,
+                                 String content) {
 
     @Builder
     public DiaryCreateRequest {}
 
-    public Diary toEntity() {
+    public Diary toEntity(Long memberId) {
         return Diary.builder()
                     .memberId(memberId)
                     .title(title)

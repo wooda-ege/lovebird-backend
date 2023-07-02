@@ -1,16 +1,5 @@
 package com.ege.wooda.domain.member.service;
 
-import com.ege.wooda.domain.member.domain.Gender;
-import com.ege.wooda.domain.member.domain.Member;
-import com.ege.wooda.domain.member.dto.request.MemberCreateRequest;
-import com.ege.wooda.domain.member.dto.request.MemberUpdateRequest;
-import com.ege.wooda.domain.member.repository.MemberRepository;
-import com.ege.wooda.global.s3.ImageS3Uploader;
-import com.ege.wooda.global.s3.S3File;
-import com.ege.wooda.global.s3.fomatter.FileNameFormatter;
-
-import jakarta.persistence.EntityNotFoundException;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,36 +7,27 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import com.ege.wooda.domain.member.domain.Member;
+import com.ege.wooda.domain.member.domain.Oauth2Entity;
+import com.ege.wooda.domain.member.repository.MemberRepository;
+import com.ege.wooda.global.security.oauth.model.OAuth2Request;
+import com.ege.wooda.global.security.oauth.model.enums.SocialProvider;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
+
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
-class MemberServiceTest {
-
+public class MemberServiceTest {
     @InjectMocks
     private MemberService memberService;
 
     @Mock
     private MemberRepository memberRepository;
-
-    @Mock
-    private ImageS3Uploader imageS3Uploader;
-
-    @Mock
-    private FileNameFormatter fileNameFormatter;
 
     @AfterEach
     public void cleanup() {
@@ -55,140 +35,102 @@ class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("Member를 생성하면 해당 Member의 ID가 반환된다")
-    void save() throws IOException {
+    @DisplayName("Member를 저장한다.")
+    void save() {
         // given
-        Member mockMember = getMember("홍길동", Gender.MALE, getLocalDate("2023-05-15"));
-        Long mockId = 1L;
-        List<MultipartFile> mockImages = getMultipartFiles();
-        List<S3File> mockS3File = getS3File();
+        Oauth2Entity oauth2Entity = getOauth2Entity("qv1go6fw", SocialProvider.valueOf("GOOGLE"), "홍길동");
+        Member mockMember = getMember(oauth2Entity);
 
-        MemberCreateRequest memberCreateRequest = MemberCreateRequest.builder()
-                                                                     .nickname("홍길동")
-                                                                     .firstDate("2023-05-15")
-                                                                     .gender("MALE")
-                                                                     .build();
-
-        ReflectionTestUtils.setField(mockMember, "id", mockId);
-        given(imageS3Uploader.upload(any()))
-                .willReturn(mockS3File);
         given(memberRepository.save(any()))
                 .willReturn(mockMember);
 
         // when
-        Long saveMemberId = memberService.save(mockImages, memberCreateRequest);
+        Member saveMember = memberService.save(oauth2Entity);
 
         // then
-        assertEquals(saveMemberId, mockId);
+        assertEquals(mockMember, saveMember);
     }
 
     @Test
-    @DisplayName("해당 ID의 Member를 반환한다.")
+    @DisplayName("만약 존재하지 않는 Member일 때 저장한다.")
+    void saveIfNewMemberSuccess() {
+        // given
+        Oauth2Entity oauth2Entity = getOauth2Entity("qv1go6fw", SocialProvider.valueOf("GOOGLE"), "홍길동");
+        Member mockMember = getMember(oauth2Entity);
+
+        given(memberRepository.findByOauth2EntityAccountId(anyString()))
+                .willReturn(Optional.empty());
+        given(memberRepository.save(any()))
+                .willReturn(mockMember);
+
+        // when
+        OAuth2Request oAuth2Request = OAuth2Request.builder()
+                                                   .accountId("bq2guq4if")
+                                                   .name("홍길동")
+                                                   .email("test@gmail.com")
+                                                   .socialProvider(SocialProvider.valueOf("GOOGLE"))
+                                                   .build();
+
+        Member saveMember = memberService.saveIfNewMember(oAuth2Request);
+
+        // then
+        assertEquals(mockMember, saveMember);
+    }
+
+    @Test
+    @DisplayName("만약 존재하는 경우 Member를 기존 데이터를 리턴한다.")
+    void saveIfNewMemberFail() {
+        // given
+        Oauth2Entity oauth2Entity = getOauth2Entity("qv1go6fw", SocialProvider.valueOf("GOOGLE"), "홍길동");
+        Member mockMember = getMember(oauth2Entity);
+
+        given(memberRepository.findByOauth2EntityAccountId(anyString()))
+                .willReturn(Optional.of(mockMember));
+
+        // when
+        OAuth2Request oAuth2Request = OAuth2Request.builder()
+                                                   .accountId("bq2guq4if")
+                                                   .name("홍길동")
+                                                   .email("test@gmail.com")
+                                                   .socialProvider(SocialProvider.valueOf("GOOGLE"))
+                                                   .build();
+
+        Member existMember = memberService.saveIfNewMember(oAuth2Request);
+
+        // then
+        assertEquals(mockMember, existMember);
+    }
+
+    @Test
+    @DisplayName("해당 id의 Member를 리턴한다.")
     void findById() {
         // given
-        Member mockMember = getMember("홍길동", Gender.MALE, getLocalDate("2023-05-15"));
         Long mockId = 1L;
+        Member mockMember = getMember(getOauth2Entity("qv1go6fw", SocialProvider.valueOf("GOOGLE"), "홍길동"));
 
         ReflectionTestUtils.setField(mockMember, "id", mockId);
         given(memberRepository.findById(anyLong()))
                 .willReturn(Optional.of(mockMember));
 
         // when
-        memberRepository.save(mockMember);
-
-        // then
         Member findMember = memberService.findById(mockId);
 
-        assertEquals(findMember, mockMember);
+        //then
+        assertEquals(mockMember, findMember);
     }
 
-    @Test
-    @DisplayName("Member의 정보를 수정하면 해당 Member의 ID가 반환된다.")
-    void update() throws IOException {
-        // given
-        Member mockMember = getMember("홍길동", Gender.MALE, getLocalDate("2023-05-15"));
-
-        String updateNickname = "청길동";
-        String updateGender = "FEMALE";
-        String updateFirstDate = "2021-04-16";
-        String mockNickname = "홍길동";
-
-        MemberUpdateRequest memberUpdateRequest = MemberUpdateRequest.builder()
-                                                                     .nickname(updateNickname)
-                                                                     .gender(updateGender)
-                                                                     .firstDate(updateFirstDate)
-                                                                     .build();
-
-        ReflectionTestUtils.setField(mockMember, "nickname", mockNickname);
-        given(memberRepository.findMemberByNickname(anyString()))
-                .willReturn(Optional.of(mockMember));
-
-        // when
-        Long updateId = memberService.update(mockNickname, new ArrayList<>(), memberUpdateRequest);
-
-        // then
-        Long findId = memberService.findMemberByNickname(mockNickname).getId();
-
-        assertEquals(updateId, findId);
-    }
-
-    @Test
-    void deleteSuccess() {
-        // given
-        String mockNickname = "홍길동";
-        Member mockMember = getMember(mockNickname, Gender.MALE, getLocalDate("2023-05-15"));
-
-        given(memberRepository.findMemberByNickname(anyString()))
-                .willReturn(Optional.of(mockMember));
-
-        // then
-        assertDoesNotThrow(() -> memberService.delete(mockNickname));
-    }
-
-    @Test
-    void deleteFail() {
-        // given
-        given(memberRepository.findMemberByNickname(anyString()))
-                .willReturn(Optional.empty());
-
-        // then
-        assertThrows(EntityNotFoundException.class, () -> memberService.delete("청길동"));
-    }
-
-    private Member getMember(String nickname, Gender gender, LocalDate firstDate) {
+    private Member getMember(Oauth2Entity oauth2Entity) {
         return Member.builder()
-                     .nickname(nickname)
-                     .firstDate(firstDate)
-                     .gender(gender)
-                     .pictureM(null)
-                     .pictureW(null)
+                     .oauth2Entity(oauth2Entity)
                      .build();
     }
 
-    private List<Member> getMemberList() {
-        return List.of(getMember("홍길동", Gender.MALE, getLocalDate("2023-05-09"))
-                , getMember("청길동", Gender.FEMALE, getLocalDate("2023-05-10"))
-                , getMember("녹길동", Gender.MALE, getLocalDate("2021-04-16")));
-    }
-
-    private List<MultipartFile> getMultipartFiles() {
-        String path1 = "male.png";
-        String contentType1 = "image/png";
-        String path2 = "female.png";
-        String contentType2 = "image/png";
-
-        return List.of(new MockMultipartFile("male", path1, contentType1, "male".getBytes())
-                , new MockMultipartFile("female", path2, contentType2, "female".getBytes()));
-    }
-
-    private List<S3File> getS3File() {
-        return List.of(new S3File("male.png",
-                                  "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&prefix=member/홍길동/male.png"),
-                       new S3File("male.png",
-                                  "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&prefix=member/홍길동/female.png"));
-    }
-
-    private LocalDate getLocalDate(String firstDate) {
-        return LocalDate.parse(firstDate, DateTimeFormatter.ISO_DATE);
+    private Oauth2Entity getOauth2Entity(String accountId, SocialProvider socialProvider, String username) {
+        return Oauth2Entity.builder()
+                           .accountId(accountId)
+                           .socialProvider(socialProvider)
+                           .email("test@" + socialProvider.toString().toLowerCase() + "." + "com")
+                           .username(username)
+                           .build();
     }
 }

@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import com.ege.wooda.global.s3.dto.ImageDeleteRequest;
 import com.ege.wooda.global.s3.dto.ImageUploadRequest;
+import com.ege.wooda.global.s3.dto.S3File;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class ImageS3Uploader {
 
             String fileName = createFileName(
                     imageUploadRequest.domain(),
-                    imageUploadRequest.uuid(),
+                    imageUploadRequest.memberId(),
                     imageUploadRequest.imageNames().get(i));
             System.out.println(imageUploadRequest.imageNames().get(i));
             s3Files.add(new S3File(fileName, putS3(image, fileName, getObjectMetadata(image))));
@@ -70,8 +71,8 @@ public class ImageS3Uploader {
         return amazonS3Client.getUrl(s3Bucket, fileName).toString();
     }
 
-    private String createFileName(String domain, String uuid, String fileName) {
-        return "users/" + uuid + "/" + domain + "/" + fileName;
+    private String createFileName(String domain, Long memberId, String fileName) {
+        return "users/" + memberId + "/" + domain + "/" + fileName;
     }
 
     private ObjectMetadata getObjectMetadata(MultipartFile multipartFile) {

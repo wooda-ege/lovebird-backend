@@ -4,26 +4,16 @@ import com.ege.wooda.domain.diary.domain.Diary;
 import com.ege.wooda.domain.diary.dto.request.DiaryCreateRequest;
 import com.ege.wooda.domain.diary.dto.request.DiaryUpdateRequest;
 import com.ege.wooda.domain.diary.service.DiaryService;
-import com.ege.wooda.domain.member.domain.Gender;
-import com.ege.wooda.domain.member.domain.Member;
-import com.ege.wooda.domain.member.service.MemberService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ege.wooda.global.docs.RestDocsTest;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.nio.charset.StandardCharsets;
@@ -33,10 +23,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
-import static com.ege.wooda.global.util.ApiDocumentUtils.getDocumentRequest;
-import static com.ege.wooda.global.util.ApiDocumentUtils.getDocumentResponse;
+import static com.ege.wooda.global.docs.ApiDocumentUtils.getDocumentRequest;
+import static com.ege.wooda.global.docs.ApiDocumentUtils.getDocumentResponse;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -48,52 +37,36 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
 @WebMvcTest(DiaryController.class)
-@AutoConfigureMockMvc(addFilters = false)
-@AutoConfigureRestDocs
-public class DiaryControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
+public class DiaryControllerTest extends RestDocsTest {
     @MockBean
     private DiaryService diaryService;
-
-    @MockBean
-    private MemberService memberService;
 
     @Test
     @DisplayName("Diary를 생성한다.")
     public void add() throws Exception {
         // given
-        String mockNickname = "홍길동";
-        Member mockMember = getMember(mockNickname, Gender.MALE, getLocalDate("2023-05-15"));
-        List<String> urls = getImageUrls(mockNickname);
-        List<MockMultipartFile> mockImgs = getMultipartFiles();
+        Long mockMemberId = 1L;
+        List<String> urls = getImageUrls(mockMemberId);
+        List<MockMultipartFile> mockImages = getMultipartFiles();
 
+        // when
         DiaryCreateRequest diaryCreateRequest = DiaryCreateRequest.builder()
-                                                                  .memberId(1L)
                                                                   .title("Diary title")
                                                                   .subTitle("Diary subtitle")
                                                                   .memoryDate("2023-04-09")
                                                                   .place("Diary place")
                                                                   .content("Diary content")
-                                                                  .imgUrls(urls)
                                                                   .build();
         String request = objectMapper.writeValueAsString(diaryCreateRequest);
 
-        given(diaryService.save(anyList(), any(), anyString()))
+        given(diaryService.save(anyList(), any(), anyLong()))
                 .willReturn(1L);
-        given(memberService.findById(anyLong()))
-                .willReturn(mockMember);
 
         ResultActions result = this.mockMvc.perform(
-                multipart("/api/v0/diaries")
-                        .file(mockImgs.get(0))
-                        .file(mockImgs.get(1))
+                multipart("/api/v1/{id}/diaries", mockMemberId)
+                        .file(mockImages.get(0))
+                        .file(mockImages.get(1))
                         .file(new MockMultipartFile("diaryCreateRequest", "", "application/json",
                                                     request.getBytes(StandardCharsets.UTF_8)))
                         .contentType("multipart/form-data")
@@ -101,14 +74,15 @@ public class DiaryControllerTest {
                         .characterEncoding("UTF-8")
         );
 
-        result.andExpect(status().is2xxSuccessful())
+        result.andExpect(status().isCreated())
               .andDo(print())
               .andDo(document("diary-add",
                               getDocumentRequest(),
                               getDocumentResponse(),
+                              pathParameters(
+                                      parameterWithName("id").description("Member ID")
+                              ),
                               requestPartFields("diaryCreateRequest",
-                                                fieldWithPath("memberId").type(JsonFieldType.NUMBER)
-                                                                         .description("Member Id"),
                                                 fieldWithPath("title").type(JsonFieldType.STRING)
                                                                       .description("title"),
                                                 fieldWithPath("subTitle").type(JsonFieldType.STRING)
@@ -118,9 +92,7 @@ public class DiaryControllerTest {
                                                 fieldWithPath("place").type(JsonFieldType.STRING)
                                                                       .description("place"),
                                                 fieldWithPath("content").type(JsonFieldType.STRING)
-                                                                         .description("content"),
-                                                fieldWithPath("imgUrls").type(JsonFieldType.ARRAY)
-                                                                        .description("imgUrls")
+                                                                         .description("content")
                               ),
                               responseFields(
                                       fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
@@ -130,8 +102,9 @@ public class DiaryControllerTest {
     }
 
     @Test
-    @DisplayName("모든 diary를 조회한다.")
+    @DisplayName("해당 Member가 작성한 모든 diary를 조회한다.")
     public void getAll() throws Exception {
+        // given
         List<Diary> diaryList = getDiaryList();
         List<Long> mockIdList = new ArrayList<>(Arrays.asList(1L, 2L, 3L));
         List<String> mockAuditList = new ArrayList<>(
@@ -158,9 +131,10 @@ public class DiaryControllerTest {
         given(diaryService.findByMemberId(2L))
                 .willReturn(diaryList);
 
+        // when
+        Long mockMemberId = 2L;
         ResultActions result = this.mockMvc.perform(
-                get("/api/v0/diaries?memberId=2")
-                        .param("memberId", String.valueOf(2L))
+                get("/api/v1/{id}/diaries", mockMemberId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8"));
@@ -170,6 +144,9 @@ public class DiaryControllerTest {
               .andDo(document("diary-getAll",
                               getDocumentRequest(),
                               getDocumentResponse(),
+                              pathParameters(
+                                      parameterWithName("id").description("Member ID")
+                              ),
                               responseFields(
                                       fieldWithPath("status").type(JsonFieldType.STRING).description("응답 코드"),
                                       fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
@@ -200,24 +177,25 @@ public class DiaryControllerTest {
     }
 
     @Test
-    @DisplayName("해당 diary Id에 해당하는 Diary를 조회한다.")
-    public void findById() throws Exception {
-        List<String> urls = getImageUrls("홍길동");
-        Diary mockDiary = getDiary(2L, "Test Diary2", "Test diary subtitle2", getLocalDate("2023-05-30"),
+    @DisplayName("해당 Member가 작성한 해당 diary Id에 해당하는 Diary를 조회한다.")
+    public void findByMemberIdAndDiaryId() throws Exception {
+        Long mockMemberId = 2L;
+        List<String> urls = getImageUrls(mockMemberId);
+        Diary mockDiary = getDiary(mockMemberId, "Test Diary2", "Test diary subtitle2", getLocalDate("2023-05-30"),
                                    "place2", "content2", urls);
-        Long mockId = 2L;
+        Long mockDiaryId = 2L;
 
-        ReflectionTestUtils.setField(mockDiary, "id", mockId);
+        ReflectionTestUtils.setField(mockDiary, "id", mockDiaryId);
         ReflectionTestUtils.setField(mockDiary.getAuditEntity(), "createdAt",
                                      getLocalDateTime("2023-06-01T19:02:14"));
         ReflectionTestUtils.setField(mockDiary.getAuditEntity(), "updatedAt",
                                      getLocalDateTime("2023-06-01T19:02:14"));
 
-        given(diaryService.findById(anyLong()))
+        given(diaryService.findByMemberIdAndDiaryId(anyLong(), anyLong()))
                 .willReturn(mockDiary);
 
         ResultActions result = this.mockMvc.perform(
-                get("/api/v0/diaries/{id}", mockId)
+                get("/api/v1/{id}/diaries/{diaryId}", mockMemberId, mockDiaryId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8"));
@@ -227,7 +205,10 @@ public class DiaryControllerTest {
               .andDo(document("diary-find",
                               getDocumentRequest(),
                               getDocumentResponse(),
-                              pathParameters(parameterWithName("id").description("다이어리 Id")),
+                              pathParameters(
+                                      parameterWithName("id").description("Member Id"),
+                                      parameterWithName("diaryId").description("다이어리 Id")
+                              ),
                               responseFields(
                                       fieldWithPath("status").type(JsonFieldType.STRING).description("응답 코드"),
                                       fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
@@ -257,39 +238,35 @@ public class DiaryControllerTest {
     @DisplayName("해당 id의 Diary 정보를 수정한다.")
     public void modify() throws Exception {
         // given
-        String mockNickname = "홍길동";
-        Member mockMember = getMember(mockNickname, Gender.MALE, getLocalDate("2023-05-15"));
-        List<String> urls = getImageUrls(mockNickname);
-        List<MockMultipartFile> mockImgs = getMultipartFiles();
+        Long mockMemberId = 1L;
+        List<String> urls = getImageUrls(mockMemberId);
+        List<MockMultipartFile> mockImages = getMultipartFiles();
 
         DiaryUpdateRequest diaryUpdateRequest = DiaryUpdateRequest.builder()
-                                                                  .memberId(1L)
                                                                   .title("Diary title")
                                                                   .subTitle("Diary subtitle")
                                                                   .memoryDate("2023-04-09")
                                                                   .place("Diary place")
                                                                   .content("Diary content")
-                                                                  .imgUrls(urls)
                                                                   .build();
         String request = objectMapper.writeValueAsString(diaryUpdateRequest);
 
         Diary mockDiary = getDiary(2L, "Test Diary2", "Test diary subtitle2", getLocalDate("2023-05-30"),
                                    "place2", "content2", urls);
-        Long mockId = 2L;
+        Long mockDiaryId = 2L;
 
-        ReflectionTestUtils.setField(mockDiary, "id", mockId);
+        ReflectionTestUtils.setField(mockDiary, "id", mockDiaryId);
 
-        given(memberService.findById(anyLong()))
-                .willReturn(mockMember);
         given(diaryService.findById(2L))
                 .willReturn(mockDiary);
-        given(diaryService.update(anyLong(), anyList(), any(), anyString()))
+        given(diaryService.update(anyLong(), anyList(), any(), anyLong()))
                 .willReturn(2L);
 
+        // when
         ResultActions result = this.mockMvc.perform(
-                multipart("/api/v0/diaries/{id}", mockId)
-                        .file(mockImgs.get(0))
-                        .file(mockImgs.get(1))
+                multipart("/api/v1/{id}/diaries/{diaryId}", mockMemberId, mockDiaryId)
+                        .file(mockImages.get(0))
+                        .file(mockImages.get(1))
                         .file(new MockMultipartFile("diaryUpdateRequest", "", "application/json",
                                                     request.getBytes(StandardCharsets.UTF_8)))
                         .with(req -> {
@@ -301,15 +278,17 @@ public class DiaryControllerTest {
                         .characterEncoding("UTF-8")
         );
 
+        // then
         result.andExpect(status().is2xxSuccessful())
               .andDo(print())
               .andDo(document("diary-update",
                               getDocumentRequest(),
                               getDocumentResponse(),
-                              pathParameters(parameterWithName("id").description("다이어리 Id")),
+                              pathParameters(
+                                      parameterWithName("id").description("Member Id"),
+                                      parameterWithName("diaryId").description("다이어리 Id")
+                              ),
                               requestPartFields("diaryUpdateRequest",
-                                                fieldWithPath("memberId").type(JsonFieldType.NUMBER)
-                                                                         .description("Member Id"),
                                                 fieldWithPath("title").type(JsonFieldType.STRING)
                                                                       .description("title"),
                                                 fieldWithPath("subTitle").type(JsonFieldType.STRING)
@@ -319,9 +298,7 @@ public class DiaryControllerTest {
                                                 fieldWithPath("place").type(JsonFieldType.STRING)
                                                                       .description("place"),
                                                 fieldWithPath("content").type(JsonFieldType.STRING)
-                                                                         .description("content"),
-                                                fieldWithPath("imgUrls").type(JsonFieldType.ARRAY)
-                                                                        .description("imgUrls")
+                                                                         .description("content")
                               ),
                               responseFields(
                                       fieldWithPath("status").type(JsonFieldType.STRING).description("응답 상태"),
@@ -334,20 +311,18 @@ public class DiaryControllerTest {
     @DisplayName("특정 다이어리를 삭제한다.")
     public void remove() throws Exception {
         // given
-        String mockNickname = "홍길동";
-        Member mockMember = getMember(mockNickname, Gender.MALE, getLocalDate("2023-05-15"));
-        List<String> urls = getImageUrls("홍길동");
-        Diary mockDiary = getDiary(2L, "Test Diary2", "Test diary subtitle2", getLocalDate("2023-05-30"),
+        Long mockMemberId = 2L;
+        List<String> urls = getImageUrls(mockMemberId);
+        Diary mockDiary = getDiary(mockMemberId, "Test Diary2", "Test diary subtitle2", getLocalDate("2023-05-30"),
                                    "place2", "content2", urls);
-        Long mockId = 2L;
+        Long mockDiaryId = 2L;
 
-        given(memberService.findById(anyLong()))
-                .willReturn(mockMember);
-        given(diaryService.findById(anyLong()))
+        given(diaryService.findByMemberIdAndDiaryId(anyLong(), anyLong()))
                 .willReturn(mockDiary);
 
+        // when
         ResultActions result = this.mockMvc.perform(
-                delete("/api/v0/diaries/{id}", mockId)
+                delete("/api/v1/{id}/diaries/{diaryId}", mockMemberId, mockDiaryId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON));
 
@@ -357,7 +332,8 @@ public class DiaryControllerTest {
                               getDocumentRequest(),
                               getDocumentResponse(),
                               pathParameters(
-                                      parameterWithName("id").description("Diary Id")
+                                      parameterWithName("id").description("Member Id"),
+                                      parameterWithName("diaryId").description("다이어리 Id")
                               ),
                               responseFields(
                                       fieldWithPath("status").type(JsonFieldType.STRING).description("응답 코드"),
@@ -380,8 +356,8 @@ public class DiaryControllerTest {
     }
 
     private List<Diary> getDiaryList() {
-        List<String> urls1 = getImageUrls("홍길동");
-        List<String> urls2 = getImageUrls("여혜민");
+        List<String> urls1 = getImageUrls(1L);
+        List<String> urls2 = getImageUrls(2L);
         return List.of(getDiary(2L, "Test Diary1", "Test diary subtitle1", getLocalDate("2023-06-01"), "place1",
                                 "content1", urls1)
                 , getDiary(2L, "Test Diary2", "Test diary subtitle2", getLocalDate("2023-06-01"), "place2",
@@ -398,32 +374,15 @@ public class DiaryControllerTest {
                        new MockMultipartFile("1-2", path2, "image/png", "1-2".getBytes()));
     }
 
-    private List<String> getImageUrls(String name) {
+    private List<String> getImageUrls(Long memberId) {
         String url1 =
                 "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/"
-                + name + "/1-1.png";
+                + memberId + "/1-1.png";
         String url2 =
                 "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&amp;prefix=member/"
-                + name + "/1-2.png";
+                + memberId + "/1-2.png";
 
         return List.of(url1, url2);
-    }
-
-    private Member getMember(String nickname, Gender gender, LocalDate firstDate) {
-        return Member.builder()
-                     .uuid(UUID.randomUUID().toString())
-                     .nickname(nickname)
-                     .firstDate(firstDate)
-                     .gender(gender)
-                     .pictureM(
-                             "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&prefix=member/"
-                             + nickname
-                             + "/male.png")
-                     .pictureW(
-                             "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&prefix=member/"
-                             + nickname
-                             + "/female.png")
-                     .build();
     }
 
     private LocalDate getLocalDate(String memoryDate) {
