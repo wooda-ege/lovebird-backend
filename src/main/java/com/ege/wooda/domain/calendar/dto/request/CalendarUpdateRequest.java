@@ -2,11 +2,12 @@ package com.ege.wooda.domain.calendar.dto.request;
 
 import com.ege.wooda.domain.calendar.domain.Calendar;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
 
-public record CalendarUpdateRequest(Long memberId,
+public record CalendarUpdateRequest(@NotNull Long memberId,
                                     @NotBlank String title,
                                     @NotBlank String memo,
                                     LocalDateTime startDate,

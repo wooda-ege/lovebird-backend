@@ -18,14 +18,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -146,8 +143,7 @@ public class CalendarControllerTest {
                                 fieldWithPath("status").type(JsonFieldType.STRING).description("응답 코드"),
                                 fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
                                 fieldWithPath("data").type(JsonFieldType.ARRAY).description("응답 데이터"),
-                                fieldWithPath("data[].id").type(JsonFieldType.NUMBER)
-                                        .description("Calendar ID").optional(),
+                                fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("Calendar ID").optional(),
                                 fieldWithPath("data[].memberId").type(JsonFieldType.NUMBER)
                                         .description("Member ID").optional(),
                                 fieldWithPath("data[].title").type(JsonFieldType.STRING)
@@ -199,8 +195,6 @@ public class CalendarControllerTest {
                                 fieldWithPath("status").type(JsonFieldType.STRING).description("응답 코드"),
                                 fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
                                 fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
-                                fieldWithPath("data.id").type(JsonFieldType.NUMBER)
-                                        .description("Calendar Id"),
                                 fieldWithPath("data.memberId").type(JsonFieldType.NUMBER)
                                         .description("Member Id"),
                                 fieldWithPath("data.title").type(JsonFieldType.STRING).description("제목"),
@@ -209,11 +203,7 @@ public class CalendarControllerTest {
                                 fieldWithPath("data.startDate").type(JsonFieldType.STRING)
                                         .description("일정 시작시간"),
                                 fieldWithPath("data.endDate").type(JsonFieldType.STRING)
-                                        .description("일정 종료시간"),
-                                fieldWithPath("data.auditEntity.createdAt").type(JsonFieldType.STRING)
-                                        .description("생성된 시간"),
-                                fieldWithPath("data.auditEntity.updatedAt").type(JsonFieldType.STRING)
-                                        .description("수정된 시간")
+                                        .description("일정 종료시간")
                         )));
     }
 

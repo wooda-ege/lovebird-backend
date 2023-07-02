@@ -3,6 +3,7 @@ package com.ege.wooda.domain.calendar.controller;
 import com.ege.wooda.domain.calendar.domain.Calendar;
 import com.ege.wooda.domain.calendar.dto.request.CalendarCreateRequest;
 import com.ege.wooda.domain.calendar.dto.request.CalendarUpdateRequest;
+import com.ege.wooda.domain.calendar.dto.response.CalendarDetailResponse;
 import com.ege.wooda.domain.calendar.dto.response.CalendarResponseMessage;
 import com.ege.wooda.domain.calendar.service.CalendarService;
 import com.ege.wooda.domain.member.service.MemberService;
@@ -43,12 +44,13 @@ public class CalendarController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Calendar>> getCalendarById(
+    public ResponseEntity<ApiResponse<CalendarDetailResponse>> getCalendarById(
             @PathVariable Long id){
-        Calendar calendar= calendarService.findById(id);
+        CalendarDetailResponse calendarDetailResponse=calendarService.findById(id).toCalendarDetailResponse();
+
         return ResponseEntity.ok(
                 ApiResponse.createSuccessWithData(CalendarResponseMessage.READ_CALENDAR.getMessage(),
-                        calendar)
+                        calendarDetailResponse)
         );
     }
 

@@ -1,5 +1,6 @@
 package com.ege.wooda.domain.calendar.domain;
 
+import com.ege.wooda.domain.calendar.dto.response.CalendarDetailResponse;
 import com.ege.wooda.global.audit.AuditEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
@@ -11,6 +12,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -22,7 +25,7 @@ public class Calendar {
     @Column(name="calendar_id")
     private Long id;
 
-    @Column(name="user_id")
+    @Column(name="member_id")
     private Long memberId;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
@@ -60,6 +63,25 @@ public class Calendar {
         memo=c.getMemo();
         startDate=c.getStartDate();
         endDate=c.getEndDate();
+    }
+
+    public CalendarDetailResponse toCalendarDetailResponse(){
+        Map<String, Object> calendarList=new HashMap<>(){{
+            put("id",id);
+            put("memberId",memberId);
+            put("title",title);
+            put("memo", memo);
+            put("startDate",startDate);
+            put("endDate",endDate);
+        }};
+
+        return CalendarDetailResponse.builder()
+                .memberId(memberId)
+                .title(title)
+                .memo(memo)
+                .startDate(startDate)
+                .endDate(endDate)
+                .build();
     }
 
 }
