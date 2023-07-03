@@ -1,6 +1,11 @@
 package com.ege.wooda.domain.profile.service;
 
+import static java.util.Objects.isNull;
+
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +27,7 @@ public class CoupleService {
         Profile profile = findByMemberId(memberId);
         profile.updateCoupleCode(generateCode());
 
-        // Scheduler 동작 필요
+        scheduleCodeReset(profile);
 
         return profile;
     }
@@ -52,5 +57,16 @@ public class CoupleService {
         return UUID.randomUUID().toString()
                    .replaceAll("-", "")
                    .substring(0, 8);
+    }
+
+    private void scheduleCodeReset(Profile profile) {
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+
+        executor.schedule(() -> {
+            if (!profile.getLinkedFlag() && !isNull(profile.getCoupleCode())) {
+                profile.deleteCoupleCode();
+            }
+        }, 24, TimeUnit.HOURS);
+        executor.shutdown();
     }
 }
