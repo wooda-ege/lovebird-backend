@@ -11,5 +11,6 @@ import com.ege.wooda.domain.profile.domain.Profile;
 @Repository
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
     Optional<Profile> findProfileByMemberId(Long memberId);
+    Optional<Profile> findProfileByCoupleCode(String coupleCode);
     List<Profile> findProfileByCoupleCodeNotNullAndLinkedFlagIsFalse();
 }
