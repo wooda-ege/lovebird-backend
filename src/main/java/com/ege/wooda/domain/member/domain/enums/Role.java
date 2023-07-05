@@ -1,6 +1,6 @@
 package com.ege.wooda.domain.member.domain.enums;
 
 public enum Role {
-    ADMIN,
-    MEMBER;
+    ROLE_ADMIN,
+    ROLE_MEMBER;
 }

@@ -46,8 +46,8 @@ public class SecurityConfig {
     private Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> setAuthorizeHttpRequests() {
         return requests ->
                 requests.requestMatchers("/auth2/**", "/api/v1/auth").permitAll()
-                        .requestMatchers("/api/docs/api-docs.html").hasRole("ADMIN")
                         .requestMatchers("/api/v1/**").hasAnyRole("MEMBER", "ADMIN")
+                        .requestMatchers("/api/docs/api-docs.html").hasRole("ADMIN")
                         .anyRequest().authenticated();
     }
 

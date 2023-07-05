@@ -3,7 +3,7 @@ spring:
     default: local
   application:
     title: Lovebird
-    version: 0.1
+    version: 1.0
   banner:
     location: classpath:/app-banner.dat
   jpa:
