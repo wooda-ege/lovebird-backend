@@ -17,6 +17,7 @@ configurations {
 
 ext {
 	set('snippetsDir', file("build/generated-snippets"))
+	set('springCloudVersion', "2022.0.3")
 }
 
 test {
@@ -90,7 +91,8 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
-	// S3
+	// Spring Cloud
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '4.0.2'
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
 	// Firebase
@@ -105,4 +107,10 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'io.findify:s3mock_2.13:0.2.6'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
 }

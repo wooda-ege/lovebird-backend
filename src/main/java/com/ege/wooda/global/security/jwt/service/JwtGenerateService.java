@@ -24,6 +24,10 @@ public class JwtGenerateService {
         return jwtProvider.createJwtTokenByAuthToken(authToken);
     }
 
+    public JwtToken createJwtTokenByAppleAuth(PrincipalUser principalUser) {
+        return jwtProvider.createJwtToken(principalUser);
+    }
+
     public String createAuthToken(PrincipalUser principalUser) {
         return jwtProvider.createAuthToken(principalUser);
     }
