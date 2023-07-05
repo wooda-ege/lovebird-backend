@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,7 +32,7 @@ public class CalendarRepositoryTest {
     @Test
     @DisplayName("새 일정을 생성한다.")
     public void save(){
-        Calendar calendar=getSchedule(1L, "Test schedule1", "Test test 1", LocalDate.now(), LocalDate.now());
+        Calendar calendar=getSchedule(1L, "Test schedule1", "Test test 1", LocalDate.now(), LocalDate.now(), toLocalTime("13:00"), toLocalTime("15:00"));
         calendarRepository.save(calendar);
 
         Calendar existCalendar=calendarRepository.findById(calendar.getId()).orElseThrow(EntityNotFoundException::new);
@@ -65,22 +67,29 @@ public class CalendarRepositoryTest {
                                  String title,
                                  String memo,
                                  LocalDate startDate,
-                                 LocalDate endDate){
+                                 LocalDate endDate,
+                                 LocalTime startTime,
+                                 LocalTime endTime){
         return Calendar.builder()
                 .memberId(memberId)
                 .title(title)
                 .memo(memo)
                 .startDate(startDate)
                 .endDate(endDate)
+                .startTime(startTime)
+                .endTime(endTime)
                 .build();
     }
 
     private List<Calendar> getScheduleList(){
         return List.of(
-                        getSchedule(1L, "Test schedule1", "Test test 1", LocalDate.now(), LocalDate.now()),
-                        getSchedule(2L, "Test schedule2", "Test test 2", LocalDate.now(), LocalDate.now()),
-                        getSchedule(2L, "Test schedule3", "Test test 3", LocalDate.now(), LocalDate.now())
+                        getSchedule(1L, "Test schedule1", "Test test 1", LocalDate.now(), LocalDate.now(),toLocalTime("9:00"),toLocalTime("11:00")),
+                        getSchedule(2L, "Test schedule2", "Test test 2", LocalDate.now(), LocalDate.now(), toLocalTime("6:00"),toLocalTime("7:30")),
+                        getSchedule(2L, "Test schedule3", "Test test 3", LocalDate.now(), LocalDate.now(),toLocalTime("19:00"),toLocalTime("22:00"))
         );
+    }
 
+    private LocalTime toLocalTime(String time){
+        return LocalTime.parse(time, DateTimeFormatter.ofPattern("H:mm"));
     }
 }

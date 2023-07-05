@@ -17,6 +17,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -43,7 +44,7 @@ public class CalendarServiceTest {
     @DisplayName("Calendar를 생성하면 해당 Calendar의 ID를 반환한다.")
     public void save() throws Exception {
 
-        Calendar mockCalendar = getSchedule(2L, "Test schedule1", "Test test 1", LocalDate.now(), LocalDate.now());
+        Calendar mockCalendar = getSchedule(2L, "Test schedule1", "Test test 1", LocalDate.now(), LocalDate.now(),toLocalTime("9:00"), toLocalTime("10:30"));
 
         Long mockId=3L;
 
@@ -83,7 +84,7 @@ public class CalendarServiceTest {
     @Test
     @DisplayName("Calendar 정보를 수정하면 해당 calendar의 ID가 반환된다.")
     public void update() throws IOException{
-        Calendar calendar=getSchedule(2L, "Test schedule", "Test memo", LocalDate.now(), LocalDate.now());
+        Calendar calendar=getSchedule(2L, "Test schedule", "Test memo", LocalDate.now(), LocalDate.now(),toLocalTime("7:00"), toLocalTime("9:00"));
 
         Long mockId=3L;
         String updateTitle="Update calendar title";
@@ -108,7 +109,7 @@ public class CalendarServiceTest {
     @Test
     @DisplayName("Calendar를 삭제하면 해당 ID가 반환된다.")
     public void delete(){
-        Calendar calendar=getSchedule(2L, "Test schedule", "Test memo", LocalDate.now(), LocalDate.now());
+        Calendar calendar=getSchedule(2L, "Test schedule", "Test memo", LocalDate.now(), LocalDate.now(), toLocalTime("16:00"), toLocalTime("20:00"));
 
         Long mockId=3L;
 
@@ -122,20 +123,24 @@ public class CalendarServiceTest {
                                  String title,
                                  String memo,
                                  LocalDate startDate,
-                                 LocalDate endDate) {
+                                 LocalDate endDate,
+                                 LocalTime startTime,
+                                 LocalTime endTime) {
         return Calendar.builder()
                 .memberId(memberId)
                 .title(title)
                 .memo(memo)
                 .startDate(startDate)
                 .endDate(endDate)
+                .startTime(startTime)
+                .endTime(endTime)
                 .build();
     }
 
     private List<Calendar> getScheduleList() {
         return List.of(
-                getSchedule(2L, "Test schedule2", "Test test 2", LocalDate.now(), LocalDate.now()),
-                getSchedule(2L, "Test schedule3", "Test test 3", LocalDate.now(), LocalDate.now())
+                getSchedule(2L, "Test schedule2", "Test test 2", LocalDate.now(), LocalDate.now(), toLocalTime("14:00"), toLocalTime("15:30")),
+                getSchedule(2L, "Test schedule3", "Test test 3", LocalDate.now(), LocalDate.now(), toLocalTime("00:00"), toLocalTime("00:00"))
         );
     }
 
@@ -143,7 +148,7 @@ public class CalendarServiceTest {
         return LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
-    private String getUUID() {
-        return UUID.randomUUID().toString();
+    private LocalTime toLocalTime(String time){
+        return LocalTime.parse(time, DateTimeFormatter.ofPattern("H:mm"));
     }
 }

@@ -3,12 +3,16 @@ package com.ege.wooda.domain.calendar.dto.response;
 import lombok.Builder;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
-public record CalendarDetailResponse(Long memberId,
+public record CalendarDetailResponse(Long id,
+                                     Long memberId,
                                      String title,
                                      String memo,
                                      LocalDate startDate,
-                                     LocalDate endDate) {
+                                     LocalDate endDate,
+                                     LocalTime startTime,
+                                     LocalTime endTime) {
 
     @Builder
     public CalendarDetailResponse {}

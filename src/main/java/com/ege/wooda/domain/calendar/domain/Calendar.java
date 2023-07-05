@@ -12,6 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -36,6 +37,16 @@ public class Calendar {
     @Column(name="end_date")
     private LocalDate endDate;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "H:mm", timezone = "Asia/Seoul")
+    @DateTimeFormat(pattern = "H:mm")
+    @Column(name="startTime")
+    private LocalTime startTime;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "H:mm", timezone = "Asia/Seoul")
+    @DateTimeFormat(pattern = "H:mm")
+    @Column(name="endTime")
+    private LocalTime endTime;
+
     @Column(name="title", nullable = false)
     private String title;
 
@@ -46,12 +57,14 @@ public class Calendar {
     private AuditEntity auditEntity;
 
     @Builder
-    public Calendar(Long memberId, String title, String memo, LocalDate startDate, LocalDate endDate){
+    public Calendar(Long memberId, String title, String memo, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime){
         this.memberId=memberId;
         this.title=title;
         this.memo=memo;
         this.startDate=startDate;
         this.endDate=endDate;
+        this.startTime=startTime;
+        this.endTime=endTime;
         auditEntity=new AuditEntity();
     }
 
@@ -61,16 +74,21 @@ public class Calendar {
         memo=c.getMemo();
         startDate=c.getStartDate();
         endDate=c.getEndDate();
+        startTime=c.getStartTime();
+        endTime=c.getEndTime();
     }
 
     public CalendarDetailResponse toCalendarDetailResponse(){
 
         return CalendarDetailResponse.builder()
+                .id(id)
                 .memberId(memberId)
                 .title(title)
                 .memo(memo)
                 .startDate(startDate)
                 .endDate(endDate)
+                .startTime(startTime)
+                .endTime(endTime)
                 .build();
     }
 

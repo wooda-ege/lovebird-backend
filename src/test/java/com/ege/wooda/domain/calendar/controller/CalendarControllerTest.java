@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -147,8 +148,12 @@ public class CalendarControllerTest {
                                 fieldWithPath("data[].memo").type(JsonFieldType.STRING)
                                         .description("내용").optional(),
                                 fieldWithPath("data[].startDate").type(JsonFieldType.STRING)
-                                        .description("일정 시작시간").optional(),
+                                        .description("일정 시작일"),
                                 fieldWithPath("data[].endDate").type(JsonFieldType.STRING)
+                                        .description("일정 종료일").optional(),
+                                fieldWithPath("data[].startTime").type(JsonFieldType.STRING)
+                                        .description("일정 시작시간").optional(),
+                                fieldWithPath("data[].endTime").type(JsonFieldType.STRING)
                                         .description("일정 종료시간").optional(),
                                 fieldWithPath("data[].auditEntity").type(JsonFieldType.OBJECT)
                                         .description("생성된 시간").optional(),
@@ -163,7 +168,7 @@ public class CalendarControllerTest {
     @Test
     @DisplayName("특정한 일정을 조회한다.")
     public void findById() throws Exception{
-        Calendar calendar = getSchedule(2L, "Test schedule1", "Test test 1", toLocalDate("2023-06-28"), toLocalDate("2023-06-28"));
+        Calendar calendar = getSchedule(2L, "Test schedule1", "Test test 1", toLocalDate("2023-06-28"), toLocalDate("2023-06-28"),toLocalTime("1:00"), toLocalTime("1:00"));
 
         ReflectionTestUtils.setField(calendar, "id", 6L);
         ReflectionTestUtils.setField(calendar.getAuditEntity(), "createdAt",
@@ -191,22 +196,28 @@ public class CalendarControllerTest {
                                 fieldWithPath("status").type(JsonFieldType.STRING).description("응답 코드"),
                                 fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
                                 fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
+                                fieldWithPath("data.id").type(JsonFieldType.NUMBER)
+                                        .description("Calendar Id"),
                                 fieldWithPath("data.memberId").type(JsonFieldType.NUMBER)
                                         .description("Member Id"),
                                 fieldWithPath("data.title").type(JsonFieldType.STRING).description("제목"),
                                 fieldWithPath("data.memo").type(JsonFieldType.STRING)
                                         .description("내용"),
                                 fieldWithPath("data.startDate").type(JsonFieldType.STRING)
-                                        .description("일정 시작시간"),
+                                        .description("일정 시작일"),
                                 fieldWithPath("data.endDate").type(JsonFieldType.STRING)
-                                        .description("일정 종료시간")
+                                        .description("일정 종료일").optional(),
+                                fieldWithPath("data.startTime").type(JsonFieldType.STRING)
+                                        .description("일정 시작시간").optional(),
+                                fieldWithPath("data.endTime").type(JsonFieldType.STRING)
+                                        .description("일정 종료시간").optional()
                         )));
     }
 
     @Test
     @DisplayName("해당 ID의 일정 정보를 수정한다.")
     public void modify() throws Exception{
-        Calendar calendar = getSchedule(2L, "Test schedule1", "Test test 1", toLocalDate("2023-06-29"), toLocalDate("2023-06-29"));
+        Calendar calendar = getSchedule(2L, "Test schedule1", "Test test 1", toLocalDate("2023-06-29"), toLocalDate("2023-06-29"), toLocalTime("14:00"), toLocalTime("15:00"));
 
         ReflectionTestUtils.setField(calendar, "id", 6L);
         ReflectionTestUtils.setField(calendar.getAuditEntity(), "createdAt",
@@ -255,7 +266,7 @@ public class CalendarControllerTest {
     @Test
     @DisplayName("특정 일정 정보를 삭제한다.")
     public void remove() throws Exception{
-        Calendar calendar = getSchedule(2L, "Test schedule1", "Test test 1", LocalDate.now(), LocalDate.now());
+        Calendar calendar = getSchedule(2L, "Test schedule1", "Test test 1", LocalDate.now(), LocalDate.now(),toLocalTime("22:00"), toLocalTime("22:00"));
 
         ReflectionTestUtils.setField(calendar, "id", 6L);
         ReflectionTestUtils.setField(calendar.getAuditEntity(), "createdAt",
@@ -292,20 +303,24 @@ public class CalendarControllerTest {
                                  String title,
                                  String memo,
                                  LocalDate startDate,
-                                 LocalDate endDate) {
+                                 LocalDate endDate,
+                                 LocalTime startTime,
+                                 LocalTime endTime) {
         return Calendar.builder()
                 .memberId(memberId)
                 .title(title)
                 .memo(memo)
                 .startDate(startDate)
                 .endDate(endDate)
+                .startTime(startTime)
+                .endTime(endTime)
                 .build();
     }
 
     private List<Calendar> getScheduleList() {
         return List.of(
-                getSchedule(2L, "Test schedule2", "Test test 2", toLocalDate("2023-07-02"), toLocalDate("2023-07-02")),
-                getSchedule(2L, "Test schedule3", "Test test 3", toLocalDate("2023-07-13"), toLocalDate("2023-07-13"))
+                getSchedule(2L, "Test schedule2", "Test test 2", toLocalDate("2023-07-02"), toLocalDate("2023-07-02"),toLocalTime("8:00"), toLocalTime("9:00")),
+                getSchedule(2L, "Test schedule3", "Test test 3", toLocalDate("2023-07-13"), toLocalDate("2023-07-13"),toLocalTime("17:00"), toLocalTime("22:00"))
         );
     }
 
@@ -315,5 +330,9 @@ public class CalendarControllerTest {
 
     private LocalDate toLocalDate(String date){
         return LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    }
+
+    private LocalTime toLocalTime(String time){
+        return LocalTime.parse(time, DateTimeFormatter.ofPattern("H:mm"));
     }
 }
