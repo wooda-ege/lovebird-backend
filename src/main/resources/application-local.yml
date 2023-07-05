@@ -60,6 +60,25 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
+  cloud:
+    openfeign:
+      client:
+        config:
+          appleAuthClient:
+            connect-timeout: 3
+            read-timeout: 1
+
+apple:
+  auth:
+    token-url: https://appleid.apple.com/auth/token
+    public-key-url: https://appleid.apple.com/auth/keys
+  redirect-uri: ${APPLE_REDIRECT_URL}
+  iss: https://appleid.apple.com
+  aud: ${APPLE_CLIENT_ID}
+  team-id: ${APPLE_TEAM_ID}
+  key:
+    id: ${APPLE_KEY_ID}
+    path: classpath:/apple/AuthKey_${APPLE_KEY_ID}.p8
 
 jwt:
   access-header: Authorization

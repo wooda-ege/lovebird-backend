@@ -44,3 +44,6 @@ out/
 
 ### firebase ###
 /src/main/resources/firebase/lovebird-firebase-admin-sdk.json
+
+### apple ###
+/src/main/resources/apple/AuthKey_92C882A5V4.p8
