@@ -37,13 +37,13 @@ public class Calendar {
     @Column(name="end_date")
     private LocalDate endDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "H:mm", timezone = "Asia/Seoul")
-    @DateTimeFormat(pattern = "H:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "Asia/Seoul")
+    @DateTimeFormat(pattern = "HH:mm")
     @Column(name="startTime")
     private LocalTime startTime;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "H:mm", timezone = "Asia/Seoul")
-    @DateTimeFormat(pattern = "H:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "Asia/Seoul")
+    @DateTimeFormat(pattern = "HH:mm")
     @Column(name="endTime")
     private LocalTime endTime;
 

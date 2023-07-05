@@ -7,6 +7,8 @@ import com.ege.wooda.domain.calendar.repository.CalendarRepository;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +21,7 @@ public class CalendarService {
     private final CalendarRepository calRepository;
 
     @Transactional
-    public Long save(CalendarCreateRequest calendarCreateRequest) throws IOException {
+    public Long save(CalendarCreateRequest calendarCreateRequest) throws IOException, DataIntegrityViolationException, HttpMessageNotReadableException {
         System.out.println(calendarCreateRequest.endDate());
         Calendar calendar = calRepository.save(calendarCreateRequest.toEntity());
 
