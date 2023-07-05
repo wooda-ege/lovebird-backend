@@ -154,7 +154,7 @@ include::{snippets}/profile-modify/response-fields.adoc[]
 
 ==== Request
 
-include::{snippets}/diary-add/httpie-request.adoc[]
+include::{snippets}/diary-add/http-request.adoc[]
 
 ===== i) images
 |===
@@ -179,7 +179,7 @@ include::{snippets}/diary-add/response-fields.adoc[]
 
 ==== Request
 
-include::{snippets}/diary-getAll/httpie-request.adoc[]
+include::{snippets}/diary-getAll/http-request.adoc[]
 
 ==== Response
 
@@ -192,7 +192,7 @@ include::{snippets}/diary-getAll/response-fields.adoc[]
 
 ==== Request
 
-include::{snippets}/diary-find/httpie-request.adoc[]
+include::{snippets}/diary-find/http-request.adoc[]
 
 include::{snippets}/diary-find/path-parameters.adoc[]
 
@@ -206,7 +206,7 @@ include::{snippets}/diary-find/response-fields.adoc[]
 
 ==== Request
 
-include::{snippets}/diary-update/httpie-request.adoc[]
+include::{snippets}/diary-update/http-request.adoc[]
 
 ===== i) path
 
@@ -237,7 +237,7 @@ include::{snippets}/diary-update/response-fields.adoc[]
 
 ==== Request
 
-include::{snippets}/diary-delete/httpie-request.adoc[]
+include::{snippets}/diary-delete/http-request.adoc[]
 
 include::{snippets}/diary-delete/path-parameters.adoc[]
 
@@ -246,3 +246,83 @@ include::{snippets}/diary-delete/path-parameters.adoc[]
 include::{snippets}/diary-delete/http-response.adoc[]
 
 include::{snippets}/diary-delete/response-fields.adoc[]
+
+== Calendar
+
+=== Calendar 등록
+
+==== Request
+
+include::{snippets}/calendar-save/http-request.adoc[]
+
+===== i) calendarCreateRequest
+
+include::{snippets}/calendar-save/request-body.adoc[]
+
+==== Response
+
+include::{snippets}/calendar-save/http-response.adoc[]
+
+include::{snippets}/calendar-save/response-fields.adoc[]
+
+=== Calendar 조회
+
+==== Request
+
+include::{snippets}/calendar-getAll/http-request.adoc[]
+
+include::{snippets}/calendar-getAll/request-body.adoc[]
+
+==== Response
+
+include::{snippets}/calendar-getAll/http-response.adoc[]
+
+include::{snippets}/calendar-getAll/response-fields.adoc[]
+
+=== Calendar ID 조회
+
+==== Request
+
+include::{snippets}/calendar-findById/http-request.adoc[]
+
+include::{snippets}/calendar-findById/request-body.adoc[]
+
+==== Response
+
+include::{snippets}/calendar-findById/http-response.adoc[]
+
+include::{snippets}/calendar-findById/response-fields.adoc[]
+
+=== Calendar 수정
+
+==== Request
+
+include::{snippets}/calendar-update/http-request.adoc[]
+
+===== i) path
+
+include::{snippets}/calendar-update/path-parameters.adoc[]
+
+===== ii) calendarUpdateRequest
+
+include::{snippets}/calendar-update/request-body.adoc[]
+
+==== Response
+
+include::{snippets}/calendar-update/http-response.adoc[]
+
+include::{snippets}/calendar-update/response-fields.adoc[]
+
+=== Calendar 삭제
+
+==== Request
+
+include::{snippets}/calendar-delete/http-request.adoc[]
+
+include::{snippets}/calendar-delete//path-parameters.adoc[]
+
+==== Response
+
+include::{snippets}/calendar-delete//http-response.adoc[]
+
+include::{snippets}/calendar-delete//response-fields.adoc[]
