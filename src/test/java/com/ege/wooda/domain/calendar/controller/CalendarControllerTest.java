@@ -4,9 +4,8 @@ import com.ege.wooda.domain.calendar.domain.Calendar;
 import com.ege.wooda.domain.calendar.dto.request.CalendarCreateRequest;
 import com.ege.wooda.domain.calendar.dto.request.CalendarUpdateRequest;
 import com.ege.wooda.domain.calendar.service.CalendarService;
-import com.ege.wooda.domain.member.domain.Gender;
-import com.ege.wooda.domain.member.domain.Member;
 import com.ege.wooda.domain.member.service.MemberService;
+import com.ege.wooda.global.security.jwt.util.JwtValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,10 +28,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
-import static com.ege.wooda.global.util.ApiDocumentUtils.getDocumentRequest;
-import static com.ege.wooda.global.util.ApiDocumentUtils.getDocumentResponse;
+import static com.ege.wooda.global.docs.ApiDocumentUtils.getDocumentRequest;
+import static com.ege.wooda.global.docs.ApiDocumentUtils.getDocumentResponse;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -62,26 +60,24 @@ public class CalendarControllerTest {
     @MockBean
     private MemberService memberService;
 
+    @MockBean
+    private JwtValidator jwtValidator;
+
     @Test
     @DisplayName("Calendar를 생성한다.")
     public void add() throws Exception{
-        String mockNickname = "홍길동";
-        Member mockMember = getMember(mockNickname, Gender.MALE, getLocalDate("2023-05-15"));
-
         CalendarCreateRequest calendarCreateRequest=CalendarCreateRequest.builder()
                 .memberId(1L)
                 .title("Calendar title")
                 .memo("Calendar memo")
-                .startDate(toLocalDateTime("2023-06-30 20:00"))
-                .endDate(toLocalDateTime("2023-06-30 22:00"))
+                .startDate(toLocalDate("2023-06-30"))
+                .endDate(toLocalDate("2023-06-30"))
                 .build();
 
         String request=objectMapper.writeValueAsString(calendarCreateRequest);
 
         given(calendarService.save(any()))
                 .willReturn(2L);
-        given(memberService.findById(anyLong()))
-                .willReturn(mockMember);
 
         ResultActions resultActions=this.mockMvc.perform(
                 multipart("/api/v1/calendar")
@@ -167,7 +163,7 @@ public class CalendarControllerTest {
     @Test
     @DisplayName("특정한 일정을 조회한다.")
     public void findById() throws Exception{
-        Calendar calendar = getSchedule(2L, "Test schedule1", "Test test 1", toLocalDateTime("2023-06-28 21:00"), toLocalDateTime("2023-06-28 23:00"));
+        Calendar calendar = getSchedule(2L, "Test schedule1", "Test test 1", toLocalDate("2023-06-28"), toLocalDate("2023-06-28"));
 
         ReflectionTestUtils.setField(calendar, "id", 6L);
         ReflectionTestUtils.setField(calendar.getAuditEntity(), "createdAt",
@@ -210,7 +206,7 @@ public class CalendarControllerTest {
     @Test
     @DisplayName("해당 ID의 일정 정보를 수정한다.")
     public void modify() throws Exception{
-        Calendar calendar = getSchedule(2L, "Test schedule1", "Test test 1", toLocalDateTime("2023-06-29 09:00"), toLocalDateTime("2023-06-29 10:00"));
+        Calendar calendar = getSchedule(2L, "Test schedule1", "Test test 1", toLocalDate("2023-06-29"), toLocalDate("2023-06-29"));
 
         ReflectionTestUtils.setField(calendar, "id", 6L);
         ReflectionTestUtils.setField(calendar.getAuditEntity(), "createdAt",
@@ -226,8 +222,8 @@ public class CalendarControllerTest {
         CalendarUpdateRequest calendarUpdateRequest=CalendarUpdateRequest.builder()
                 .memberId(1L)
                 .title("Update calendar title")
-                .startDate(toLocalDateTime("2023-07-02 16:00"))
-                .endDate(toLocalDateTime("2023-07-02 18:00"))
+                .startDate(toLocalDate("2023-07-02"))
+                .endDate(toLocalDate("2023-07-02"))
                 .build();
 
         String request=objectMapper.writeValueAsString(calendarUpdateRequest);
@@ -259,7 +255,7 @@ public class CalendarControllerTest {
     @Test
     @DisplayName("특정 일정 정보를 삭제한다.")
     public void remove() throws Exception{
-        Calendar calendar = getSchedule(2L, "Test schedule1", "Test test 1", LocalDateTime.now(), LocalDateTime.now());
+        Calendar calendar = getSchedule(2L, "Test schedule1", "Test test 1", LocalDate.now(), LocalDate.now());
 
         ReflectionTestUtils.setField(calendar, "id", 6L);
         ReflectionTestUtils.setField(calendar.getAuditEntity(), "createdAt",
@@ -292,28 +288,11 @@ public class CalendarControllerTest {
                         ));
     }
 
-    private Member getMember(String nickname, Gender gender, LocalDate firstDate) {
-        return Member.builder()
-                .uuid(UUID.randomUUID().toString())
-                .nickname(nickname)
-                .firstDate(firstDate)
-                .gender(gender)
-                .pictureM(
-                        "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&prefix=member/"
-                                + nickname
-                                + "/male.png")
-                .pictureW(
-                        "https://s3.console.aws.amazon.com/s3/object/test?region=ap-northeast-2&prefix=member/"
-                                + nickname
-                                + "/female.png")
-                .build();
-    }
-
     private Calendar getSchedule(Long memberId,
                                  String title,
                                  String memo,
-                                 LocalDateTime startDate,
-                                 LocalDateTime endDate) {
+                                 LocalDate startDate,
+                                 LocalDate endDate) {
         return Calendar.builder()
                 .memberId(memberId)
                 .title(title)
@@ -325,20 +304,16 @@ public class CalendarControllerTest {
 
     private List<Calendar> getScheduleList() {
         return List.of(
-                getSchedule(2L, "Test schedule2", "Test test 2", toLocalDateTime("2023-07-02 17:00"), toLocalDateTime("2023-07-02 19:00")),
-                getSchedule(2L, "Test schedule3", "Test test 3", toLocalDateTime("2023-07-13 10:00"), toLocalDateTime("2023-07-13 11:00"))
+                getSchedule(2L, "Test schedule2", "Test test 2", toLocalDate("2023-07-02"), toLocalDate("2023-07-02")),
+                getSchedule(2L, "Test schedule3", "Test test 3", toLocalDate("2023-07-13"), toLocalDate("2023-07-13"))
         );
-    }
-
-    private LocalDate getLocalDate(String memoryDate) {
-        return LocalDate.parse(memoryDate, DateTimeFormatter.ISO_DATE);
     }
 
     private LocalDateTime getLocalDateTime(String date) {
         return LocalDateTime.parse(date, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
     }
 
-    private LocalDateTime toLocalDateTime(String date){
-        return LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+    private LocalDate toLocalDate(String date){
+        return LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 }

@@ -4,13 +4,13 @@ import com.ege.wooda.domain.calendar.domain.Calendar;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public record CalendarUpdateRequest(@NotNull Long memberId,
                                     String title,
                                     String memo,
-                                    @NotNull LocalDateTime startDate,
-                                    @NotNull LocalDateTime endDate)
+                                    @NotNull LocalDate startDate,
+                                    LocalDate endDate)
 {
     @Builder
     public CalendarUpdateRequest {}

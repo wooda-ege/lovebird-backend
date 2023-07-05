@@ -6,7 +6,6 @@ import com.ege.wooda.domain.calendar.dto.request.CalendarUpdateRequest;
 import com.ege.wooda.domain.calendar.dto.response.CalendarDetailResponse;
 import com.ege.wooda.domain.calendar.dto.response.CalendarResponseMessage;
 import com.ege.wooda.domain.calendar.service.CalendarService;
-import com.ege.wooda.domain.member.service.MemberService;
 import com.ege.wooda.global.common.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

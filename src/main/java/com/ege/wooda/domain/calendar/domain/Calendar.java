@@ -11,9 +11,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDate;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -28,15 +26,15 @@ public class Calendar {
     @Column(name="member_id")
     private Long memberId;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name="start_date", nullable = false)
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-    @Column(name="end_date", nullable = false)
-    private LocalDateTime endDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name="end_date")
+    private LocalDate endDate;
 
     @Column(name="title", nullable = false)
     private String title;
@@ -48,7 +46,7 @@ public class Calendar {
     private AuditEntity auditEntity;
 
     @Builder
-    public Calendar(Long memberId, String title, String memo, LocalDateTime startDate, LocalDateTime endDate){
+    public Calendar(Long memberId, String title, String memo, LocalDate startDate, LocalDate endDate){
         this.memberId=memberId;
         this.title=title;
         this.memo=memo;
@@ -66,14 +64,6 @@ public class Calendar {
     }
 
     public CalendarDetailResponse toCalendarDetailResponse(){
-        Map<String, Object> calendarList=new HashMap<>(){{
-            put("id",id);
-            put("memberId",memberId);
-            put("title",title);
-            put("memo", memo);
-            put("startDate",startDate);
-            put("endDate",endDate);
-        }};
 
         return CalendarDetailResponse.builder()
                 .memberId(memberId)

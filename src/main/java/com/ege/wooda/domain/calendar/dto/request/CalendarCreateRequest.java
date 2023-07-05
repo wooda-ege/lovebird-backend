@@ -3,9 +3,9 @@ package com.ege.wooda.domain.calendar.dto.request;
 import com.ege.wooda.domain.calendar.domain.Calendar;
 import lombok.Builder;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
-public record CalendarCreateRequest(Long memberId, String title, String memo, LocalDateTime startDate, LocalDateTime endDate) {
+public record CalendarCreateRequest(Long memberId, String title, String memo, LocalDate startDate, LocalDate endDate) {
 
     @Builder
     public CalendarCreateRequest {}

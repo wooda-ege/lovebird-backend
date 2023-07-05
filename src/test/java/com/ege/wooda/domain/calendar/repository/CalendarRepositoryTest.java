@@ -12,7 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,7 +30,7 @@ public class CalendarRepositoryTest {
     @Test
     @DisplayName("새 일정을 생성한다.")
     public void save(){
-        Calendar calendar=getSchedule(1L, "Test schedule1", "Test test 1", LocalDateTime.now(), LocalDateTime.now());
+        Calendar calendar=getSchedule(1L, "Test schedule1", "Test test 1", LocalDate.now(), LocalDate.now());
         calendarRepository.save(calendar);
 
         Calendar existCalendar=calendarRepository.findById(calendar.getId()).orElseThrow(EntityNotFoundException::new);
@@ -64,8 +64,8 @@ public class CalendarRepositoryTest {
     private Calendar getSchedule(Long memberId,
                                  String title,
                                  String memo,
-                                 LocalDateTime startDate,
-                                 LocalDateTime endDate){
+                                 LocalDate startDate,
+                                 LocalDate endDate){
         return Calendar.builder()
                 .memberId(memberId)
                 .title(title)
@@ -77,9 +77,9 @@ public class CalendarRepositoryTest {
 
     private List<Calendar> getScheduleList(){
         return List.of(
-                        getSchedule(1L, "Test schedule1", "Test test 1", LocalDateTime.now(), LocalDateTime.now()),
-                        getSchedule(2L, "Test schedule2", "Test test 2", LocalDateTime.now(), LocalDateTime.now()),
-                        getSchedule(2L, "Test schedule3", "Test test 3", LocalDateTime.now(), LocalDateTime.now())
+                        getSchedule(1L, "Test schedule1", "Test test 1", LocalDate.now(), LocalDate.now()),
+                        getSchedule(2L, "Test schedule2", "Test test 2", LocalDate.now(), LocalDate.now()),
+                        getSchedule(2L, "Test schedule3", "Test test 3", LocalDate.now(), LocalDate.now())
         );
 
     }

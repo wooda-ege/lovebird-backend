@@ -4,8 +4,6 @@ import com.ege.wooda.domain.calendar.domain.Calendar;
 import com.ege.wooda.domain.calendar.dto.request.CalendarCreateRequest;
 import com.ege.wooda.domain.calendar.dto.request.CalendarUpdateRequest;
 import com.ege.wooda.domain.calendar.repository.CalendarRepository;
-import com.ege.wooda.domain.member.domain.Gender;
-import com.ege.wooda.domain.member.domain.Member;
 import com.ege.wooda.global.config.jpa.JpaConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,19 +14,15 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.test.web.servlet.ResultActions;
 
 import java.io.IOException;
-import java.sql.Ref;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 
 @Import(JpaConfig.class)
 @ExtendWith(MockitoExtension.class)
@@ -49,8 +43,7 @@ public class CalendarServiceTest {
     @DisplayName("Calendar를 생성하면 해당 Calendar의 ID를 반환한다.")
     public void save() throws Exception {
 
-        Member mockMember = getMember("홍길동", Gender.MALE, getLocalDate("2023-05-09"));
-        Calendar mockCalendar = getSchedule(2L, "Test schedule1", "Test test 1", LocalDateTime.now(), LocalDateTime.now());
+        Calendar mockCalendar = getSchedule(2L, "Test schedule1", "Test test 1", LocalDate.now(), LocalDate.now());
 
         Long mockId=3L;
 
@@ -58,8 +51,8 @@ public class CalendarServiceTest {
                 .memberId(2L)
                 .title("Calendar test")
                 .memo("memo")
-                .startDate(getLocalDateTime("2023-07-01 17:00"))
-                .endDate(getLocalDateTime("2023-07-02 20:00"))
+                .startDate(getLocalDate("2023-07-01"))
+                .endDate(getLocalDate("2023-07-02"))
                 .build();
 
         ReflectionTestUtils.setField(mockCalendar, "id", mockId);
@@ -90,7 +83,7 @@ public class CalendarServiceTest {
     @Test
     @DisplayName("Calendar 정보를 수정하면 해당 calendar의 ID가 반환된다.")
     public void update() throws IOException{
-        Calendar calendar=getSchedule(2L, "Test schedule", "Test memo", LocalDateTime.now(), LocalDateTime.now());
+        Calendar calendar=getSchedule(2L, "Test schedule", "Test memo", LocalDate.now(), LocalDate.now());
 
         Long mockId=3L;
         String updateTitle="Update calendar title";
@@ -115,7 +108,7 @@ public class CalendarServiceTest {
     @Test
     @DisplayName("Calendar를 삭제하면 해당 ID가 반환된다.")
     public void delete(){
-        Calendar calendar=getSchedule(2L, "Test schedule", "Test memo", LocalDateTime.now(), LocalDateTime.now());
+        Calendar calendar=getSchedule(2L, "Test schedule", "Test memo", LocalDate.now(), LocalDate.now());
 
         Long mockId=3L;
 
@@ -128,8 +121,8 @@ public class CalendarServiceTest {
     private Calendar getSchedule(Long memberId,
                                  String title,
                                  String memo,
-                                 LocalDateTime startDate,
-                                 LocalDateTime endDate) {
+                                 LocalDate startDate,
+                                 LocalDate endDate) {
         return Calendar.builder()
                 .memberId(memberId)
                 .title(title)
@@ -141,27 +134,13 @@ public class CalendarServiceTest {
 
     private List<Calendar> getScheduleList() {
         return List.of(
-                getSchedule(2L, "Test schedule2", "Test test 2", LocalDateTime.now(), LocalDateTime.now()),
-                getSchedule(2L, "Test schedule3", "Test test 3", LocalDateTime.now(), LocalDateTime.now())
+                getSchedule(2L, "Test schedule2", "Test test 2", LocalDate.now(), LocalDate.now()),
+                getSchedule(2L, "Test schedule3", "Test test 3", LocalDate.now(), LocalDate.now())
         );
     }
 
-    private Member getMember(String nickname, Gender gender, LocalDate firstDate) {
-        return Member.builder()
-                .nickname(nickname)
-                .firstDate(firstDate)
-                .gender(gender)
-                .pictureM(null)
-                .pictureW(null)
-                .build();
-    }
-
     private LocalDate getLocalDate(String date) {
-        return LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
-    }
-
-    private LocalDateTime getLocalDateTime(String date) {
-        return LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        return LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
     private String getUUID() {
