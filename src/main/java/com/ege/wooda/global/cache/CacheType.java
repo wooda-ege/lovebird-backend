@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum CacheType {
+    MEMBERS("member", 12, 10000),
     PROFILES("profile", 12, 10000);
 
     private final String cacheName;

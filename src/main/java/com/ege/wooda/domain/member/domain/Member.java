@@ -43,7 +43,7 @@ public class Member {
     @Builder
     public Member(Oauth2Entity oauth2Entity) {
         this.oauth2Entity = oauth2Entity;
-        this.role = new ArrayList<>(List.of(Role.MEMBER));
+        this.role = new ArrayList<>(List.of(Role.ROLE_MEMBER));
         this.auditEntity = new AuditEntity();
     }
 
