@@ -11,6 +11,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate.ddl-auto: create-drop
+
   security:
     oauth2:
       client:
@@ -36,13 +37,32 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
+  cloud:
+    openfeign:
+      client:
+        config:
+          appleAuthClient:
+            connect-timeout: 3
+            read-timeout: 1
+
+apple:
+  auth:
+    token-url: https://appleid.apple.com/auth/token
+    public-key-url: https://appleid.apple.com/auth/keys
+  redirect-uri: test
+  iss: https://appleid.apple.com
+  aud: test
+  team-id: test
+  key:
+    id: test
+    path: classpath:/apple/AuthKey_test.p8
 
 cloud:
   aws:
     credentials:
       access-key: ''
       secret-key: ''
-    s3-bucket: 'wooda-test'
+    s3-bucket: 'lovebird-test'
     region:
       static: ap-northeast-2
     stack:
