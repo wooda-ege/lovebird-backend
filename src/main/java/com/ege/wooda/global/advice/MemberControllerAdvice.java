@@ -1,7 +1,13 @@
 package com.ege.wooda.global.advice;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+
+import javax.naming.AuthenticationException;
+
 import com.ege.wooda.domain.member.dto.response.MemberResponseMessage;
 import com.ege.wooda.global.common.response.ApiResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -28,5 +34,15 @@ public class MemberControllerAdvice {
                 .body(ApiResponse.createFailWithData(
                         MemberResponseMessage.CREATE_TOKEN_FAIL.getMessage(),
                         bindingResult.getFieldErrors()));
+    }
+
+    @ExceptionHandler({
+            JsonProcessingException.class, AuthenticationException.class, NoSuchAlgorithmException.class,
+            InvalidKeySpecException.class
+    })
+    public ResponseEntity<ApiResponse<?>> appleAuthExHandler() {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED).
+                body(ApiResponse.createFail(MemberResponseMessage.FAIL_AUTHORIZATION_APPLE.getMessage()));
     }
 }

@@ -1,9 +1,7 @@
 package com.ege.wooda.global.security.oauth.ios.dto.user;
 
-public record AppleUser(String email,
-                        Name name) {
+import jakarta.validation.constraints.NotEmpty;
 
-    public String getFullName() {
-        return name.lastName() + name.firstName();
-    }
+public record AppleUser(@NotEmpty String email,
+                        @NotEmpty Name name) {
 }

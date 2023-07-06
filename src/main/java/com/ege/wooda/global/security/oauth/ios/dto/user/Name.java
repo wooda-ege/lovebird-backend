@@ -1,5 +1,7 @@
 package com.ege.wooda.global.security.oauth.ios.dto.user;
 
-public record Name(String firstName,
-                   String lastName) {
+import jakarta.validation.constraints.NotEmpty;
+
+public record Name(@NotEmpty String firstName,
+                   @NotEmpty String lastName) {
 }

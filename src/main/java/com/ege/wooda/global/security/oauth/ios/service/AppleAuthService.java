@@ -33,10 +33,14 @@ public class AppleAuthService {
     public PrincipalUser loadUser(AppleAuthRequest appleAuthRequest)
             throws AuthenticationException, NoSuchAlgorithmException, InvalidKeySpecException,
                    JsonProcessingException {
+        String accountId = getAppleAccountId(appleAuthRequest.identityToken());
+        String name = appleAuthRequest.user().name().lastName() + appleAuthRequest.user().name().firstName();
+        String email = appleAuthRequest.user().email();
+
         OAuth2Request oAuth2Request = OAuth2Request.builder()
-                                                   .accountId(getAppleAccountId(appleAuthRequest.id_token()))
-                                                   .name(appleAuthRequest.getName())
-                                                   .email(appleAuthRequest.getEmail())
+                                                   .accountId(accountId)
+                                                   .name(name)
+                                                   .email(email)
                                                    .build();
 
         return principalUserMapper.toPrincipalUser(memberService.saveIfNewMember(oAuth2Request));

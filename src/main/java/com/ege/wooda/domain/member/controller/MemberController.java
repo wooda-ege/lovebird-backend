@@ -39,11 +39,11 @@ public class MemberController {
 
     @PostMapping("/apple")
     public ResponseEntity<ApiResponse<AuthTokenResponse>> handleAppleCallbackAndGenerateAuthToken(
-            @RequestBody AppleAuthRequest appleResponse)
+            @RequestBody @Validated AppleAuthRequest appleAuthRequest)
             throws AuthenticationException, NoSuchAlgorithmException, InvalidKeySpecException,
                    JsonProcessingException {
         AuthTokenResponse tokenData = AuthTokenResponse.of(
-                jwtGenerateService.createJwtTokenByAppleAuth(appleAuthService.loadUser(appleResponse)));
+                jwtGenerateService.createJwtTokenByAppleAuth(appleAuthService.loadUser(appleAuthRequest)));
         return ResponseEntity.ok(
                 ApiResponse.createSuccessWithData(MemberResponseMessage.CREATE_TOKEN_SUCCESS.getMessage(),
                                                   tokenData));
