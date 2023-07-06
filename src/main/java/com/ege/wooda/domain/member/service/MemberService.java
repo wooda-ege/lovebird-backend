@@ -40,4 +40,10 @@ public class MemberService {
     public Member findById(Long id) {
         return memberRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
+
+    @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "member", key = "#accountId", value = "member")
+    public Member findByAccountId(String accountId) {
+        return memberRepository.findByOauth2EntityAccountId(accountId).orElse(null);
+    }
 }

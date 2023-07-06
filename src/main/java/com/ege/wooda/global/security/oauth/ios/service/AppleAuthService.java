@@ -1,5 +1,7 @@
 package com.ege.wooda.global.security.oauth.ios.service;
 
+import static java.util.Objects.isNull;
+
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
@@ -9,6 +11,7 @@ import javax.naming.AuthenticationException;
 
 import org.springframework.stereotype.Service;
 
+import com.ege.wooda.domain.member.domain.Member;
 import com.ege.wooda.domain.member.service.MemberService;
 import com.ege.wooda.global.security.jwt.util.JwtValidator;
 import com.ege.wooda.global.security.oauth.common.mapper.PrincipalUserMapper;
@@ -34,6 +37,12 @@ public class AppleAuthService {
             throws AuthenticationException, NoSuchAlgorithmException, InvalidKeySpecException,
                    JsonProcessingException {
         String accountId = getAppleAccountId(appleAuthRequest.identityToken());
+        Member member = memberService.findByAccountId(accountId);
+        
+        if(!isNull(member)) {
+            return principalUserMapper.toPrincipalUser(member);
+        }
+
         String name = appleAuthRequest.user().name().lastName() + appleAuthRequest.user().name().firstName();
         String email = appleAuthRequest.user().email();
 
