@@ -37,7 +37,7 @@ public class CoupleService {
         Profile partner=profileRepository.findProfileByMemberId(partnerId).orElseThrow(EntityNotFoundException::new);
 
         self.updateLinkedFlag(partnerId);
-        partner.updateLinkedFlag(self.getId());
+        partner.updateLinkedFlag(self.getMemberId());
 
         couple.connectCouple(connectCoupleParam.coupleCode());
         couple.expireCode();

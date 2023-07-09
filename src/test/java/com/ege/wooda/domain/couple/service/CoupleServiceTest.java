@@ -2,7 +2,6 @@ package com.ege.wooda.domain.couple.service;
 
 import com.ege.wooda.domain.couple.domain.Couple;
 import com.ege.wooda.domain.couple.dto.param.ConnectCoupleParam;
-import com.ege.wooda.domain.couple.dto.request.CoupleLinkRequest;
 import com.ege.wooda.domain.couple.repository.CoupleRepository;
 import com.ege.wooda.domain.member.domain.enums.Gender;
 import com.ege.wooda.domain.profile.domain.Profile;
@@ -15,7 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -24,7 +22,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 
 @Import(JpaConfig.class)
@@ -54,10 +51,8 @@ public class CoupleServiceTest {
         Profile selfP = getProfile(3L, "홍길동", getLocalDate("2023-06-01"), Gender.MALE);
         Profile partnerP = getProfile(7L, "홍길순", getLocalDate("2023-06-01"), Gender.FEMALE);
 
-        String coupleCode=generateCode();
-
         Long mockId=1L;
-        ConnectCoupleParam connectCoupleParam=new ConnectCoupleParam(3L, coupleCode);
+        ConnectCoupleParam connectCoupleParam=new ConnectCoupleParam(3L, partner.getCoupleCode());
 
         ReflectionTestUtils.setField(couple, "id", mockId);
 
@@ -69,7 +64,10 @@ public class CoupleServiceTest {
                 .willReturn(Optional.ofNullable(partner));
 
         Long partnerId=coupleService.connectCouple(connectCoupleParam);
-        assertEquals(partnerId, partner.getMemberId());
+
+        assertEquals(partnerId, partnerP.getMemberId());
+        assertEquals(selfP.getLinkedFlag(), true);
+        assertEquals(partnerP.getLinkedFlag(), true);
 
     }
 
