@@ -1,6 +1,7 @@
 package com.ege.wooda.domain.calendar.dto.request;
 
 import com.ege.wooda.domain.calendar.domain.Calendar;
+import com.ege.wooda.domain.calendar.domain.enums.Color;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
@@ -10,6 +11,7 @@ import java.time.LocalTime;
 public record CalendarUpdateRequest(@NotNull Long memberId,
                                     String title,
                                     String memo,
+                                    Color color,
                                     @NotNull LocalDate startDate,
                                     LocalDate endDate,
                                     LocalTime startTime,
@@ -23,6 +25,7 @@ public record CalendarUpdateRequest(@NotNull Long memberId,
                 .memberId(memberId)
                 .title(title)
                 .memo(memo)
+                .color(color)
                 .startDate(startDate)
                 .endDate(endDate)
                 .startTime(startTime)

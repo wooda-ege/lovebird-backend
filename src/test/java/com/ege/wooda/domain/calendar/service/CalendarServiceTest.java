@@ -1,6 +1,7 @@
 package com.ege.wooda.domain.calendar.service;
 
 import com.ege.wooda.domain.calendar.domain.Calendar;
+import com.ege.wooda.domain.calendar.domain.enums.Color;
 import com.ege.wooda.domain.calendar.dto.request.CalendarCreateRequest;
 import com.ege.wooda.domain.calendar.dto.request.CalendarUpdateRequest;
 import com.ege.wooda.domain.calendar.repository.CalendarRepository;
@@ -44,7 +45,7 @@ public class CalendarServiceTest {
     @DisplayName("Calendar를 생성하면 해당 Calendar의 ID를 반환한다.")
     public void save() throws Exception {
 
-        Calendar mockCalendar = getSchedule(2L, "Test schedule1", "Test test 1", LocalDate.now(), LocalDate.now(),toLocalTime("9:00"), toLocalTime("10:30"));
+        Calendar mockCalendar = getSchedule(2L, "Test schedule1", "Test test 1", Color.SECONDARY, LocalDate.now(), LocalDate.now(),toLocalTime("9:00"), toLocalTime("10:30"));
 
         Long mockId=3L;
 
@@ -52,6 +53,7 @@ public class CalendarServiceTest {
                 .memberId(2L)
                 .title("Calendar test")
                 .memo("memo")
+                .color(Color.SECONDARY.toString())
                 .startDate(getLocalDate("2023-07-01"))
                 .endDate(getLocalDate("2023-07-02"))
                 .build();
@@ -84,7 +86,7 @@ public class CalendarServiceTest {
     @Test
     @DisplayName("Calendar 정보를 수정하면 해당 calendar의 ID가 반환된다.")
     public void update() throws IOException{
-        Calendar calendar=getSchedule(2L, "Test schedule", "Test memo", LocalDate.now(), LocalDate.now(),toLocalTime("7:00"), toLocalTime("9:00"));
+        Calendar calendar=getSchedule(2L, "Test schedule", "Test memo", Color.PRIMARY, LocalDate.now(), LocalDate.now(),toLocalTime("7:00"), toLocalTime("9:00"));
 
         Long mockId=3L;
         String updateTitle="Update calendar title";
@@ -109,7 +111,7 @@ public class CalendarServiceTest {
     @Test
     @DisplayName("Calendar를 삭제하면 해당 ID가 반환된다.")
     public void delete(){
-        Calendar calendar=getSchedule(2L, "Test schedule", "Test memo", LocalDate.now(), LocalDate.now(), toLocalTime("16:00"), toLocalTime("20:00"));
+        Calendar calendar=getSchedule(2L, "Test schedule", "Test memo", Color.SECONDARY, LocalDate.now(), LocalDate.now(), toLocalTime("16:00"), toLocalTime("20:00"));
 
         Long mockId=3L;
 
@@ -122,6 +124,7 @@ public class CalendarServiceTest {
     private Calendar getSchedule(Long memberId,
                                  String title,
                                  String memo,
+                                 Color color,
                                  LocalDate startDate,
                                  LocalDate endDate,
                                  LocalTime startTime,
@@ -130,6 +133,7 @@ public class CalendarServiceTest {
                 .memberId(memberId)
                 .title(title)
                 .memo(memo)
+                .color(color)
                 .startDate(startDate)
                 .endDate(endDate)
                 .startTime(startTime)
@@ -139,8 +143,8 @@ public class CalendarServiceTest {
 
     private List<Calendar> getScheduleList() {
         return List.of(
-                getSchedule(2L, "Test schedule2", "Test test 2", LocalDate.now(), LocalDate.now(), toLocalTime("14:00"), toLocalTime("15:30")),
-                getSchedule(2L, "Test schedule3", "Test test 3", LocalDate.now(), LocalDate.now(), toLocalTime("00:00"), toLocalTime("00:00"))
+                getSchedule(2L, "Test schedule2", "Test test 2", Color.PRIMARY, LocalDate.now(), LocalDate.now(), toLocalTime("14:00"), toLocalTime("15:30")),
+                getSchedule(2L, "Test schedule3", "Test test 3", Color.GRAY, LocalDate.now(), LocalDate.now(), toLocalTime("00:00"), toLocalTime("00:00"))
         );
     }
 

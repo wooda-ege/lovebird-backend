@@ -1,5 +1,6 @@
 package com.ege.wooda.domain.calendar.domain;
 
+import com.ege.wooda.domain.calendar.domain.enums.Color;
 import com.ege.wooda.domain.calendar.dto.response.CalendarDetailResponse;
 import com.ege.wooda.global.audit.AuditEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -53,14 +54,19 @@ public class Calendar {
     @Column(name="memo")
     private String memo;
 
+    @Column(name="color", nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private Color color;
+
     @Embedded
     private AuditEntity auditEntity;
 
     @Builder
-    public Calendar(Long memberId, String title, String memo, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime){
+    public Calendar(Long memberId, String title, String memo, Color color, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime){
         this.memberId=memberId;
         this.title=title;
         this.memo=memo;
+        this.color=color;
         this.startDate=startDate;
         this.endDate=endDate;
         this.startTime=startTime;
@@ -72,6 +78,7 @@ public class Calendar {
         memberId=c.getMemberId();
         title=c.getTitle();
         memo=c.getMemo();
+        color=c.getColor();
         startDate=c.getStartDate();
         endDate=c.getEndDate();
         startTime=c.getStartTime();
@@ -85,6 +92,7 @@ public class Calendar {
                 .memberId(memberId)
                 .title(title)
                 .memo(memo)
+                .color(color.toString())
                 .startDate(startDate)
                 .endDate(endDate)
                 .startTime(startTime)

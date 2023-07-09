@@ -4,7 +4,6 @@ import com.ege.wooda.domain.calendar.domain.Calendar;
 import com.ege.wooda.domain.calendar.dto.request.CalendarCreateRequest;
 import com.ege.wooda.domain.calendar.dto.request.CalendarUpdateRequest;
 import com.ege.wooda.domain.calendar.repository.CalendarRepository;
-import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
