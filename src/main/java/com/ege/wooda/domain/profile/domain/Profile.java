@@ -9,7 +9,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.ege.wooda.domain.member.domain.enums.Gender;
 import com.ege.wooda.domain.profile.domain.enums.Anniversary;
-import com.ege.wooda.domain.profile.dto.response.CoupleCodeResponse;
 import com.ege.wooda.domain.profile.dto.response.ProfileDetailResponse;
 import com.ege.wooda.global.audit.AuditEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -45,6 +44,9 @@ public class Profile {
     @Column(name = "member_id", nullable = false)
     private Long memberId;
 
+    @Column(name = "partner_id")
+    private Long partnerId;
+
     @Column(name = "nickname", nullable = false)
     private String nickname;
 
@@ -57,14 +59,11 @@ public class Profile {
     @Enumerated(value = EnumType.STRING)
     private Gender gender;
 
-    @Column(name = "couple_code")
-    private String coupleCode;
+    @Column(name = "image_url")
+    private String imageUrl;
 
     @Column(name = "linked_flag", nullable = false)
     private Boolean linkedFlag;
-
-    @Column(name = "image_url")
-    private String imageUrl;
 
     @ElementCollection
     @CollectionTable(name = "anniversary", joinColumns = @JoinColumn(name = "profile_id"))
@@ -81,7 +80,7 @@ public class Profile {
         this.nickname = nickname;
         this.firstDate = firstDate;
         this.gender = gender;
-        this.linkedFlag = Boolean.FALSE;
+        this.linkedFlag=Boolean.FALSE;
         this.anniversaryMap = new EnumMap<>(Anniversary.class);
         this.auditEntity = new AuditEntity();
 
@@ -109,18 +108,10 @@ public class Profile {
         this.imageUrl = null;
     }
 
-    public void updateCoupleCode(String coupleCode) {
-        this.coupleCode = coupleCode;
+    public void updateLinkedFlag(Long partnerId){
+        this.linkedFlag=Boolean.TRUE;
+        this.partnerId=partnerId;
     }
-
-    public void deleteCoupleCode() { this.coupleCode = null; }
-
-    public void connectCouple(String coupleCode) {
-        this.coupleCode = coupleCode;
-        this.linkedFlag = true;
-    }
-
-    public void disconnectFlag() { this.linkedFlag = false; }
 
     public void update(Profile profile) {
         this.nickname = profile.getNickname();
@@ -140,9 +131,5 @@ public class Profile {
                                    .gender(gender.toString())
                                    .profileImageUrl(imageUrl)
                                    .build();
-    }
-
-    public CoupleCodeResponse toCoupleCodeResponse() {
-        return new CoupleCodeResponse(memberId, coupleCode);
     }
 }
