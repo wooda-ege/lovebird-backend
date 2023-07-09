@@ -1,6 +1,7 @@
 package com.ege.wooda.domain.calendar.dto.request;
 
 import com.ege.wooda.domain.calendar.domain.Calendar;
+import com.ege.wooda.domain.calendar.domain.enums.Alarm;
 import com.ege.wooda.domain.calendar.domain.enums.Color;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,6 +14,7 @@ public record CalendarCreateRequest(@NotNull Long memberId,
                                     @NotBlank String title,
                                     String memo,
                                     @NotBlank String color,
+                                    Alarm alarm,
                                     @NotNull LocalDate startDate,
                                     LocalDate endDate,
                                     LocalTime startTime,
@@ -26,7 +28,8 @@ public record CalendarCreateRequest(@NotNull Long memberId,
                 .memberId(memberId)
                 .title(title)
                 .memo(memo)
-                .color(Color.valueOf(color.toString()))
+                .color(Color.valueOf(String.valueOf(color)))
+                .alarm(Alarm.valueOf(String.valueOf(alarm)))
                 .startDate(startDate)
                 .endDate(endDate)
                 .startTime(startTime)

@@ -1,5 +1,6 @@
 package com.ege.wooda.domain.calendar.domain;
 
+import com.ege.wooda.domain.calendar.domain.enums.Alarm;
 import com.ege.wooda.domain.calendar.domain.enums.Color;
 import com.ege.wooda.domain.calendar.dto.response.CalendarDetailResponse;
 import com.ege.wooda.global.audit.AuditEntity;
@@ -58,15 +59,20 @@ public class Calendar {
     @Enumerated(value = EnumType.STRING)
     private Color color;
 
+    @Column(name="alarm")
+    @Enumerated(value = EnumType.STRING)
+    private Alarm alarm;
+
     @Embedded
     private AuditEntity auditEntity;
 
     @Builder
-    public Calendar(Long memberId, String title, String memo, Color color, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime){
+    public Calendar(Long memberId, String title, String memo, Color color, Alarm alarm, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime){
         this.memberId=memberId;
         this.title=title;
         this.memo=memo;
         this.color=color;
+        this.alarm=alarm;
         this.startDate=startDate;
         this.endDate=endDate;
         this.startTime=startTime;
@@ -79,6 +85,7 @@ public class Calendar {
         title=c.getTitle();
         memo=c.getMemo();
         color=c.getColor();
+        alarm=c.getAlarm();
         startDate=c.getStartDate();
         endDate=c.getEndDate();
         startTime=c.getStartTime();
@@ -93,6 +100,7 @@ public class Calendar {
                 .title(title)
                 .memo(memo)
                 .color(color.toString())
+                .alarm(alarm.toString())
                 .startDate(startDate)
                 .endDate(endDate)
                 .startTime(startTime)
