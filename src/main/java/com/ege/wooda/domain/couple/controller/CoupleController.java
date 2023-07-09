@@ -1,4 +1,4 @@
-package com.ege.wooda.domain.profile.controller;
+package com.ege.wooda.domain.couple.controller;
 
 import com.ege.wooda.domain.couple.domain.Couple;
 import com.ege.wooda.domain.couple.dto.response.CoupleResponseMessage;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ege.wooda.domain.member.service.MemberService;
-import com.ege.wooda.domain.profile.dto.param.ConnectCoupleParam;
+import com.ege.wooda.domain.couple.dto.param.ConnectCoupleParam;
 import com.ege.wooda.domain.couple.dto.request.CoupleLinkRequest;
 import com.ege.wooda.domain.couple.dto.response.CoupleCodeResponse;
 import com.ege.wooda.global.common.response.ApiResponse;

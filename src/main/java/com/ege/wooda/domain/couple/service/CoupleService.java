@@ -3,14 +3,13 @@ package com.ege.wooda.domain.couple.service;
 import com.ege.wooda.domain.couple.domain.Couple;
 import com.ege.wooda.domain.couple.repository.CoupleRepository;
 import com.ege.wooda.domain.profile.domain.Profile;
-import com.ege.wooda.domain.profile.dto.param.ConnectCoupleParam;
+import com.ege.wooda.domain.couple.dto.param.ConnectCoupleParam;
 import com.ege.wooda.domain.profile.repository.ProfileRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Random;
 
 import static java.util.Objects.isNull;
 
@@ -43,7 +42,7 @@ public class CoupleService {
         couple.connectCouple(connectCoupleParam.coupleCode());
         couple.expireCode();
 
-        return couple.getMemberId();
+        return partnerId;
     }
 
     @Transactional(readOnly = true)
@@ -64,12 +63,17 @@ public class CoupleService {
     private String generateCode() {
         int LENGTH = 8;
 
-        Random random = new Random();
-        StringBuilder oneTimePassword = new StringBuilder();
+        String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                + "0123456789"
+                + "abcdefghijklmnopqrstuvxyz";
+
+        StringBuilder oneTimePassword = new StringBuilder(LENGTH);
         for (int i = 0; i < LENGTH; i++) {
-            int randomNumber = random.nextInt(10);
-            oneTimePassword.append(randomNumber);
+            int index = (int)(AlphaNumericString.length() * Math.random());
+
+            oneTimePassword.append(AlphaNumericString.charAt(index));
         }
+
         return oneTimePassword.toString().trim();
     }
 
