@@ -1,5 +1,7 @@
 package com.ege.wooda.global.security.oauth.common.handler;
 
+import com.ege.wooda.global.security.oauth.model.AuthTokenResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
 import org.springframework.http.HttpStatus;
@@ -23,17 +25,20 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     private final JwtGenerateService jwtGenerateService;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("utf-8");
+        response.setStatus(HttpServletResponse.SC_OK);
+
         PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
 
-        String authToken = jwtGenerateService.createAuthToken(principalUser);
+        AuthTokenResponse authToken = new AuthTokenResponse(jwtGenerateService.createAuthToken(principalUser));
+        String data = objectMapper.writeValueAsString(authToken);
 
-
-        response.getWriter().write(authToken);
-        response.setContentType("application/json");
-        response.setStatus(HttpServletResponse.SC_OK);
+        response.getWriter().write(data);
     }
 }
