@@ -20,8 +20,11 @@ http://127.0.0.1:8080/auth2/authorize/google
 
 ==== Response
 
+[source,http,options="nowrap"]
 ----
-eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjEiLCJleHAiOjE2ODc2ODE2MzB9.dWIbrC0spNgY9EBDIZ9skEhmNXIJqjt5hdo_nPw4QHNAWYhEXiCEV9_pmObbWvlxOx-CnDUMm-IhooKwPaPKCA
+{
+    "authToken": "eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjEiLCJleHAiOjE2ODc2ODE2MzB9.dWIbrC0spNgY9EBDIZ9skEhmNXIJqjt5hdo_nPw4QHNAWYhEXiCEV9_pmObbWvlxOx-CnDUMm-IhooKwPaPKCA"
+}
 ----
 
 |===
@@ -41,8 +44,11 @@ http://127.0.0.1:8080/auth2/authorize/kakao
 
 ==== Response
 
+[source,http,options="nowrap"]
 ----
-eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjIiLCJleHAiOjE2ODc2ODE3MzB9.HyPVJRKqAMm75NRmVMb22PuzZNQoIoJrRyjVsuYooMfRGx6nQikvuoUA5byLo7chrzORHinvMFOw86EdmzjJRQ
+{
+    "authToken": "eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjIiLCJleHAiOjE2ODc2ODE3MzB9.HyPVJRKqAMm75NRmVMb22PuzZNQoIoJrRyjVsuYooMfRGx6nQikvuoUA5byLo7chrzORHinvMFOw86EdmzjJRQ"
+}
 ----
 
 |===
