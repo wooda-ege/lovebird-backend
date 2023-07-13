@@ -58,7 +58,7 @@ public class Couple {
     public void expireCode() { this.useCode = Boolean.TRUE; }
 
     public Boolean isExpired(){
-        if(ChronoUnit.HOURS.between(LocalDateTime.now(),this.auditEntity.getCreatedAt())>=24 ) return Boolean.TRUE;
+        if(ChronoUnit.HOURS.between(this.auditEntity.getCreatedAt(),LocalDateTime.now())>=24 ) return Boolean.TRUE;
         return Boolean.FALSE;
     }
 

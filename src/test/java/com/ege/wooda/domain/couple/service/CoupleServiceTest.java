@@ -18,7 +18,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -45,8 +47,8 @@ public class CoupleServiceTest {
     @Test
     @DisplayName("Couple 연동 테스트")
     public void connect() throws Exception{
-        Couple couple=getCouple(generateCode(), 3L);
-        Couple partner=getCouple(generateCode(), 7L);
+        Couple couple=getCouple(coupleService.generateCode(), 3L);
+        Couple partner=getCouple(coupleService.generateCode(), 7L);
 
         Profile selfP = getProfile(3L, "홍길동", getLocalDate("2023-06-01"), Gender.MALE);
         Profile partnerP = getProfile(7L, "홍길순", getLocalDate("2023-06-01"), Gender.FEMALE);
@@ -54,7 +56,11 @@ public class CoupleServiceTest {
         Long mockId=1L;
         ConnectCoupleParam connectCoupleParam=new ConnectCoupleParam(3L, partner.getCoupleCode());
 
-        ReflectionTestUtils.setField(couple, "id", mockId);
+        ReflectionTestUtils.setField(partner, "id", mockId);
+        ReflectionTestUtils.setField(partner.getAuditEntity(), "createdAt",
+                LocalDateTime.now());
+        ReflectionTestUtils.setField(partner.getAuditEntity(), "updatedAt",
+                LocalDateTime.now());
 
         given(profileRepository.findProfileByMemberId(3L))
                 .willReturn(Optional.ofNullable(selfP));
@@ -68,24 +74,6 @@ public class CoupleServiceTest {
         assertEquals(partnerId, partnerP.getMemberId());
         assertEquals(selfP.getLinkedFlag(), true);
         assertEquals(partnerP.getLinkedFlag(), true);
-
-    }
-
-    private String generateCode() {
-        int LENGTH = 8;
-
-        String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                + "0123456789"
-                + "abcdefghijklmnopqrstuvxyz";
-
-        StringBuilder oneTimePassword = new StringBuilder(LENGTH);
-        for (int i = 0; i < LENGTH; i++) {
-            int index = (int)(AlphaNumericString.length() * Math.random());
-
-            oneTimePassword.append(AlphaNumericString.charAt(index));
-        }
-
-        return oneTimePassword.toString().trim();
     }
 
     private Couple getCouple(String coupleCode, Long memberId){
