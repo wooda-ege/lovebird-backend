@@ -1,6 +1,7 @@
 package com.ege.wooda.domain.couple.service;
 
 import com.ege.wooda.domain.couple.domain.Couple;
+import com.ege.wooda.domain.couple.exception.CodeExpiredException;
 import com.ege.wooda.domain.couple.repository.CoupleRepository;
 import com.ege.wooda.domain.profile.domain.Profile;
 import com.ege.wooda.domain.couple.dto.param.ConnectCoupleParam;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.util.Optional;
+
 import static java.util.Objects.isNull;
 
 @Service
@@ -18,6 +21,10 @@ import static java.util.Objects.isNull;
 public class CoupleService {
     private final ProfileRepository profileRepository;
     private final CoupleRepository coupleRepository;
+    private static final int LENGTH=8;
+    private static final String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            + "0123456789"
+            + "abcdefghijklmnopqrstuvxyz";
 
     @Transactional
     public Couple getCoupleCode(Long memberId) {
@@ -29,18 +36,23 @@ public class CoupleService {
     }
 
     @Transactional
-    public Long connectCouple(ConnectCoupleParam connectCoupleParam) {
+    public Long connectCouple(ConnectCoupleParam connectCoupleParam) throws CodeExpiredException {
         Couple couple = findByCoupleCode(connectCoupleParam.coupleCode());
         Long partnerId=couple.getMemberId();
 
-        Profile self=profileRepository.findProfileByMemberId(connectCoupleParam.memberId()).orElseThrow(EntityNotFoundException::new);
-        Profile partner=profileRepository.findProfileByMemberId(partnerId).orElseThrow(EntityNotFoundException::new);
+        Profile self=findProfileByMemberId(connectCoupleParam.memberId()).orElseThrow(EntityNotFoundException::new);
+        Profile partner=findProfileByMemberId(partnerId).orElseThrow(EntityNotFoundException::new);
 
-        self.updateLinkedFlag(partnerId);
-        partner.updateLinkedFlag(self.getMemberId());
+        if(!couple.isExpired()){
+            self.updateLinkedFlag(partnerId);
+            partner.updateLinkedFlag(self.getMemberId());
 
-        couple.connectCouple(connectCoupleParam.coupleCode());
-        couple.expireCode();
+            couple.connectCouple(connectCoupleParam.coupleCode());
+            couple.expireCode();
+        }
+        else{
+            throw new CodeExpiredException();
+        }
 
         return partnerId;
     }
@@ -60,14 +72,9 @@ public class CoupleService {
         return coupleRepository.findByCoupleCode(coupleCode).orElseThrow(EntityNotFoundException::new);
     }
 
-    private String generateCode() {
-        int LENGTH = 8;
-
-        String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                + "0123456789"
-                + "abcdefghijklmnopqrstuvxyz";
-
+    public String generateCode() {
         StringBuilder oneTimePassword = new StringBuilder(LENGTH);
+
         for (int i = 0; i < LENGTH; i++) {
             int index = (int)(AlphaNumericString.length() * Math.random());
 
@@ -77,13 +84,29 @@ public class CoupleService {
         return oneTimePassword.toString().trim();
     }
 
+    private Boolean checkUniqueness(String code){
+        Couple couple=findByCoupleCode(code);
+        if(!isNull(couple) && !couple.getUseCode()){
+            return Boolean.FALSE;
+        }
+        else return Boolean.TRUE;
+    }
+
     private void codeReset(Couple couple) {
-        if (!couple.getUseFlag() && !isNull(couple.getCoupleCode()) && couple.isExpired()) {
+        if (!couple.getUseCode() && !isNull(couple.getCoupleCode()) && couple.isExpired()) {
                 couple.deleteCoupleCode();
                 couple.expireCode();
         }
         else {
-            couple.updateCoupleCode(generateCode());
+            String newCode=generateCode();
+            while (!checkUniqueness(newCode)){
+                newCode=generateCode();
+            }
+            couple.updateCoupleCode(newCode);
         }
+    }
+
+    private Optional<Profile> findProfileByMemberId(Long id){
+        return profileRepository.findProfileByMemberId(id);
     }
 }

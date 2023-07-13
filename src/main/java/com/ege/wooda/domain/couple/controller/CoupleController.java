@@ -2,6 +2,7 @@ package com.ege.wooda.domain.couple.controller;
 
 import com.ege.wooda.domain.couple.domain.Couple;
 import com.ege.wooda.domain.couple.dto.response.CoupleResponseMessage;
+import com.ege.wooda.domain.couple.exception.CodeExpiredException;
 import com.ege.wooda.domain.couple.service.CoupleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,7 +46,7 @@ public class CoupleController {
     @PutMapping("/link")
     public ResponseEntity<ApiResponse<?>> linkCouple(@PathVariable Long id,
                                                      @RequestBody CoupleLinkRequest coupleLinkRequest)
-            throws FirebaseMessagingException {
+            throws FirebaseMessagingException, CodeExpiredException {
         Long partnerId = coupleService.connectCouple(
                 new ConnectCoupleParam(id, coupleLinkRequest.coupleCode()));
         NotificationRequest notificationRequest = NotificationRequest.builder()

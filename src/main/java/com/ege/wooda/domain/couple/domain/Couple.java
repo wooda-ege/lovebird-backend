@@ -29,8 +29,8 @@ public class Couple {
     @Column(name = "couple_code")
     private String coupleCode;
 
-    @Column(name = "use_flag", nullable = false)
-    private Boolean useFlag;
+    @Column(name = "use_code", nullable = false)
+    private Boolean useCode;
 
     @Embedded
     private AuditEntity auditEntity;
@@ -39,7 +39,7 @@ public class Couple {
     public Couple(String coupleCode, Long memberId){
         this.memberId=memberId;
         this.coupleCode=coupleCode;
-        this.useFlag=Boolean.TRUE;
+        this.useCode=Boolean.FALSE;
         this.auditEntity=new AuditEntity();
     }
 
@@ -55,7 +55,7 @@ public class Couple {
         this.coupleCode = coupleCode;
     }
 
-    public void expireCode() { this.useFlag = Boolean.FALSE; }
+    public void expireCode() { this.useCode = Boolean.TRUE; }
 
     public Boolean isExpired(){
         if(ChronoUnit.HOURS.between(LocalDateTime.now(),this.auditEntity.getCreatedAt())>=24 ) return Boolean.TRUE;
