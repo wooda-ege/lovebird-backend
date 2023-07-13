@@ -7,6 +7,7 @@ import com.ege.wooda.domain.calendar.dto.response.CalendarDetailResponse;
 import com.ege.wooda.domain.calendar.dto.response.CalendarResponseMessage;
 import com.ege.wooda.domain.calendar.service.CalendarService;
 import com.ege.wooda.global.common.response.ApiResponse;
+import com.ege.wooda.global.firebase.service.FCMService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import java.util.List;
 @RequestMapping("/api/v1/calendar")
 public class CalendarController {
     private final CalendarService calendarService;
+    private final FCMService fcmService;
 
     @PostMapping("")
     public ResponseEntity<ApiResponse<Long>> save(
